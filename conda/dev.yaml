@@ -1,0 +1,8 @@
+name: mhai-django
+channels:
+  - nodefaults
+  - conda-forge
+dependencies:
+  - nodejs
+  - yarn
+  - poetry
