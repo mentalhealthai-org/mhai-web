@@ -1,4 +1,4 @@
-from mhai_django.users.models import User
+from mhai_web.users.models import User
 
 
 def test_user_get_absolute_url(user: User):

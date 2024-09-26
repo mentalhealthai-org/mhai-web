@@ -11,7 +11,7 @@ from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
-from mhai_django.urls import urlpatterns as mhai_urls
+from mhai_web.urls import urlpatterns as mhai_urls
 
 urlpatterns = mhai_urls + [
     path(
@@ -22,7 +22,7 @@ urlpatterns = mhai_urls + [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
-    path("users/", include("mhai_django.users.urls", namespace="users")),
+    path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     # ...

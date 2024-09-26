@@ -5,7 +5,7 @@ from factory import Faker
 from factory import post_generation
 from factory.django import DjangoModelFactory
 
-from mhai_django.users.models import User
+from mhai_web.users.models import User
 
 
 class UserFactory(DjangoModelFactory[User]):

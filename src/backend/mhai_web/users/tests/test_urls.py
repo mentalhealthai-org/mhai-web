@@ -1,7 +1,7 @@
 from django.urls import resolve
 from django.urls import reverse
 
-from mhai_django.users.models import User
+from mhai_web.users.models import User
 
 
 def test_detail(user: User):

@@ -1,8 +1,8 @@
 import pytest
 from rest_framework.test import APIRequestFactory
 
-from mhai_django.users.api.views import UserViewSet
-from mhai_django.users.models import User
+from mhai_web.users.api.views import UserViewSet
+from mhai_web.users.models import User
 
 
 class TestUserViewSet:

@@ -6,8 +6,8 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# mhai_django/
-APPS_DIR = BASE_DIR / "mhai_django"
+# mhai_web/
+APPS_DIR = BASE_DIR / "mhai_web"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -85,8 +85,8 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "mhai_django.users",
-    "mhai_django",
+    "mhai_web.users",
+    "mhai_web",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -94,7 +94,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "mhai_django.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "mhai_web.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "mhai_django.users.context_processors.allauth_settings",
+                "mhai_web.users.context_processors.allauth_settings",
             ],
         },
     },
@@ -313,13 +313,13 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://docs.allauth.org/en/latest/account/configuration.html
-ACCOUNT_ADAPTER = "mhai_django.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "mhai_web.users.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
-ACCOUNT_FORMS = {"signup": "mhai_django.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "mhai_web.users.forms.UserSignupForm"}
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_ADAPTER = "mhai_django.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "mhai_web.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
-SOCIALACCOUNT_FORMS = {"signup": "mhai_django.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "mhai_web.users.forms.UserSocialSignupForm"}
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation

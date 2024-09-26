@@ -1,7 +1,7 @@
 import pytest
 
-from mhai_django.users.models import User
-from mhai_django.users.tests.factories import UserFactory
+from mhai_web.users.models import User
+from mhai_web.users.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

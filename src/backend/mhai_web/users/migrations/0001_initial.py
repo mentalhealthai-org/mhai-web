@@ -4,7 +4,7 @@ import django.utils.timezone
 from django.db import migrations
 from django.db import models
 
-import mhai_django.users.models
+import mhai_web.users.models
 
 
 class Migration(migrations.Migration):
@@ -106,7 +106,7 @@ class Migration(migrations.Migration):
                 "abstract": False,
             },
             managers=[
-                ("objects", mhai_django.users.models.UserManager()),
+                ("objects", mhai_web.users.models.UserManager()),
             ],
         ),
     ]

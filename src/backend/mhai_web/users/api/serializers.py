@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from mhai_django.users.models import User
+from mhai_web.users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer[User]):

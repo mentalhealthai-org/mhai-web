@@ -9,7 +9,7 @@ python_files = [
 
 # ==== Coverage ====
 [tool.coverage.run]
-include = ["mhai_django/**"]
+include = ["mhai_web/**"]
 omit = ["*/migrations/*", "*/tests/*"]
 plugins = ["django_coverage_plugin"]
 

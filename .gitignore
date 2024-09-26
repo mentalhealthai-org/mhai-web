@@ -272,7 +272,7 @@ tags
 dump.rdb
 
 ### Project template
-mhai_django/media/
+mhai_web/media/
 
 .pytest_cache/
 .ipython/
