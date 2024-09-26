@@ -11,8 +11,9 @@ from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
-urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+from mhai_django.urls import urlpatterns as mhai_urls
+
+urlpatterns = mhai_urls + [
     path(
         "about/",
         TemplateView.as_view(template_name="pages/about.html"),

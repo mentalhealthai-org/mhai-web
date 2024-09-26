@@ -3,6 +3,9 @@ channels:
   - nodefaults
   - conda-forge
 dependencies:
+  - compilers
+  - compose-go
   - nodejs
   - yarn
   - poetry
+  - pip

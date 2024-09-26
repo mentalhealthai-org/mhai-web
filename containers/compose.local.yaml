@@ -6,8 +6,8 @@ volumes:
 services:
   django: &django
     build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
+      context: ..
+      dockerfile: ./containers/compose/local/django/Dockerfile
     image: mhai_django_local_django
     container_name: mhai_django_local_django
     depends_on:
@@ -34,6 +34,9 @@ services:
       - mhai_django_local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    command: postgres -p ${POSTGRES_PORT}
 
   mailpit:
     image: docker.io/axllent/mailpit:latest
@@ -44,10 +47,10 @@ services:
   redis:
     image: docker.io/redis:6
     container_name: mhai_django_local_redis
-    
+
     volumes:
       - mhai_django_local_redis_data:/data
-    
+
 
   celeryworker:
     <<: *django
@@ -76,5 +79,5 @@ services:
     image: mhai_django_local_flower
     container_name: mhai_django_local_flower
     ports:
-      - '5555:5555'
+      - '25555:25555'
     command: /start-flower
