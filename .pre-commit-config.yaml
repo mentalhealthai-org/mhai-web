@@ -43,7 +43,7 @@ repos:
         # it is necessary to exclude templates/tags because of the
         # following issue:
         #   - https://github.com/Riverside-Healthcare/djLint/issues/703
-        exclude: ".git|docs|.eggs|src/*/templates/tags|src/frontend/"
+        exclude: ".git|docs|.eggs|/templates/tags|src/frontend/"
 
 
   - repo: local
