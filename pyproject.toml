@@ -204,17 +204,17 @@ quote-style = "double"
 
 [tool.djlint]
 blank_line_after_tag="load,extends,include"
-blank_line_before_tag="load,extends,include,block"
+blank_line_before_tag="load,extends,include"
 close_void_tags=true
 # custom_blocks="toc,example"
 # custom_html="mjml,simple-greeting,mj-\w+"
-format_attribute_template_tags=true
+# format_attribute_template_tags=true
 format_css=true
 format_js=true
 indent=2
-line_break_after_multiline_tag=true
-max_attribute_length=3
-max_blank_lines=1
+# line_break_after_multiline_tag=true
+# max_attribute_length=3
+# max_blank_lines=1
 max_line_length=80
 profile="django"
 # ref issue:
@@ -225,8 +225,7 @@ exclude=".git,docs,.eggs,src/mhai_web/templates/tags,src/frontend"
 # TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
 ignore="H029,H005,H030,H031,H006,H013,H021,H023,D018,T002"
 # include = "H017,H035"
-
-preserve_blank_lines=false
+# preserve_blank_lines=false
 
 [tool.djlint.html]
 indent_size=2
