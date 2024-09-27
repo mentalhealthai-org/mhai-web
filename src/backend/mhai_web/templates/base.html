@@ -72,7 +72,9 @@
                 aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'home' %}">Mhai-Django</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <img src="{% static 'images/logo-small.png' %}" style="height:50px;" />
+        </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
