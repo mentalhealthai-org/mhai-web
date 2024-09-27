@@ -35,6 +35,7 @@ jobs:
           pr_sha: ${{ github.event.pull_request.head.sha }}
   linter:
     runs-on: ubuntu-latest
+
     concurrency:
       group: ci-linter-${{ github.ref }}
       cancel-in-progress: true
@@ -55,7 +56,6 @@ jobs:
           activate-environment: mhai-web
           auto-update-conda: true
           conda-solver: libmamba
-          python-version: "${{ matrix.python_version }}"
 
       - name: Install dependencies
         run: |
@@ -69,8 +69,16 @@ jobs:
           pre-commit run --all-files
 
   # With no caching at all the entire ci process takes 3m to complete!
-  pytest:
+  test:
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: ci-tests-${{ github.ref }}
+      cancel-in-progress: true
+
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - name: Checkout Code Repository
@@ -84,7 +92,6 @@ jobs:
           activate-environment: mhai-web
           auto-update-conda: true
           conda-solver: libmamba
-          python-version: "${{ matrix.python_version }}"
 
       - name: Install dependencies
         run: |
