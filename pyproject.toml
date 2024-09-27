@@ -4,7 +4,9 @@ version = "0.1.0"
 description = ""
 authors = ["Ivan Ogasawara <ivan.ogasawara@gmail.com>"]
 readme = "README.md"
-package-mode = false
+packages = [
+  {include = "*", from="src/backend"},
+]
 
 [tool.poetry.dependencies]
 python = "3.12.*"
@@ -62,6 +64,9 @@ django-debug-toolbar = "^4.4.6"
 django-extensions = "^3.2.3"
 django-coverage-plugin = "^3.1.0"
 pytest-django = "^4.9.0"
+mccabe = "^0.7.0"
+vulture = "^2.12"
+bandit = "^1.7.10"
 
 [build-system]
 requires = ["poetry-core"]
@@ -77,7 +82,7 @@ python_files = [
 
 [tool.coverage.run]
 include = ["mhai_web/**"]
-omit = ["*/migrations/*", "*/tests/*"]
+omit = ["*/migrations/*", "*/tests/*", "scripts/*"]
 plugins = ["django_coverage_plugin"]
 
 [tool.mypy]
@@ -100,23 +105,6 @@ ignore_errors = true
 [tool.django-stubs]
 django_settings_module = "config.settings.test"
 
-[tool.djlint]
-blank_line_after_tag = "load,extends"
-close_void_tags = true
-format_css = true
-format_js = true
-# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
-ignore = "H006,H030,H031,T002"
-include = "H017,H035"
-indent = 2
-max_line_length = 119
-profile = "django"
-
-[tool.djlint.css]
-indent_size = 2
-
-[tool.djlint.js]
-indent_size = 2
 
 [tool.ruff]
 target-version = "py312"
@@ -124,7 +112,9 @@ target-version = "py312"
 extend-exclude = [
     "*/migrations/*.py",
     "staticfiles/*",
+    "scripts/*",
 ]
+fix = true
 
 [tool.ruff.lint]
 select = [
@@ -191,6 +181,9 @@ ignore = [
           # of types for comparison.
           # Deactivated because it can make the code slow:
           # https://github.com/astral-sh/ruff/issues/7871
+  "INP001",
+  "COM812",
+  "ISC001",
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
@@ -198,5 +191,48 @@ extend-unsafe-fixes = [
     "UP038",
 ]
 
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
 [tool.ruff.lint.isort]
-force-single-line = true
+# Use a single line between direct and from import
+lines-between-types = 1
+
+[tool.ruff.format]
+quote-style = "double"
+
+
+[tool.djlint]
+blank_line_after_tag="load,extends,include"
+blank_line_before_tag="load,extends,include,block"
+close_void_tags=true
+# custom_blocks="toc,example"
+# custom_html="mjml,simple-greeting,mj-\w+"
+format_attribute_template_tags=true
+format_css=true
+format_js=true
+indent=2
+line_break_after_multiline_tag=true
+max_attribute_length=3
+max_blank_lines=1
+max_line_length=80
+profile="django"
+# ref issue:
+#   - https://github.com/Riverside-Healthcare/djLint/issues/703
+exclude=".git,docs,.eggs,src/mhai_web/templates/tags,src/frontend"
+# TODO: remove from the ignore list:
+#       H013,H021,H023,D018
+# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
+ignore="H029,H005,H030,H031,H006,H013,H021,H023,D018,T002"
+# include = "H017,H035"
+
+preserve_blank_lines=false
+
+[tool.djlint.html]
+indent_size=2
+
+[tool.djlint.css]
+indent_size=2
+
+[tool.djlint.js]
+indent_size=2

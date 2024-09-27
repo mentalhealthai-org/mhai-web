@@ -1,13 +1,13 @@
 from http import HTTPStatus
 
 import pytest
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
-from django.http import HttpRequest
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -15,9 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from mhai_web.users.forms import UserAdminChangeForm
 from mhai_web.users.models import User
 from mhai_web.users.tests.factories import UserFactory
-from mhai_web.users.views import UserRedirectView
-from mhai_web.users.views import UserUpdateView
-from mhai_web.users.views import user_detail_view
+from mhai_web.users.views import UserRedirectView, UserUpdateView, user_detail_view
 
 pytestmark = pytest.mark.django_db
 

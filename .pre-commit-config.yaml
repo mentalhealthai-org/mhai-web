@@ -26,21 +26,82 @@ repos:
       - id: django-upgrade
         args: ['--target-version', '5.0']
 
-  # Run the Ruff linter.
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.7
-    hooks:
-      # Linter
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
-      # Formatter
-      - id: ruff-format
 
   - repo: https://github.com/Riverside-Healthcare/djLint
-    rev: v1.35.2
+    rev: v1.32.1
     hooks:
       - id: djlint-reformat-django
+        files: "\\.html"
+        types_or: ['html']
+        # it is necessary to exclude templates/tags because of the
+        # following issue:
+        #   - https://github.com/Riverside-Healthcare/djLint/issues/703
+        exclude: ".git|docs|.eggs|templates/tags|src/frontend/"
       - id: djlint-django
+        files: "\\.html"
+        types_or: ['html']
+        # it is necessary to exclude templates/tags because of the
+        # following issue:
+        #   - https://github.com/Riverside-Healthcare/djLint/issues/703
+        exclude: "src/*/tests|.git|docs|.eggs|src/*/templates/tags|src/frontend/"
+
+
+  - repo: local
+    hooks:
+
+    - id: ruff-format
+      name: ruff-format
+      entry: ruff format
+      exclude: "docs/|scripts/.*|migrations/.*|/urls.py"
+      language: system
+      pass_filenames: true
+      types:
+        - python
+
+    - id: ruff-linter
+      name: ruff-linter
+      entry: ruff check
+      language: system
+      exclude: "docs/|scripts/.*|migrations/.*|/urls.py"
+      pass_filenames: true
+      types:
+        - python
+
+    - id: bandit
+      name: bandit
+      entry: bandit
+      language: system
+      args: ['--configfile', 'pyproject.toml', '-iii', '-lll']
+      pass_filenames: true
+      types:
+        - python
+
+    - id: vulture
+      name: vulture
+      entry: python scripts/run-vulture.py
+      language: system
+      description: Find unused Python code.
+      pass_filenames: false
+      types:
+        - python
+
+    # note: mccabe doesn't return a error code 1 when it finds functions with
+    #       high complexity
+    - id: mccabe
+      name: mccabe
+      # note: it would be nice to move this threshold to 10
+      entry: python -m mccabe --min 25
+      language: system
+      files: "src/"
+      pass_filenames: true
+      types:
+        - python
+
+    - id: mypy
+      name: mypy
+      entry: mypy .
+      language: system
+      pass_filenames: false
 
 # sets up .pre-commit-ci.yaml to ensure pre-commit dependencies stay up to date
 ci:

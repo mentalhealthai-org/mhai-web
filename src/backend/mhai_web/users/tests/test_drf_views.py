@@ -1,4 +1,5 @@
 import pytest
+
 from rest_framework.test import APIRequestFactory
 
 from mhai_web.users.api.views import UserViewSet

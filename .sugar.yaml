@@ -2,7 +2,7 @@ version: 1.0
 compose-app: docker compose
 env-file: ./containers/.envs/.local/.env
 defaults:
-  group: {{ env.SUGAR_GROUP }}
+  group: ${{ env.SUGAR_GROUP }}
   project-name: mhai
 groups:
   dev:
