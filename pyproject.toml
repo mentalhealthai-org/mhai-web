@@ -1,4 +1,77 @@
-# ==== pytest ====
+[tool.poetry]
+name = "mhai-web"
+version = "0.1.0"
+description = ""
+authors = ["Ivan Ogasawara <ivan.ogasawara@gmail.com>"]
+readme = "README.md"
+packages = [
+  {include = "*", from="src/backend"},
+]
+
+[tool.poetry.dependencies]
+python = "3.12.*"
+python-slugify = "^8.0.4"
+pillow = "^10.4.0"
+rcssmin = "^1.1.2"
+argon2-cffi = "^23.1.0"
+whitenoise = "^6.7.0"
+redis = "^5.0.8"
+hiredis = "^3.0.0"
+celery = "^5.4.0"
+django-celery-beat = "^2.7.0"
+flower = "^2.0.1"
+uvicorn = {extras = ["standard"], version = "^0.30.6"}
+uvicorn-worker = "^0.2.0"
+django = "^5.1.1"
+django-environ = "^0.11.2"
+django-model-utils = "^5.0.0"
+django-allauth = {extras = ["mfa"], version = "^65.0.1"}
+django-crispy-forms = "^2.3"
+crispy-bootstrap5 = "^2024.2"
+django-compressor = "^4.5.1"
+django-redis = "^5.4.0"
+djangorestframework = "^3.15.2"
+django-cors-headers = "^4.4.0"
+drf-spectacular = "^0.27.2"
+gunicorn = "^23.0.0"
+psycopg2-binary = "^2.9.9"
+sentry-sdk = "^2.14.0"
+django-anymail = "^12.0"
+
+
+[tool.poetry.group.dev.dependencies]
+makim = "^1.16.0"
+compose-go = "^2.29.7"
+containers-sugar = "^1.14.0"
+ruff = "^0.6.8"
+watchdog = "^5.0.2"
+werkzeug = {extras = ["watchdog"], version = "^3.0.4"}
+ipdb = "^0.13.13"
+psycopg2-binary = "^2.9.9"
+watchfiles = "^0.24.0"
+mypy = "^1.11.2"
+django-stubs = {extras = ["compatible-mypy"], version = "^5.1.0"}
+pytest = "^8.3.3"
+pytest-sugar = "^1.0.0"
+djangorestframework-stubs = "^3.15.1"
+sphinx = "^8.0.2"
+sphinx-autobuild = "^2024.9.19"
+coverage = "^7.6.1"
+djlint = "^1.35.2"
+pre-commit = "^3.8.0"
+factory-boy = "^3.3.1"
+django-debug-toolbar = "^4.4.6"
+django-extensions = "^3.2.3"
+django-coverage-plugin = "^3.1.0"
+pytest-django = "^4.9.0"
+mccabe = "^0.7.0"
+vulture = "^2.12"
+bandit = "^1.7.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "--ds=config.settings.test --reuse-db --import-mode=importlib"
@@ -7,13 +80,11 @@ python_files = [
     "test_*.py",
 ]
 
-# ==== Coverage ====
 [tool.coverage.run]
 include = ["mhai_web/**"]
-omit = ["*/migrations/*", "*/tests/*"]
+omit = ["*/migrations/*", "*/tests/*", "scripts/*"]
 plugins = ["django_coverage_plugin"]
 
-# ==== mypy ====
 [tool.mypy]
 python_version = "3.12"
 check_untyped_defs = true
@@ -34,24 +105,6 @@ ignore_errors = true
 [tool.django-stubs]
 django_settings_module = "config.settings.test"
 
-# ==== djLint ====
-[tool.djlint]
-blank_line_after_tag = "load,extends"
-close_void_tags = true
-format_css = true
-format_js = true
-# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
-ignore = "H006,H030,H031,T002"
-include = "H017,H035"
-indent = 2
-max_line_length = 119
-profile = "django"
-
-[tool.djlint.css]
-indent_size = 2
-
-[tool.djlint.js]
-indent_size = 2
 
 [tool.ruff]
 target-version = "py312"
@@ -59,7 +112,9 @@ target-version = "py312"
 extend-exclude = [
     "*/migrations/*.py",
     "staticfiles/*",
+    "scripts/*",
 ]
+fix = true
 
 [tool.ruff.lint]
 select = [
@@ -126,6 +181,9 @@ ignore = [
           # of types for comparison.
           # Deactivated because it can make the code slow:
           # https://github.com/astral-sh/ruff/issues/7871
+  "INP001",
+  "COM812",
+  "ISC001",
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
@@ -133,5 +191,47 @@ extend-unsafe-fixes = [
     "UP038",
 ]
 
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
 [tool.ruff.lint.isort]
-force-single-line = true
+# Use a single line between direct and from import
+lines-between-types = 1
+
+[tool.ruff.format]
+quote-style = "double"
+
+
+[tool.djlint]
+blank_line_after_tag="load,extends,include"
+blank_line_before_tag="load,extends,include"
+close_void_tags=true
+# custom_blocks="toc,example"
+# custom_html="mjml,simple-greeting,mj-\w+"
+# format_attribute_template_tags=true
+format_css=true
+format_js=true
+indent=2
+# line_break_after_multiline_tag=true
+# max_attribute_length=3
+# max_blank_lines=1
+max_line_length=80
+profile="django"
+# ref issue:
+#   - https://github.com/Riverside-Healthcare/djLint/issues/703
+exclude=".git,docs,.eggs,src/mhai_web/templates/tags,src/frontend"
+# TODO: remove from the ignore list:
+#       H013,H021,H023,D018
+# TODO: remove T002 when fixed https://github.com/djlint/djLint/issues/687
+ignore="H029,H005,H030,H031,H006,H013,H021,H023,D018,T002"
+# include = "H017,H035"
+# preserve_blank_lines=false
+
+[tool.djlint.html]
+indent_size=2
+
+[tool.djlint.css]
+indent_size=2
+
+[tool.djlint.js]
+indent_size=2

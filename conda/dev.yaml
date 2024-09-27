@@ -1,11 +1,12 @@
-name: mhai-django
+name: mhai-web
 channels:
   - nodefaults
   - conda-forge
 dependencies:
   - compilers
-  - compose-go
   - nodejs
   - yarn
   - poetry
   - pip
+  - pip:
+    - compose-go

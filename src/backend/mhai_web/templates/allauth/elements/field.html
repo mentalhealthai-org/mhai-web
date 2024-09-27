@@ -9,14 +9,14 @@
       {% endslot %}
     </label>
   </div>
-  <textarea {% if attrs.required %}required{% endif %}
-            {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %}
-            {% if attrs.disabled %}disabled{% endif %}
-            {% if attrs.readonly %}readonly{% endif %}
-            {% if attrs.checked %}checked{% endif %}
-            {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
-            {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
-            {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}
+  <textarea {% if attrs.required %} required {% endif %}
+            {% if attrs.rows %} rows="{{ attrs.rows }}" {% endif %}
+            {% if attrs.disabled %} disabled {% endif %}
+            {% if attrs.readonly %} readonly {% endif %}
+            {% if attrs.checked %} checked {% endif %}
+            {% if attrs.name %} name="{{ attrs.name }}" {% endif %}
+            {% if attrs.id %} id="{{ attrs.id }}" {% endif %}
+            {% if attrs.placeholder %} placeholder="{{ attrs.placeholder }}" {% endif %}
             class="form-control">{% slot value %}{% endslot %}</textarea>
 </div>
 {% elif attrs.type == "radio" %}

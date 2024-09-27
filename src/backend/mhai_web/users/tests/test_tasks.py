@@ -1,4 +1,5 @@
 import pytest
+
 from celery.result import EagerResult
 
 from mhai_web.users.tasks import get_users_count

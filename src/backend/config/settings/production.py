@@ -2,16 +2,14 @@
 import logging
 
 import sentry_sdk
+
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
 from .base import *  # noqa: F403
-from .base import DATABASES
-from .base import INSTALLED_APPS
-from .base import SPECTACULAR_SETTINGS
-from .base import env
+from .base import DATABASES, INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -110,7 +108,7 @@ INSTALLED_APPS += ["anymail"]
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-ANYMAIL = {}
+ANYMAIL: dict[str, str] = {}
 
 # django-compressor
 # ------------------------------------------------------------------------------
@@ -197,5 +195,3 @@ sentry_sdk.init(
 SPECTACULAR_SETTINGS["SERVERS"] = [
     {"url": "https://mhai.com", "description": "Production server"},
 ]
-# Your stuff...
-# ------------------------------------------------------------------------------
