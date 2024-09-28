@@ -1,9 +1,6 @@
 volumes:
   postgres_data: {}
   postgres_data_backups: {}
-  traefik: {}
-  django_media: {}
-
   redis_data: {}
 
 services:
@@ -48,27 +45,3 @@ services:
     extends:
       file: compose.base.yml
       service: flower
-
-  traefik:
-    build:
-      context: .
-      dockerfile: ./compose/production/traefik/Dockerfile
-    image: mhai_django_traefik
-    depends_on:
-      - django
-    volumes:
-      - traefik:/etc/traefik/acme
-    ports:
-      - '0.0.0.0:80:80'
-      - '0.0.0.0:443:443'
-      - '0.0.0.0:5555:5555'
-
-  nginx:
-    build:
-      context: .
-      dockerfile: ./compose/production/nginx/Dockerfile
-    image: mhai_django_nginx
-    depends_on:
-      - django
-    volumes:
-      - django_media:/usr/share/nginx/media:ro

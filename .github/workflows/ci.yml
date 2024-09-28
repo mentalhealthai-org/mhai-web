@@ -81,7 +81,7 @@ jobs:
         shell: bash -l {0}
 
     env:
-      SUGAR_GROUP: dev
+      SUGAR_ENV: dev
 
     steps:
       - name: Checkout Code Repository
