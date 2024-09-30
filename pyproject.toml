@@ -44,7 +44,7 @@ makim = "^1.16.0"
 compose-go = "^2.29.7"
 containers-sugar = "^1.14.0"
 ruff = "^0.6.8"
-watchdog = "^5.0.2"
+watchdog = "^5.0.3"
 werkzeug = {extras = ["watchdog"], version = "^3.0.4"}
 ipdb = "^0.13.13"
 psycopg2-binary = "^2.9.9"
