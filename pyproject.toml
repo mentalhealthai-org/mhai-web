@@ -43,7 +43,7 @@ django-anymail = "^12.0"
 makim = "^1.16.0"
 compose-go = "^2.29.7"
 containers-sugar = "^1.14.0"
-ruff = "^0.6.8"
+ruff = "^0.6.9"
 watchdog = "^5.0.2"
 werkzeug = {extras = ["watchdog"], version = "^3.0.4"}
 ipdb = "^0.13.13"
