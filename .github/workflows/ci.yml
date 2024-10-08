@@ -100,7 +100,6 @@ jobs:
           pre-commit install
           pre-commit run --all-files
 
-  # With no caching at all the entire ci process takes 3m to complete!
   test:
     runs-on: ubuntu-latest
 
@@ -124,9 +123,6 @@ jobs:
           activate-environment: mhai-web
           auto-update-conda: true
           conda-solver: libmamba
-
-      - name: test docker
-        run: docker run hello-world
 
       - name: Install dependencies
         run: |
