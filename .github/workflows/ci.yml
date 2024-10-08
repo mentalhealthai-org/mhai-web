@@ -125,6 +125,9 @@ jobs:
           auto-update-conda: true
           conda-solver: libmamba
 
+      - name: test docker
+        run: docker run hello-world
+
       - name: Install dependencies
         run: |
           poetry config virtualenvs.create false
