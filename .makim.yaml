@@ -1,21 +1,21 @@
-env-file: ./containers/.envs/.local/.django
+env-file: .envs/.django
 groups:
   django:
     tasks:
       runserver:
-        env-file: ./containers/.envs/.local/.env
+        env-file: .envs/.env
         dir: src/backend
         run: |
           python manage.py runserver
 
       migrate:
-        env-file: ./containers/.envs/.local/.env
+        env-file: .envs/.env
         dir: src/backend
         run: |
           python manage.py migrate
 
       collectstatic:
-        env-file: ./containers/.envs/.local/.env
+        env-file: .envs/.env
         dir: src/backend
         run: |
           python manage.py collectstatic

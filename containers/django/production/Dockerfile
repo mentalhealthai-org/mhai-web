@@ -34,8 +34,10 @@ ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+ENV USERNAME=mhai
+
+RUN addgroup --system ${USERNAME} \
+    && adduser --system --ingroup ${USERNAME} ${USERNAME}
 
 
 # Install required system dependencies
@@ -57,36 +59,36 @@ RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
 
-COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/production/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
 
-COPY --chown=django:django ./compose/production/django/start /start
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/production/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-COPY --chown=django:django ./compose/production/django/celery/worker/start /start-celeryworker
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
 
 
-COPY --chown=django:django ./compose/production/django/celery/beat/start /start-celerybeat
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/beat/start /start-celerybeat
 RUN sed -i 's/\r$//g' /start-celerybeat
 RUN chmod +x /start-celerybeat
 
 
-COPY --chown=django:django ./compose/production/django/celery/flower/start /start-flower
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 
 # copy application code to WORKDIR
-COPY --chown=django:django . ${APP_HOME}
+COPY --chown=${USERNAME}:${USERNAME} . ${APP_HOME}
 
 # make django owner of the WORKDIR directory as well.
-RUN chown -R django:django ${APP_HOME}
+RUN chown -R ${USERNAME}:${USERNAME} ${APP_HOME}
 
-USER django
+USER ${USERNAME}
 
 RUN DATABASE_URL="" \
   CELERY_BROKER_URL="" \

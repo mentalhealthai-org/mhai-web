@@ -7,11 +7,11 @@ env:
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ["main"]
     # paths-ignore: ['docs/**']
 
   push:
-    branches: ['master', 'main']
+    branches: ["master", "main"]
     # paths-ignore: ['docs/**']
 
 jobs:
@@ -109,13 +109,13 @@ jobs:
       #   run: docker compose -f docker-compose.docs.yml build docs
 
       # - name: Check DB Migrations
-      #   run: docker compose -f docker-compose.local.yml run --rm django python manage.py makemigrations --check
+      #   run: docker compose -f docker-compose.dev.yaml run --rm django python manage.py makemigrations --check
 
       # - name: Run DB Migrations
-      #   run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
+      #   run: docker compose -f docker-compose.dev.yaml run --rm django python manage.py migrate
 
       # - name: Run Django Tests
-      #   run: docker compose -f docker-compose.local.yml run django pytest
+      #   run: docker compose -f docker-compose.dev.yaml run django pytest
 
       # - name: Tear down the Stack
-      #   run: docker compose -f docker-compose.local.yml down
+      #   run: docker compose -f docker-compose.dev.yaml down

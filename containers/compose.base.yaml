@@ -7,7 +7,7 @@ services:
   mhai-web-base:
     build:
       context: ..
-      dockerfile: ./containers/compose/local/django/Dockerfile
+      dockerfile: ./containers/django/dev/Dockerfile
     image: mhai-web
     depends_on:
       - postgres
@@ -16,17 +16,19 @@ services:
     volumes:
       - .:/app:z
     env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
+      - ../.envs/.django
+      - ../.envs/.postgres
     ports:
-      - '${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}'
+      - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
     command: /start
 
   mhai-web:
-    extends: mhai-web-base
+    extends:
+      file: compose.base.yaml
+      service: mhai-web-base
     # NOTE: Any other service that is based on mhai-web-base should set:
     # build: !reset null
-    container_name: django
+    hostname: mhai-web
     depends_on:
       - postgres
       - redis
@@ -34,15 +36,16 @@ services:
     volumes:
       - .:/app:z
     env_file:
-      - ./.envs/.django
-      - ./.envs/.postgres
+      - ../.envs/.django
+      - ../.envs/.postgres
     ports:
-      - '${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}'
+      - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
     command: /start
 
   celeryworker:
-    extends: mhai-web-base
+    extends: mhai-web
     hostname: celeryworker
+    build: !reset null
     depends_on:
       - redis
       - postgres
@@ -52,7 +55,8 @@ services:
 
   celerybeat:
     hostname: celerybeat
-    extends: mhai-web-base
+    build: !reset null
+    extends: mhai-web
     depends_on:
       - redis
       - postgres
@@ -60,33 +64,33 @@ services:
     ports: []
     command: /start-celerybeat
 
+  flower:
+    extends: mhai-web
+    hostname: flower
+    build: !reset null
+    ports:
+      - "${CELERY_FLOWRER_PORT:-25555}:${CELERY_FLOWRER_PORT:-25555}"
+    command: /start-flower
+
   postgres:
     build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: mhai_django_production_postgres
-    container_name: postgres
+      context: ..
+      dockerfile: ./containers/postgres/Dockerfile
+    image: mhai-postgres
+    hostname: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_data_backups:/backups
     env_file:
-      - ./.envs/.postgres
+      - ../.envs/.postgres
     ports:
       - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
     command: postgres -p ${POSTGRES_PORT:-5432}
 
   redis:
     image: docker.io/redis:6
-    container_name: redis
+    hostname: redis
     ports:
-      - '${REDIS_PORT:-6379}:${REDIS_PORT:-6379}'
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
     volumes:
       - redis_data:/data
-
-  flower:
-    extends: mhai-web-base
-    image: flower
-    hostname: flower
-    ports:
-      - '${CELERY_FLOWRER_PORT:-25555}:${CELERY_FLOWRER_PORT:-25555}'
-    command: /start-flower

@@ -7,68 +7,31 @@ volumes:
   redis_data: {}
 
 services:
-  mhai-web:
-    extends:
-      file: compose.base.yml
-      service: mhai-web
-    volumes:
-      - .:/app:z
-
-  postgres:
-    extends:
-      file: compose.base.yml
-      service: postgres
-
-  mailpit:
-    image: docker.io/axllent/mailpit:latest
-    hostname: mailpit
-    ports:
-      - "${MAILPIT_PORT:-8025}:${MAILPIT_PORT:-8025}"
-
-  redis:
-    extends:
-      file: compose.base.yml
-      service: redis
-
-  celeryworker:
-    extends:
-      file: compose.base.yml
-      service: celeryworker
-    volumes:
-      - .:/app:z
-
-  celerybeat:
-    extends:
-      file: compose.base.yml
-      service: celerybeat
-    volumes:
-      - .:/app:z
-
-  flower:
-    extends:
-      file: compose.base.yml
-      service: flower
+  mhai-web-base:
+    build:
+      context: ..
+      dockerfile: ./containers/django/production/Dockerfile
 
   traefik:
     build:
-      context: .
-      dockerfile: ./compose/production/traefik/Dockerfile
-    image: mhai_django_traefik
+      context: ..
+      dockerfile: ./containers/traefik/Dockerfile
+    image: mhai-traefik
     depends_on:
       - django
     volumes:
       - traefik:/etc/traefik/acme
     ports:
-      - '0.0.0.0:80:80'
-      - '0.0.0.0:443:443'
-      - '0.0.0.0:5555:5555'
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+      - "0.0.0.0:5555:5555"
 
   nginx:
     build:
-      context: .
-      dockerfile: ./compose/production/nginx/Dockerfile
-    image: mhai_django_nginx
+      context: ..
+      dockerfile: ./containers/nginx/Dockerfile
+    image: mhai-nginx
     depends_on:
-      - django
+      - mhai_web
     volumes:
-      - django_media:/usr/share/nginx/media:ro
+      - mhai_web_media:/usr/share/nginx/media:ro
