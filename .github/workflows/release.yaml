@@ -23,6 +23,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Create environment variables files
+        run: |
+          export HOST_UID=$(id -u)
+          export HOST_GID=$(id -g)
+          pushd .envs
+          envsubst < .env.tpl > .env
+          envsubst < .django.tpl > .django
+          envsubst < .postgres.tpl > .postgres
+          popd
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniconda-version: "latest"
