@@ -13,7 +13,7 @@ groups:
     services:
       default: postgres,mailpit,redis,celeryworker,celerybeat,flower
       available:
-        - name: django
+        - name: mhai-web
         - name: postgres
         - name: mailpit
         - name: redis

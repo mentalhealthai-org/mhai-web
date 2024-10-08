@@ -112,9 +112,6 @@ jobs:
       run:
         shell: bash -l {0}
 
-    env:
-      SUGAR_ENV: dev
-
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
