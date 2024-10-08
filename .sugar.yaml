@@ -1,17 +1,19 @@
 version: 1.0
 compose-app: docker compose
-env-file: ./containers/.envs/.local/.env
+env-file: .envs/.env
 defaults:
-  group: dev  # ${{ env.SUGAR_GROUP }}
+  group: ${{ env.SUGAR_GROUP }}
   project-name: mhai
 groups:
   dev:
-    compose-path: containers/compose.local.yaml
-    env-file: ./containers/.envs/.local/.env
+    compose-path:
+      - containers/compose.base.yaml
+      - containers/compose.dev.yaml
+    env-file: .envs/.env
     services:
       default: postgres,mailpit,redis,celeryworker,celerybeat,flower
       available:
-        - name: django
+        - name: mhai-web
         - name: postgres
         - name: mailpit
         - name: redis

@@ -1,0 +1,96 @@
+volumes:
+  postgres_data: {}
+  postgres_data_backups: {}
+  redis_data: {}
+
+services:
+  mhai-web-base:
+    build:
+      context: ..
+      dockerfile: ./containers/django/dev/Dockerfile
+    image: mhai-web
+    depends_on:
+      - postgres
+      - redis
+      - mailpit
+    volumes:
+      - .:/app:z
+    env_file:
+      - ../.envs/.django
+      - ../.envs/.postgres
+    ports:
+      - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
+    command: /start
+
+  mhai-web:
+    extends:
+      file: compose.base.yaml
+      service: mhai-web-base
+    # NOTE: Any other service that is based on mhai-web-base should set:
+    # build: !reset null
+    hostname: mhai-web
+    depends_on:
+      - postgres
+      - redis
+      - mailpit
+    volumes:
+      - .:/app:z
+    env_file:
+      - ../.envs/.django
+      - ../.envs/.postgres
+    ports:
+      - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
+    command: /start
+
+  celeryworker:
+    extends: mhai-web
+    hostname: celeryworker
+    build: !reset null
+    depends_on:
+      - redis
+      - postgres
+      - mailpit
+    ports: []
+    command: /start-celeryworker
+
+  celerybeat:
+    hostname: celerybeat
+    build: !reset null
+    extends: mhai-web
+    depends_on:
+      - redis
+      - postgres
+      - mailpit
+    ports: []
+    command: /start-celerybeat
+
+  flower:
+    extends: mhai-web
+    hostname: flower
+    build: !reset null
+    ports:
+      - "${CELERY_FLOWRER_PORT:-25555}:${CELERY_FLOWRER_PORT:-25555}"
+    command: /start-flower
+
+  postgres:
+    build:
+      context: ..
+      dockerfile: ./containers/postgres/Dockerfile
+    image: mhai-postgres
+    hostname: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_backups:/backups
+    env_file:
+      - ../.envs/.postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    command: postgres -p ${POSTGRES_PORT:-5432}
+
+  redis:
+    image: docker.io/redis:6
+    hostname: redis
+    ports:
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
+    volumes:
+      - redis_data:/data

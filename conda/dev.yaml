@@ -4,9 +4,9 @@ channels:
   - conda-forge
 dependencies:
   - compilers
-  - nodejs
+  - nodejs >=18
   - yarn
   - poetry
   - pip
   - pip:
-    - compose-go
+      - compose-go

@@ -1,10 +1,11 @@
+
 # define an alias for the specific python version used in this file.
 FROM docker.io/python:3.12.6-slim-bookworm AS python
 
 # Python build stage
 FROM python AS python-build-stage
 
-ARG BUILD_ENVIRONMENT=local
+ARG BUILD_ENVIRONMENT=production
 
 # Install apt packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -24,7 +25,7 @@ RUN pip wheel --wheel-dir /usr/src/app/wheels  \
 # Python 'run' stage
 FROM python AS python-run-stage
 
-ARG BUILD_ENVIRONMENT=local
+ARG BUILD_ENVIRONMENT=production
 ARG APP_HOME=/app
 
 ENV PYTHONUNBUFFERED=1
@@ -33,16 +34,10 @@ ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
+ENV USERNAME=mhai
 
-# devcontainer dependencies and utils
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  sudo git bash-completion nano ssh
-
-# Create devcontainer user and add it to sudoers
-RUN groupadd --gid 1000 dev-user \
-  && useradd --uid 1000 --gid dev-user --shell /bin/bash --create-home dev-user \
-  && echo dev-user ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/dev-user \
-  && chmod 0440 /etc/sudoers.d/dev-user
+RUN addgroup --system ${USERNAME} \
+    && adduser --system --ingroup ${USERNAME} ${USERNAME}
 
 
 # Install required system dependencies
@@ -63,29 +58,41 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
-COPY ./containers/compose/production/django/entrypoint /entrypoint
+
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/production/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
-COPY ./containers/compose/local/django/start /start
+
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/production/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-
-
-COPY ./containers/compose/local/django/celery/worker/start /start-celeryworker
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
 
-COPY ./containers/compose/local/django/celery/beat/start /start-celerybeat
+
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/beat/start /start-celerybeat
 RUN sed -i 's/\r$//g' /start-celerybeat
 RUN chmod +x /start-celerybeat
 
-COPY ./containers/compose/local/django/celery/flower/start /start-flower
+
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/production/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
 
 # copy application code to WORKDIR
-COPY . ${APP_HOME}
+COPY --chown=${USERNAME}:${USERNAME} . ${APP_HOME}
+
+# make django owner of the WORKDIR directory as well.
+RUN chown -R ${USERNAME}:${USERNAME} ${APP_HOME}
+
+USER ${USERNAME}
+
+RUN DATABASE_URL="" \
+  CELERY_BROKER_URL="" \
+  DJANGO_SETTINGS_MODULE="config.settings.test" \
+  python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
