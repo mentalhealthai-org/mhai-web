@@ -9,4 +9,4 @@ dependencies:
   - poetry
   - pip
   - pip:
-    - compose-go
+      - compose-go

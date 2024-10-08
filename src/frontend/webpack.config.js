@@ -1,10 +1,10 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  entry: './frontend/src/index.js',  // Entry point for React
+  entry: "./frontend/src/index.js", // Entry point for React
   output: {
-    path: path.resolve(__dirname, './static/frontend'),
-    filename: 'main.js',
+    path: path.resolve(__dirname, "./static/frontend"),
+    filename: "main.js",
   },
   module: {
     rules: [
@@ -12,15 +12,15 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
       },
     ],
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ["*", ".js", ".jsx"],
   },
 };
