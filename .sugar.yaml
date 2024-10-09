@@ -11,8 +11,7 @@ groups:
       - containers/compose.dev.yaml
     env-file: .envs/.env
     services:
-      # ,mailpit,redis,celeryworker,celerybeat,flower
-      default: mhai-web,postgres
+      default: mhai-web,postgres,mailpit,redis,celeryworker,celerybeat,flower
       available:
         - name: mhai-web
         - name: postgres
