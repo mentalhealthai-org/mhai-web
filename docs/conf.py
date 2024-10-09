@@ -23,12 +23,12 @@ else:
     sys.path.insert(0, os.path.abspath("/app"))
 os.environ["DATABASE_URL"] = "sqlite:///readthedocs.db"
 os.environ["CELERY_BROKER_URL"] = os.getenv("REDIS_URL", "redis://redis:6379")
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
 django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = "Mhai-Django"
+project = "Mhai-Web"
 copyright = """2024, Ivan Ogasawara"""
 author = "Ivan Ogasawara"
 

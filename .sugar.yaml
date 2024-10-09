@@ -11,7 +11,7 @@ groups:
       - containers/compose.dev.yaml
     env-file: .envs/.env
     services:
-      default: postgres,mailpit,redis,celeryworker,celerybeat,flower
+      default: mhai-web,postgres,mailpit,redis,celeryworker,celerybeat,flower
       available:
         - name: mhai-web
         - name: postgres
@@ -20,3 +20,20 @@ groups:
         - name: celeryworker
         - name: celerybeat
         - name: flower
+
+  prod:
+    compose-path:
+      - containers/compose.base.yaml
+      - containers/compose.prod.yaml
+    env-file: .envs/.env
+    services:
+      default: mhai-web,postgres,redis,celeryworker,celerybeat,flower,traefik,nginx
+      available:
+        - name: mhai-web
+        - name: postgres
+        - name: redis
+        - name: celeryworker
+        - name: celerybeat
+        - name: flower
+        - name: traefik
+        - name: nginx

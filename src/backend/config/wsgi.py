@@ -1,6 +1,6 @@
 # ruff: noqa
 """
-WSGI config for Mhai-Django project.
+WSGI config for Mhai-Web project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
