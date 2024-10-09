@@ -1,3 +1,0 @@
-makim
-compose-go
-containers-sugar

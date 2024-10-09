@@ -1,6 +1,6 @@
 # ruff: noqa
 """
-ASGI config for Mhai-Django project.
+ASGI config for Mhai-Web project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(BASE_DIR / "mhai_web"))
 
 # If DJANGO_SETTINGS_MODULE is unset, default to the local settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
 
 # This application object is used by any ASGI server configured to use this file.
 django_application = get_asgi_application()

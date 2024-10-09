@@ -1,16 +1,13 @@
 volumes:
-  postgres_data: {}
-  postgres_data_backups: {}
   traefik: {}
-  django_media: {}
-
-  redis_data: {}
+  mhai_web_media: {}
 
 services:
   mhai-web-base:
     build:
       context: ..
-      dockerfile: ./containers/django/production/Dockerfile
+      # note: we need to move that to the prod dockerfile
+      dockerfile: ./containers/django/dev/Dockerfile
 
   traefik:
     build:
@@ -18,7 +15,7 @@ services:
       dockerfile: ./containers/traefik/Dockerfile
     image: mhai-traefik
     depends_on:
-      - django
+      - mhai-web
     volumes:
       - traefik:/etc/traefik/acme
     ports:
@@ -32,6 +29,6 @@ services:
       dockerfile: ./containers/nginx/Dockerfile
     image: mhai-nginx
     depends_on:
-      - mhai_web
+      - mhai-web
     volumes:
       - mhai_web_media:/usr/share/nginx/media:ro

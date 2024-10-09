@@ -20,3 +20,20 @@ groups:
         - name: celeryworker
         - name: celerybeat
         - name: flower
+
+  prod:
+    compose-path:
+      - containers/compose.base.yaml
+      - containers/compose.prod.yaml
+    env-file: .envs/.env
+    services:
+      default: postgres,redis,celeryworker,celerybeat,flower,traefik,nginx
+      available:
+        - name: mhai-web
+        - name: postgres
+        - name: redis
+        - name: celeryworker
+        - name: celerybeat
+        - name: flower
+        - name: traefik
+        - name: nginx
