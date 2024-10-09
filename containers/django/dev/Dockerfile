@@ -73,17 +73,18 @@ ENV PATH ${CONDA_PREFIX}/bin:$PATH
 
 # install dependencies
 COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mhai-web/
-# COPY --chown=${USERNAME}:${USERNAME} containers/mhai-web/scripts/install-deps.sh /tmp/install-deps.sh
+COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/install-deps.sh
+COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
 
 ARG ENV=dev
 
-RUN poetry install
+RUN conda init bash \
+  && source ~/.bashrc \
+  && source /opt/activate.sh \
+  && conda env list \
+  && /opt/install-deps.sh
 
-# COPY --chown=mhai-web:mhai-web containers/mhai-web/scripts/entrypoint.sh /opt/entrypoint.sh
 COPY --chown=mhai-web:mhai-web src/ /opt/services/mhai-web/src
-
-# copy start script
-# COPY --chown=mhai-web:mhai-web containers/mhai-web/scripts/start.sh /opt/start.sh
 
 ARG STATIC_ROOT
 ARG MEDIA_ROOT
@@ -92,14 +93,14 @@ ENV STATIC_ROOT ${STATIC_ROOT}
 ENV MEDIA_ROOT ${MEDIA_ROOT}
 
 
-WORKDIR /opt/services/mhai-web/src
+WORKDIR /opt/services/mhai-web/src/backend
 
-ENV PYTHONPATH='/opt/services/mhai-web/src'
+ENV PYTHONPATH='/opt/services/mhai-web/src/backend'
 
 RUN sudo chown ${USERNAME}:${USERNAME} /opt/
-COPY --chown=mhai-web:mhai-web ./containers/django/production/entrypoint /opt/entrypoint
-RUN sed -i 's/\r$//g' /opt/entrypoint
-RUN chmod +x /opt/entrypoint
+COPY --chown=mhai-web:mhai-web ./containers/django/scripts/entrypoint.sh /opt/entrypoint.sh
+RUN sed -i 's/\r$//g' /opt/entrypoint.sh
+RUN chmod +x /opt/entrypoint.sh
 
 COPY --chown=mhai-web:mhai-web ./containers/django/dev/start /opt/start
 RUN sed -i 's/\r$//g' /opt/start

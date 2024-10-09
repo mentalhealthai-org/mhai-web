@@ -6,7 +6,7 @@ volumes:
 services:
   mhai-web:
     volumes:
-      - .:/app:z
+      - ..:/opt/services/mhai-web:z
 
   mailpit:
     image: docker.io/axllent/mailpit:latest
@@ -16,12 +16,12 @@ services:
 
   celeryworker:
     volumes:
-      - .:/app:z
+      - ..:/opt/services/mhai-web:z
 
   celerybeat:
     volumes:
-      - .:/app:z
+      - ..:/opt/services/mhai-web:z
 
   flower:
     volumes:
-      - .:/app:z
+      - ..:/opt/services/mhai-web:z

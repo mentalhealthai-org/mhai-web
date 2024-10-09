@@ -17,9 +17,7 @@ services:
     env_file:
       - ../.envs/.django
       - ../.envs/.postgres
-    ports:
-      - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
-    command: /start
+    command: /opt/start
 
   mhai-web:
     extends:
@@ -38,35 +36,35 @@ services:
       - ../.envs/.postgres
     ports:
       - "${DJANGO_PORT:-8000}:${DJANGO_PORT:-8000}"
-    command: /start
+    command: /opt/start
 
   celeryworker:
-    extends: mhai-web
+    extends: mhai-web-base
     hostname: celeryworker
     build: !reset null
     depends_on:
       - redis
       - postgres
     ports: []
-    command: /start-celeryworker
+    command: /opt/start-celeryworker
 
   celerybeat:
     hostname: celerybeat
     build: !reset null
-    extends: mhai-web
+    extends: mhai-web-base
     depends_on:
       - redis
       - postgres
     ports: []
-    command: /start-celerybeat
+    command: /opt/start-celerybeat
 
   flower:
-    extends: mhai-web
+    extends: mhai-web-base
     hostname: flower
     build: !reset null
     ports:
       - "${CELERY_FLOWRER_PORT:-25555}:${CELERY_FLOWRER_PORT:-25555}"
-    command: /start-flower
+    command: /opt/start-flower
 
   postgres:
     build:

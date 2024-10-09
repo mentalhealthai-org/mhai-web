@@ -1,14 +1,9 @@
 #!/bin/bash
 
-set -o errexit
-set -o pipefail
-set -o nounset
-
-
+set -e
 
 # N.B. If only .env files supported variable expansion...
 export CELERY_BROKER_URL="${REDIS_URL}"
-
 
 if [ -z "${POSTGRES_USER}" ]; then
     base_postgres_image_default_user='postgres'
@@ -16,18 +11,23 @@ if [ -z "${POSTGRES_USER}" ]; then
 fi
 export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
+source /opt/activate.sh
+
+# created by docker build
+/opt/install-deps.sh
+
 python << END
 import sys
 import time
 
-import psycopg
+import psycopg2
 
 suggest_unrecoverable_after = 30
 start = time.time()
 
 while True:
     try:
-        psycopg.connect(
+        psycopg2.connect(
             dbname="${POSTGRES_DB}",
             user="${POSTGRES_USER}",
             password="${POSTGRES_PASSWORD}",
@@ -35,11 +35,15 @@ while True:
             port="${POSTGRES_PORT}",
         )
         break
-    except psycopg.OperationalError as error:
+    except psycopg2.OperationalError as error:
         sys.stderr.write("Waiting for PostgreSQL to become available...\n")
 
         if time.time() - start > suggest_unrecoverable_after:
-            sys.stderr.write("  This is taking longer than expected. The following exception may be indicative of an unrecoverable error: '{}'\n".format(error))
+            sys.stderr.write(
+                "  This is taking longer than expected. The following "
+                "exception may be indicative of an unrecoverable error: "
+                "'{}'\n".format(error)
+            )
 
     time.sleep(1)
 END
