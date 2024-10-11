@@ -12,25 +12,19 @@ services:
     depends_on:
       - postgres
       - redis
-    volumes:
-      - .:/app:z
     env_file:
       - ../.envs/.django
       - ../.envs/.postgres
     command: /opt/start
 
   mhai-web:
-    extends:
-      file: compose.base.yaml
-      service: mhai-web-base
+    extends: mhai-web-base
     # NOTE: Any other service that is based on mhai-web-base should set:
     # build: !reset null
     hostname: mhai-web
     depends_on:
       - postgres
       - redis
-    volumes:
-      - .:/app:z
     env_file:
       - ../.envs/.django
       - ../.envs/.postgres
