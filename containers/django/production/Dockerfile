@@ -62,7 +62,7 @@ COPY --chown=${USERNAME}:${USERNAME} ./conda/ /tmp/conda
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 
-RUN mamba env create -n $ENV_NAME --file /tmp/conda/dev.yaml \
+RUN mamba env create -n $ENV_NAME --file /tmp/conda/production.yaml \
   && conda clean --all \
   && find /opt/conda/ -type f,l -name '*.pyc' -delete \
   && find /opt/conda/ -type f,l -name '*.js.map' -delete \
@@ -76,7 +76,7 @@ COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mh
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/install-deps.sh
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
 
-ARG ENV=dev
+ARG ENV=production
 
 RUN conda init bash \
   && source ~/.bashrc \
@@ -102,13 +102,13 @@ COPY --chown=mhai-web:mhai-web ./containers/django/scripts/entrypoint.sh /opt/en
 RUN sed -i 's/\r$//g' /opt/entrypoint.sh
 RUN chmod +x /opt/entrypoint.sh
 
-COPY --chown=mhai-web:mhai-web ./containers/django/dev/start /opt/start
+COPY --chown=mhai-web:mhai-web ./containers/django/production/start /opt/start
 RUN sed -i 's/\r$//g' /opt/start
 RUN chmod +x /opt/start
 
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/worker/start /opt/start-celeryworker
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/beat/start /opt/start-celerybeat
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/flower/start /opt/start-flower
+COPY --chown=mhai-web:mhai-web ./containers/celery/production/worker/start /opt/start-celeryworker
+COPY --chown=mhai-web:mhai-web ./containers/celery/production/beat/start /opt/start-celerybeat
+COPY --chown=mhai-web:mhai-web ./containers/celery/production/flower/start /opt/start-flower
 
 RUN sed -i 's/\r$//g' /opt/start-celeryworker \
   && sed -i 's/\r$//g' /opt/start-celerybeat \
@@ -121,4 +121,3 @@ RUN sed -i 's/\r$//g' /opt/start-celeryworker \
 COPY --chown=mhai-web:mhai-web . ${APP_HOME}
 
 ENTRYPOINT ["tini", "--", "/opt/entrypoint.sh"]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

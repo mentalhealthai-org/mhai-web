@@ -6,6 +6,7 @@ groups:
         env-file: .envs/.env
         dir: src/backend
         run: |
+          python manage.py compress
           python manage.py runserver
 
       migrate:

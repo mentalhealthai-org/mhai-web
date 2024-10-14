@@ -7,7 +7,7 @@ services:
     build:
       context: ..
       # note: we need to move that to the prod dockerfile
-      dockerfile: ./containers/django/prod/Dockerfile
+      dockerfile: ./containers/django/production/Dockerfile
 
   mhai-web:
     extends: mhai-web-base

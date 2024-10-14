@@ -1,0 +1,12 @@
+name: mhai-web
+channels:
+  - nodefaults
+  - conda-forge
+dependencies:
+  - compilers
+  - nodejs >=18
+  - yarn
+  - poetry
+  - pip
+  - pip:
+      - compose-go
