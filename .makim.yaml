@@ -1,12 +1,22 @@
 env-file: .envs/.django
 groups:
+  reactjs:
+    tasks:
+      build:
+        dir: src/frontend
+        run: npm run build
+
   django:
     tasks:
       runserver:
         env-file: .envs/.env
+        hooks:
+          pre-run:
+            - task: reactjs.build
         dir: src/backend
         run: |
-          python manage.py compress
+          if "${{ env.SUGAR_GROUP }}" == "prod":
+              python manage.py compress
           python manage.py runserver
 
       migrate:
@@ -18,6 +28,9 @@ groups:
       collectstatic:
         env-file: .envs/.env
         dir: src/backend
+        hooks:
+          pre-run:
+            - task: reactjs.build
         run: |
           python manage.py collectstatic
 
