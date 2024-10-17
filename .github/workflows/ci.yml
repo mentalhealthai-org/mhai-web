@@ -141,10 +141,10 @@ jobs:
           poetry install
 
       - name: Build the Stack
-        run: sugar build
+        run: sugar compose build
 
       - name: Containers configuration
-        run: sugar config
+        run: sugar compose config
 
       # - name: Migrate containers
       #  run: makim django.migrate
@@ -198,5 +198,5 @@ jobs:
 
       - name: Stop services
         run: |
-          sugar stop
-          sugar down --options --volumes
+          sugar compose stop
+          sugar compose down --options --volumes
