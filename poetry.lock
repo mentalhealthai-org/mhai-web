@@ -1850,18 +1850,19 @@ rapidfuzz = ">=3.9.0,<4.0.0"
 
 [[package]]
 name = "makim"
-version = "1.18.1"
+version = "1.19.0"
 description = "Simplify the usage of containers"
 optional = false
 python-versions = "<4,>=3.9"
 files = [
-    {file = "makim-1.18.1-py3-none-any.whl", hash = "sha256:6a06f0deadbae390a21b58a329d8b2be6236a371d80bb3e12c1373e65894e34a"},
-    {file = "makim-1.18.1.tar.gz", hash = "sha256:b269e68921e919edf53a189379f5aaa6787c2346d3081bf823a6b4ded193bfab"},
+    {file = "makim-1.19.0-py3-none-any.whl", hash = "sha256:51c1b98d5dada4347fe9f5ffebe39a9984e9589ee2966542ae7e2b65897d9ee4"},
+    {file = "makim-1.19.0.tar.gz", hash = "sha256:c22c701bb1544975052f0d6e4a1f86c7ede349fea06c91b824f22f8074f10aae"},
 ]
 
 [package.dependencies]
 fuzzywuzzy = ">=0.18.0"
 jinja2 = ">=2.0"
+jsonschema = ">=4"
 python-dotenv = ">=0.21.1"
 python-levenshtein = ">=0.23.0"
 pyyaml = ">=5.0"
@@ -4114,4 +4115,4 @@ test = ["coverage (>=5.3.1)", "prompt-toolkit (>=3.0.29)", "pygments (>=2.2)", "
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.*"
-content-hash = "246d0cc0e574f79ead9f714ade969dfa1803b888f8d1ae4a22b8b7e064a7439c"
+content-hash = "b9b28b70619a6544f17717e8844db7fb8ead930e4ab49bfb5eed6258b7cf611a"
