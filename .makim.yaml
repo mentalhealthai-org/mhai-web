@@ -1,9 +1,13 @@
 env-file: .envs/.django
 groups:
   reactjs:
+    dir: src/frontend
     tasks:
+      install:
+        help: Install the dependencies for the frontend
+        run: npm install
       build:
-        dir: src/frontend
+        help: Build the assets for reactjs
         run: npm run build
 
   django:
@@ -12,6 +16,7 @@ groups:
         env-file: .envs/.env
         hooks:
           pre-run:
+            - task: reactjs.install
             - task: reactjs.build
         dir: src/backend
         run: |
@@ -30,6 +35,7 @@ groups:
         dir: src/backend
         hooks:
           pre-run:
+            - task: reactjs.install
             - task: reactjs.build
         run: |
           python manage.py collectstatic -v 3 --noinput  # --clear
