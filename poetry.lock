@@ -571,19 +571,20 @@ files = [
 
 [[package]]
 name = "containers-sugar"
-version = "1.15.0"
+version = "1.16.1"
 description = "Simplify the usage of containers"
 optional = false
 python-versions = "<4,>=3.9"
 files = [
-    {file = "containers_sugar-1.15.0-py3-none-any.whl", hash = "sha256:5435a37a1116e66fc8385230c7ed299a42a5c00fdfe3979b9b7acda4867d8113"},
-    {file = "containers_sugar-1.15.0.tar.gz", hash = "sha256:b666210f00567f1d9d24f4c2830b1f6b8f59ef673d5d2aab5453f719c271ddfb"},
+    {file = "containers_sugar-1.16.1-py3-none-any.whl", hash = "sha256:5e218c47306c93fe55f46d7cb67b107643ba2ae60be32993351c4c4f8067b316"},
+    {file = "containers_sugar-1.16.1.tar.gz", hash = "sha256:73bb1788d58d4e528d935b2ae77afd567b7c193910024d1e58877cc92ccffc35"},
 ]
 
 [package.dependencies]
 colorama = ">=0.4.6"
 compose-go = ">=1.27.0"
 Jinja2 = ">=2"
+jsonschema = ">=4"
 python-dotenv = ">=0.21.1"
 pyyaml = ">=6"
 sh = ">=2.0.0"
@@ -3183,13 +3184,13 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "2.16.0"
+version = "2.17.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "sentry_sdk-2.16.0-py2.py3-none-any.whl", hash = "sha256:49139c31ebcd398f4f6396b18910610a0c1602f6e67083240c33019d1f6aa30c"},
-    {file = "sentry_sdk-2.16.0.tar.gz", hash = "sha256:90f733b32e15dfc1999e6b7aca67a38688a567329de4d6e184154a73f96c6892"},
+    {file = "sentry_sdk-2.17.0-py2.py3-none-any.whl", hash = "sha256:625955884b862cc58748920f9e21efdfb8e0d4f98cca4ab0d3918576d5b606ad"},
+    {file = "sentry_sdk-2.17.0.tar.gz", hash = "sha256:dd0a05352b78ffeacced73a94e86f38b32e2eae15fff5f30ca5abb568a72eacf"},
 ]
 
 [package.dependencies]
@@ -4115,4 +4116,4 @@ test = ["coverage (>=5.3.1)", "prompt-toolkit (>=3.0.29)", "pygments (>=2.2)", "
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.*"
-content-hash = "b9b28b70619a6544f17717e8844db7fb8ead930e4ab49bfb5eed6258b7cf611a"
+content-hash = "f80fb81cdb67a973ed96ddd048068b6c3d8e78b3474e9e81cc84d71f75eb8944"
