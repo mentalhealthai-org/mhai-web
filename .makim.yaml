@@ -32,7 +32,7 @@ groups:
           pre-run:
             - task: reactjs.build
         run: |
-          python manage.py collectstatic
+          python manage.py collectstatic -v 3 --noinput  # --clear
 
   release:
     vars:
