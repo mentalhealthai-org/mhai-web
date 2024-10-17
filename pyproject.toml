@@ -42,7 +42,7 @@ django-anymail = "^12.0"
 [tool.poetry.group.dev.dependencies]
 makim = "1.18.1"
 compose-go = "^2.29.7"
-containers-sugar = "1.14.1"
+containers-sugar = "1.15.0"
 ruff = "^0.6.8"
 watchdog = "^5.0.2"
 werkzeug = {extras = ["watchdog"], version = "^3.0.4"}

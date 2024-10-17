@@ -1,12 +1,30 @@
 version: 1.0
-compose-app: docker compose
+backend: compose
 env-file: .envs/.env
 defaults:
   group: ${{ env.SUGAR_GROUP }}
   project-name: mhai
+
+hooks:
+  pre-run:
+    - name: collectstatic
+      targets:
+        compose:
+          - build
+          - start
+          - restart
+          - up
+        compose-ext:
+          - build
+          - start
+          - restart
+          - up
+      run: |
+        makim django.collectstatic
+
 groups:
   dev:
-    compose-path:
+    config-path:
       - containers/compose.base.yaml
       - containers/compose.dev.yaml
     env-file: .envs/.env
@@ -22,7 +40,7 @@ groups:
         - name: flower
 
   prod:
-    compose-path:
+    config-path:
       - containers/compose.base.yaml
       - containers/compose.prod.yaml
     env-file: .envs/.env
