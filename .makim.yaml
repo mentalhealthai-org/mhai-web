@@ -1,14 +1,18 @@
 env-file: .envs/.django
 groups:
   reactjs:
-    dir: src/frontend
     tasks:
       install:
         help: Install the dependencies for the frontend
+        dir: src/frontend
         run: npm install
       build:
         help: Build the assets for reactjs
+        dir: src/frontend
         run: npm run build
+      autobuild:
+        help: Build the assets for reactjs
+        run: python scripts/autobuild_frontend.py
 
   django:
     tasks:

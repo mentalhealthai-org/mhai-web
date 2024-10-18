@@ -1,7 +1,10 @@
 from django.urls import path
+from django.views.generic import TemplateView
+
 
 from .views import index
 
 urlpatterns = [
-    path("", index, name="home"),  # Serve the React app
+    path("", TemplateView.as_view(template_name="generic.html"), name="home"),
+    path("about/", TemplateView.as_view(template_name="generic.html"), name="about"),
 ]
