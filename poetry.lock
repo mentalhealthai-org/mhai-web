@@ -566,6 +566,7 @@ optional = false
 python-versions = "<4.0.0,>=3.7.0"
 files = [
     {file = "compose_go-2.29.7-cp312-cp312-manylinux_2_35_x86_64.whl", hash = "sha256:57d530bd9cb473524e968ed655eca531c137c2d41b7bb2e133d1a093b380b025"},
+    {file = "compose_go-2.29.7-cp313-cp313-manylinux_2_35_x86_64.whl", hash = "sha256:5f12a550b36a73f9ded81e8b23a4779e99ebc984028ea929541316dddd48c43d"},
     {file = "compose_go-2.29.7.tar.gz", hash = "sha256:6abf27e0869e7386f76cb79094164aa7010b606f26d8e09695aabeb472b289dc"},
 ]
 

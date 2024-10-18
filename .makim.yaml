@@ -44,6 +44,24 @@ groups:
         run: |
           python manage.py collectstatic -v 3 --noinput  # --clear
 
+  nginx:
+    tasks:
+      proxydomain:
+        help: Create SSL proxy configuration with CertBot for a domain
+        env-file: .envs/.env
+        run: |
+          python ./containers/nginx/scripts/generate_proxy_ui.py
+      generate-certificate:
+        help: Generate certificate
+        env-file: .envs/.env
+        run: |
+          bash ./containers/nginx/scripts/generate-certificates.sh
+      setup:
+        hooks:
+          pre-run:
+            - task: nginx.proxydomain
+            - task: nginx.generate-certificate
+
   release:
     vars:
       app: |

@@ -44,7 +44,7 @@ groups:
       - containers/compose.prod.yaml
     env-file: .envs/.env
     services:
-      default: mhai-web,postgres,redis,celeryworker,celerybeat,flower,traefik,nginx
+      default: mhai-web,postgres,redis,celeryworker,celerybeat,flower,nginx
       available:
         - name: mhai-web
         - name: postgres
@@ -52,5 +52,5 @@ groups:
         - name: celeryworker
         - name: celerybeat
         - name: flower
-        - name: traefik
+        # - name: traefik
         - name: nginx
