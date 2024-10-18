@@ -22,6 +22,15 @@
             integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer" />
+      <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+            integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"
+              integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer"></script>
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
       {% compress css %}
@@ -114,6 +123,55 @@
         {% endblock main %}
       </div>
     {% endblock body %}
+    {% block footer %}
+      <footer class="bg-dark text-light pt-5 pb-4">
+        <div class="container text-center text-md-left">
+          <div class="row text-center text-md-left">
+            <!-- Company Information -->
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Mhai</h5>
+              <p>
+                At Mhai, we believe that mental health support should be accessible, immediate, and personalized.
+              </p>
+            </div>
+            <!-- Useful Links -->
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Quick Links</h5>
+              <p>
+                <a href="/about/" class="text-light" style="text-decoration: none;">About Us</a>
+              </p>
+            </div>
+            <!-- Contact Information -->
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Contact</h5>
+              <p>
+                <i class="fas fa-envelope mr-3"></i>
+                <a href="mailto:connect@mymhai.com">connect@mymhai.com</a>
+              </p>
+            </div>
+            <!-- Social Media Links -->
+            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Follow Us</h5>
+              <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-brands fa-facebook-f"></i></a>
+              <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+          <!-- Horizontal Divider -->
+          <hr class="mb-4" />
+          <!-- Copyright Information -->
+          <div class="row align-items-center">
+            <div class="col-md-7 col-lg-8">
+              <p class="text-center text-md-left">© 2024 Mhai. All rights reserved.</p>
+            </div>
+            <div class="col-md-5 col-lg-4">
+              <p class="text-center text-md-right">Made with ❤️ by Mhai</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    {% endblock footer %}
     <!-- /container -->
     {% block modal %}
     {% endblock modal %}
