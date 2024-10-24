@@ -8,7 +8,7 @@ env:
   CELERY_BROKER_URL: redis://localhost:6379/0
   CELERY_FLOWER_PORT: 2555
   DATABASE_URL: postgres://debug:debug@localhost:25432/mhai_web
-  DJANGO_SETTINGS_MODULE: config.settings.prod
+  DJANGO_SETTINGS_MODULE: config.settings.dev
   DJANGO_SECRET_KEY: 1NeLi0lQveM9nZ9bkfoWwRKReojo1FKvtBI6nXSUUvGAMYP4kvXEGLH8snpM52sJ
   DJANGO_ADMIN_URL: Qpqnghk9LNJCAhEnfwb8WZmU030MmIiF/
   DJANGO_ALLOWED_HOSTS: .mhai.com
