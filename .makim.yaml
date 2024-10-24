@@ -73,6 +73,7 @@ groups:
         run: |
           python manage.py migrate
 
+
       collectstatic:
         env-file: .envs/.env
         dir: src/backend

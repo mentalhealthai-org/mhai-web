@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords  # Import for tracking history
 
 from .managers import UserManager
 
@@ -24,6 +25,9 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    # Add HistoricalRecords to track changes to this model
+    history = HistoricalRecords()
 
     objects: ClassVar[UserManager] = UserManager()
 
