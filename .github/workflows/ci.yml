@@ -30,11 +30,9 @@ env:
 on:
   pull_request:
     branches: ["main"]
-    # paths-ignore: ['docs/**']
 
   push:
     branches: ["master", "main"]
-    # paths-ignore: ['docs/**']
 
 jobs:
   check-branch:
@@ -146,20 +144,23 @@ jobs:
       - name: Containers configuration
         run: sugar compose config
 
-      # - name: Migrate containers
-      #  run: makim django.migrate
+      - name: Start Postgres Service
+        run: sugar compose-ext restart --services postgres --options "-d"
 
-      # - name: Check migration files
-      #   if: ${{ success() || failure() }}
-      #   run: makim --verbose django.makemigrations --check
+      - name: Migrate containers
+        run: makim django.migrate
 
-      # - name: Run tests FrontEnd
-      #   run: makim --verbose tests.coverage-gen-data --append
+      - name: Check migration files
+        if: ${{ success() || failure() }}
+        run: makim --verbose django.makemigrations --check
+
+      - name: Run tests FrontEnd
+        run: makim --verbose tests.coverage-gen-data --append
 
       - name: Generate logs
         if: ${{ failure() }}
         run: |
-          sugar logs --all > /tmp/containers-services.log
+          sugar compose logs --all > /tmp/containers-services.log
 
       # - name: Set coverage report
       #   id: parse-coverage-report
@@ -252,14 +253,10 @@ jobs:
       - name: Migrate containers
         run: makim django.migrate
 
-      - name: Check migration files
-        if: ${{ success() || failure() }}
-        run: makim --verbose django.makemigrations --check
-
       - name: Generate logs
         if: ${{ failure() }}
         run: |
-          sugar logs --all > /tmp/containers-services.log
+          sugar compose logs --all > /tmp/containers-services.log
 
       # - name: Set coverage report
       #   id: parse-coverage-report
