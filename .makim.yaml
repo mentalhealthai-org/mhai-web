@@ -88,7 +88,7 @@ groups:
     tasks:
       coverage-gen-data:
         help: Generate coverage data with pytest
-        env-file: .env
+        env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
         args:
