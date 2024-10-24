@@ -213,7 +213,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: ci-containers-${{ github.ref }}
+      group: ci-containers-${{ matrix.django_settings }}-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:
