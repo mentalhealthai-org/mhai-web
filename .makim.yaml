@@ -112,8 +112,7 @@ groups:
         run: |
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
-            --ds=${{env.DJANGO_SETTINGS_MODULE or args.settings}} \
-            ${{ args.params }} ${{ args.app }}"
+            --ds=${{env.DJANGO_SETTINGS_MODULE or args.settings}} ${{ args.params }} ${{ args.app }}
 
       coverage-report:
         help: Generate coverage report

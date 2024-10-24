@@ -566,7 +566,6 @@ optional = false
 python-versions = "<4.0.0,>=3.7.0"
 files = [
     {file = "compose_go-2.29.7-cp312-cp312-manylinux_2_35_x86_64.whl", hash = "sha256:57d530bd9cb473524e968ed655eca531c137c2d41b7bb2e133d1a093b380b025"},
-    {file = "compose_go-2.29.7-cp313-cp313-manylinux_2_35_x86_64.whl", hash = "sha256:5f12a550b36a73f9ded81e8b23a4779e99ebc984028ea929541316dddd48c43d"},
     {file = "compose_go-2.29.7.tar.gz", hash = "sha256:6abf27e0869e7386f76cb79094164aa7010b606f26d8e09695aabeb472b289dc"},
 ]
 
@@ -2455,6 +2454,24 @@ pluggy = ">=1.5,<2"
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "pytest-cov"
+version = "5.0.0"
+description = "Pytest plugin for measuring coverage."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pytest-cov-5.0.0.tar.gz", hash = "sha256:5837b58e9f6ebd335b0f8060eecce69b662415b16dc503883a02f45dfeb14857"},
+    {file = "pytest_cov-5.0.0-py3-none-any.whl", hash = "sha256:4f0764a1219df53214206bf1feea4633c3b558a2925c8b59f144f682861ce652"},
+]
+
+[package.dependencies]
+coverage = {version = ">=5.2.1", extras = ["toml"]}
+pytest = ">=4.6"
+
+[package.extras]
+testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
+
+[[package]]
 name = "pytest-django"
 version = "4.9.0"
 description = "A Django plugin for pytest."
@@ -4117,4 +4134,4 @@ test = ["coverage (>=5.3.1)", "prompt-toolkit (>=3.0.29)", "pygments (>=2.2)", "
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.*"
-content-hash = "f80fb81cdb67a973ed96ddd048068b6c3d8e78b3474e9e81cc84d71f75eb8944"
+content-hash = "68f363a1a5a02bd3e235a5828d3073d9fafefa7a353ee63d02582f635aef66ef"
