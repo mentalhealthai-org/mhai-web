@@ -101,6 +101,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    permissions:
+      pull-requests: write
+      contents: write
+      actions: read
+
     concurrency:
       group: ci-tests-${{ github.ref }}
       cancel-in-progress: true
