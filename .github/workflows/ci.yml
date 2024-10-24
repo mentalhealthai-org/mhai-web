@@ -205,7 +205,7 @@ jobs:
     runs-on: ubuntu-latest
 
     concurrency:
-      group: ci-tests-${{ github.ref }}
+      group: ci-containers-${{ github.ref }}
       cancel-in-progress: true
 
     defaults:
