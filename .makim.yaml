@@ -119,9 +119,8 @@ groups:
         env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
-        dir: src/backend
         run: |
-          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py
+          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py,src/frontend/*
 
       ci:
         help: Run the same the same tests executed on CI
