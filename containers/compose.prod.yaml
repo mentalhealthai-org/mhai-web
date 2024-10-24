@@ -6,9 +6,10 @@ volumes:
 
 services:
   mhai-web-base:
+    image: ghcr.io/mentalhealthai-org/mhai-web:prod
     build:
       context: ..
-      dockerfile: ./containers/django/production/Dockerfile
+      dockerfile: ./containers/django/prod/Dockerfile
 
   mhai-web:
     extends: mhai-web-base

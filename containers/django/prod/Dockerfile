@@ -1,6 +1,6 @@
 # ref: https://github.com/mamba-org/micromamba-docker/blob/main/Dockerfile
 
-FROM ghcr.io/mentalhealthai-org/mhai-web-deps:dev
+FROM ghcr.io/mentalhealthai-org/mhai-web-deps:prod
 
 LABEL maintainer="Ivan Ogasawara <ivan.ogasawara@gmail.com>"
 LABEL org.opencontainers.image.title="Mhai"
@@ -33,7 +33,7 @@ COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/deps/
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/deps/install-deps.sh
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
 
-ARG ENV=dev
+ARG ENV=prod
 
 RUN conda init bash \
   && source ~/.bashrc \
@@ -59,13 +59,13 @@ COPY --chown=mhai-web:mhai-web ./containers/django/scripts/entrypoint.sh /opt/en
 RUN sed -i 's/\r$//g' /opt/entrypoint.sh
 RUN chmod +x /opt/entrypoint.sh
 
-COPY --chown=mhai-web:mhai-web ./containers/django/dev/start /opt/start
+COPY --chown=mhai-web:mhai-web ./containers/django/prod/start /opt/start
 RUN sed -i 's/\r$//g' /opt/start
 RUN chmod +x /opt/start
 
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/worker/start /opt/start-celeryworker
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/beat/start /opt/start-celerybeat
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/flower/start /opt/start-flower
+COPY --chown=mhai-web:mhai-web ./containers/celery/prod/worker/start /opt/start-celeryworker
+COPY --chown=mhai-web:mhai-web ./containers/celery/prod/beat/start /opt/start-celerybeat
+COPY --chown=mhai-web:mhai-web ./containers/celery/prod/flower/start /opt/start-flower
 
 RUN sed -i 's/\r$//g' /opt/start-celeryworker \
   && sed -i 's/\r$//g' /opt/start-celerybeat \
@@ -78,4 +78,3 @@ RUN sed -i 's/\r$//g' /opt/start-celeryworker \
 COPY --chown=mhai-web:mhai-web . ${APP_HOME}
 
 ENTRYPOINT ["tini", "--", "/opt/entrypoint.sh"]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
