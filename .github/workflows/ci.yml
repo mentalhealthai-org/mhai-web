@@ -203,6 +203,13 @@ jobs:
           sugar compose down --options --volumes
 
   containers:
+    strategy:
+      fail-fast: false
+      matrix:
+        django_settings:
+          - "config.settings.dev"
+          - "config.settings.prod"
+
     runs-on: ubuntu-latest
 
     concurrency:
@@ -212,6 +219,9 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
+
+    env:
+      DJANGO_SETTINGS_MODULE: ${{ matrix.django_settings }}
 
     steps:
       - name: Checkout Code Repository

@@ -83,6 +83,64 @@ groups:
         run: |
           python manage.py collectstatic -v 3 --noinput  # --clear
 
+  tests:
+    backend: bash
+    tasks:
+      coverage-gen-data:
+        help: Generate coverage data with pytest
+        env-file: .env
+        env:
+          POSTGRES_HOST: localhost
+        args:
+          settings:
+            help: Specify the Django settings module
+            type: string
+            default: "config.settings.dev"
+          app:
+            help: The name of the app
+            type: string
+            default: ""
+          append:
+            help: Coverage append flag
+            type: bool
+            action: store_true
+            default: ""
+          params:
+            help: Extra params for the test
+            type: string
+            default: ""
+        run: |
+          COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
+          pytest --cov=. $COVERAGE_FLAG \
+            --ds=${{env.DJANGO_SETTINGS_MODULE or args.settings}} \
+            ${{ args.params }} ${{ args.app }}"
+
+      coverage-report:
+        help: Generate coverage report
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+        dir: src/backend
+        run: |
+          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py
+
+      ci:
+        help: Run the same the same tests executed on CI
+        args:
+          params:
+            help: Specify parameters to be used for tests
+            type: string
+            default: "-v 3"
+          settings:
+            help: Specify the django settings module
+            type: string
+            default: "config.settings.dev"
+        hooks:
+          pre-run:
+            - task: tests.coverage-gen-data
+            - task: tests.lint
+            - task: tests.coverage-report
+
   nginx:
     tasks:
       proxydomain:
