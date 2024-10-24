@@ -28,6 +28,45 @@ groups:
               python manage.py compress
           python manage.py runserver
 
+      create-superuser:
+        args:
+          email:
+            help: Specify the username
+            type: string
+            required: True
+          username:
+            help: Specify the username
+            type: string
+            required: True
+            interactive: True
+          password:
+            help: Specify the password
+            type: string
+            required: True
+            interactive: True
+        env:
+          POSTGRES_HOST: localhost
+        help: create an admin user
+        run: |
+          export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
+          export DJANGO_SUPERUSER_USERNAME=${{ args.username }}
+          python manage.py createsuperuser --noinput --email ${{ args.email }}
+
+      makemigrations:
+        help: Run django makemigrations command (just for development)
+        env-file: .envs/.env
+        dir: src/backend
+        args:
+          check:
+            help: |
+              Just check if the latest migration files were already created.
+            type: bool
+            action: store_true
+        backend: bash
+        run: |
+          CMD_FLAG="${{ '--check' if args.check else '' }} --no-input"
+          python manage.py makemigrations ${CMD_FLAG}
+
       migrate:
         env-file: .envs/.env
         dir: src/backend
@@ -43,6 +82,62 @@ groups:
             - task: reactjs.build
         run: |
           python manage.py collectstatic -v 3 --noinput  # --clear
+
+  tests:
+    backend: bash
+    tasks:
+      coverage-gen-data:
+        help: Generate coverage data with pytest
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+        args:
+          settings:
+            help: Specify the Django settings module
+            type: string
+            default: "config.settings.dev"
+          app:
+            help: The name of the app
+            type: string
+            default: ""
+          append:
+            help: Coverage append flag
+            type: bool
+            action: store_true
+            default: ""
+          params:
+            help: Extra params for the test
+            type: string
+            default: ""
+        run: |
+          COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
+          pytest --cov=. $COVERAGE_FLAG \
+            --ds=${{env.DJANGO_SETTINGS_MODULE or args.settings}} ${{ args.params }} ${{ args.app }}
+
+      coverage-report:
+        help: Generate coverage report
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+        run: |
+          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py,src/frontend/*
+
+      ci:
+        help: Run the same the same tests executed on CI
+        args:
+          params:
+            help: Specify parameters to be used for tests
+            type: string
+            default: "-v 3"
+          settings:
+            help: Specify the django settings module
+            type: string
+            default: "config.settings.dev"
+        hooks:
+          pre-run:
+            - task: tests.coverage-gen-data
+            - task: tests.lint
+            - task: tests.coverage-report
 
   nginx:
     tasks:
