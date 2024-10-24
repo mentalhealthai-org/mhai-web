@@ -14,7 +14,7 @@ export DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES
 source /opt/activate.sh
 
 # created by docker build
-/opt/install-deps.sh
+/opt/deps/install-deps.sh
 
 python << END
 import sys
