@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy
 
@@ -11,11 +12,15 @@ class GenderChoices(models.TextChoices):
 
 
 class UserProfile(models.Model):
-    name = models.CharField(max_length=100)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     age = models.IntegerField()
 
     gender = models.CharField(
-        max_length=2, choices=GenderChoices.choices, default=GenderChoices.OTHER
+        max_length=2,
+        choices=GenderChoices.choices,
+        default=GenderChoices.OTHER,
     )
     gender_custom = models.CharField(max_length=50, blank=True)
 
@@ -30,12 +35,12 @@ class UserProfile(models.Model):
     bio_health = models.TextField(max_length=4000)
 
     def __str__(self):
-        return self.name
+        return self.user.name
 
 
-class UserProfileImportantEvent(models.Model):
+class UserProfileCriticalEvent(models.Model):
     profile = models.ForeignKey(
-        UserProfile, on_delete=models.CASCADE, related_name="important_events"
+        UserProfile, on_delete=models.CASCADE, related_name="critical_events"
     )
     date = models.DateField()
     description = models.TextField()

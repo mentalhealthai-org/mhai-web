@@ -4,12 +4,17 @@ from datetime import date
 
 import pytest
 
-from user_profile.models import GenderChoices, UserProfile, UserProfileImportantEvent
+from mhai_web.users.models import User
+
+from user_profile.models import (
+    GenderChoices,
+    UserProfile,
+    UserProfileCriticalEvent,
+)
 
 
 @pytest.mark.django_db
-def test_user_profile_creation():
-    name = "Ivan Ogasawara"
+def test_user_profile_creation(user: User):
     age = 40
     gender = GenderChoices.MALE
     interests = "video games, board games, nature"
@@ -23,7 +28,7 @@ def test_user_profile_creation():
     bio_health = "Health details here."
 
     profile = UserProfile.objects.create(
-        name=name,
+        user=user,
         age=age,
         gender=gender,
         interests=interests,
@@ -36,7 +41,6 @@ def test_user_profile_creation():
         bio_pets=bio_pets,
         bio_health=bio_health,
     )
-    assert profile.name == name
     assert profile.age == age
     assert profile.gender == gender
     assert profile.interests == interests
@@ -51,9 +55,12 @@ def test_user_profile_creation():
 
 
 @pytest.mark.django_db
-def test_user_profile_custom_gender():
+def test_user_profile_custom_gender(user: User):
     profile = UserProfile.objects.create(
-        name="User 01", age=28, gender=GenderChoices.CUSTOM, gender_custom="Genderqueer"
+        user=user,
+        age=28,
+        gender=GenderChoices.CUSTOM,
+        gender_custom="Genderqueer",
     )
     assert profile.gender == GenderChoices.CUSTOM
     assert profile.gender_custom == "Genderqueer"
@@ -66,11 +73,11 @@ def test_user_profile_custom_gender():
 
 
 @pytest.mark.django_db
-def test_user_profile_important_event():
+def test_user_profile_important_event(user: User):
     profile = UserProfile.objects.create(
-        name="Ivan Ogasawara", age=40, gender=GenderChoices.MALE
+        user=user, age=40, gender=GenderChoices.MALE
     )
-    event = UserProfileImportantEvent.objects.create(
+    event = UserProfileCriticalEvent.objects.create(
         profile=profile,
         date=date(2019, 1, 1),
         description="My dog died in an accident.",
@@ -79,7 +86,7 @@ def test_user_profile_important_event():
         treated=False,
     )
 
-    assert event in profile.important_events.all()
+    assert event in profile.critical_events.all()
     assert event.date == date(2019, 1, 1)
     assert event.description == "My dog died in an accident."
     assert event.impact == "I am sad since then."
