@@ -10,5 +10,4 @@ class UsersConfig(AppConfig):
 
     def ready(self):
         with contextlib.suppress(ImportError):
-            # Connect the Signal in App Config
             import mhai_web.users.signals  # noqa: F401

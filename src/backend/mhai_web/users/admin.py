@@ -49,5 +49,4 @@ class UserAdmin(SimpleHistoryAdmin, auth_admin.UserAdmin):
         ),
     )
 
-    # Adding history-related functionality
     history_list_display = ["email", "name", "is_superuser"]

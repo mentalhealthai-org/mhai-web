@@ -18,21 +18,17 @@ class User(AbstractUser):
     instance's history, such as changes to name or email, over time.
     """
 
-    # Custom fields to replace the standard first_name and last_name
     name = models.CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
     email = models.EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
 
-    # Required fields for authentication and UserManager setup
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    # Custom manager
     objects: ClassVar[UserManager] = UserManager()
 
-    # History tracking field
     history = HistoricalRecords()
 
     def get_absolute_url(self) -> str:
