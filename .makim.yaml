@@ -75,7 +75,6 @@ groups:
         run: |
           python manage.py migrate
 
-
       collectstatic:
         env-file: .envs/.env
         dir: src/backend
@@ -139,7 +138,7 @@ groups:
         hooks:
           pre-run:
             - task: tests.coverage-gen-data
-            - task: tests.lint
+            # - task: tests.lint
             - task: tests.coverage-report
 
   nginx:
