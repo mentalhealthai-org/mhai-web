@@ -83,8 +83,15 @@ python_files = [
 ]
 
 [tool.coverage.run]
-include = ["mhai_web/**"]
-omit = ["*/migrations/*", "*/tests/*", "scripts/*"]
+include = ["src/backend/**"]
+omit = [
+	"*/migrations/*",
+	"*/tests/*",
+	"scripts/*",
+	"manage.py",
+	"*/src/frontend/*",
+	"*.txt",
+]
 plugins = ["django_coverage_plugin"]
 
 [tool.mypy]

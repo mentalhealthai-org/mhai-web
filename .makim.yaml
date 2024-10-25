@@ -64,16 +64,25 @@ groups:
               Just check if the latest migration files were already created.
             type: bool
             action: store_true
+        matrix:
+          app:
+            - ""
+            - mhai_web
+            - user_profile
         backend: bash
         run: |
           CMD_FLAG="${{ '--check' if args.check else '' }} --no-input"
-          python manage.py makemigrations ${CMD_FLAG}
+          python manage.py makemigrations ${CMD_FLAG} ${{ matrix.app }}
 
       migrate:
         env-file: .envs/.env
         dir: src/backend
+        matrix:
+          app:
+            - ""
+            - user_profile
         run: |
-          python manage.py migrate
+          python manage.py migrate ${{ matrix.app }}
 
       collectstatic:
         env-file: .envs/.env
@@ -122,9 +131,9 @@ groups:
         env:
           POSTGRES_HOST: localhost
         run: |
-          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py,src/frontend/*
+          coverage report -m --skip-empty
 
-      ci:
+      unit:
         help: Run the same the same tests executed on CI
         args:
           params:
