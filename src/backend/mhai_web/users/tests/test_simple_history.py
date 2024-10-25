@@ -1,6 +1,9 @@
 import pytest
-from mhai_web.users.models import User
+
 from simple_history.utils import update_change_reason
+
+from mhai_web.users.models import User
+
 
 @pytest.mark.django_db
 class TestUserHistory:
@@ -17,15 +20,15 @@ class TestUserHistory:
 
     def test_update_history_reason(self, caplog):
         """
-        Test that updating an existing User instance records "User updated" as the change reason.
+        Test that updating an existing User instance records.
         """
         user = User.objects.create(email="example@example.com", name="Example User")
-        
+
         user.name = "Updated User"
         user.save()
-        
+
         update_change_reason(user, "User updated")
-        
+
         last_history = user.history.first()
 
         assert last_history.history_change_reason == "User updated"

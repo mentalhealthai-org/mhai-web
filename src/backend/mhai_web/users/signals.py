@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=User)
 def log_and_set_change_reason(sender, instance, created, **kwargs):
     """
-    Logs the latest update and sets a reason for historical records after saving a User instance.
+    Logs the latest update and sets a reason for historical records
+    after saving a User instance.
 
     Parameters
     ----------
@@ -33,5 +34,5 @@ def log_and_set_change_reason(sender, instance, created, **kwargs):
     if instance.history.exists():
         last_history = instance.history.first()
         logger.info(
-            f"User {instance.email} was last changed on {last_history.history_date} with reason: {change_reason}."
+            f"User {instance.email} was last changed on {last_history.history_date} with reason: {change_reason}."  # noqa: G004 E501
         )
