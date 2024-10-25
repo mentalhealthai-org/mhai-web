@@ -29,6 +29,7 @@ groups:
           python manage.py runserver
 
       create-superuser:
+        help: create an admin user
         args:
           email:
             help: Specify the username
@@ -46,7 +47,8 @@ groups:
             interactive: True
         env:
           POSTGRES_HOST: localhost
-        help: create an admin user
+        dir: src/backend
+        backend: bash
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
           export DJANGO_SUPERUSER_USERNAME=${{ args.username }}
@@ -136,7 +138,6 @@ groups:
         hooks:
           pre-run:
             - task: tests.coverage-gen-data
-            - task: tests.lint
             - task: tests.coverage-report
 
   nginx:

@@ -1,25 +1,27 @@
 from typing import ClassVar
 
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField
+from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from .managers import UserManager
 
 
 class User(AbstractUser):
     """
-    Default custom user model for Mhai-Web.
-    If adding fields that need to be filled at user signup,
-    check forms.SignupForm and forms.SocialSignupForms accordingly.
+    Custom user model for Mhai-Web with extended fields and history tracking.
+
+    This model includes modifications for supporting history tracking using
+    Django Simple History's `HistoricalRecords`, allowing the capture of each
+    instance's history, such as changes to name or email, over time.
     """
 
-    # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
+    name = models.CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
-    email = EmailField(_("email address"), unique=True)
+    email = models.EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
 
     USERNAME_FIELD = "email"
@@ -27,11 +29,15 @@ class User(AbstractUser):
 
     objects: ClassVar[UserManager] = UserManager()
 
+    history = HistoricalRecords()
+
     def get_absolute_url(self) -> str:
-        """Get URL for user's detail view.
+        """
+        Returns the URL for this user's detail view.
 
-        Returns:
-            str: URL for user detail.
-
+        Returns
+        -------
+        str
+            URL for user's detail.
         """
         return reverse("users:detail", kwargs={"pk": self.id})
