@@ -56,10 +56,6 @@ groups:
             help: Specify the username
             type: string
             required: True
-          username:
-            help: Specify the username
-            type: string
-            required: True
             interactive: True
           password:
             help: Specify the password
@@ -72,7 +68,7 @@ groups:
         backend: bash
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
-          export DJANGO_SUPERUSER_USERNAME=${{ args.username }}
+          export DJANGO_SUPERUSER_USERNAME=${{ args.email }}
           python manage.py createsuperuser --noinput --email ${{ args.email }}
 
       makemigrations:
