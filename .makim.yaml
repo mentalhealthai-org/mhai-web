@@ -62,13 +62,13 @@ groups:
             type: string
             required: True
             interactive: True
+        env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
         dir: src/backend
         backend: bash
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
-          export DJANGO_SUPERUSER_USERNAME=${{ args.email }}
           python manage.py createsuperuser --noinput --email ${{ args.email }}
 
       makemigrations:

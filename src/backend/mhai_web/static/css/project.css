@@ -1,3 +1,15 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Optional: Center footer text */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f1f1f1;
+}
+
 .alert-debug {
   color: black;
   background-color: white;

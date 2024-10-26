@@ -54,57 +54,58 @@
       {% endcompress %}
     {% endblock javascript %}
   </head>
-  <body>
-    {% block body %}
-      <div class="mb-1">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-          <div class="container-fluid">
-            <button class="navbar-toggler navbar-toggler-right"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'home' %}">
-              <img src="{% static 'images/logo-small.png' %}" style="height: 50px" />
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
+  <body class="d-flex flex-column min-vh-100">
+    <!-- Header or Navbar -->
+    <header class="text-center py-0">
+      <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+          <button class="navbar-toggler navbar-toggler-right"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'images/logo-small.png' %}" style="height: 50px" />
+          </a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+              </li>
+              {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'about' %}">About</a>
+                  {# URL provided by django-allauth/account/urls.py #}
+                  <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
                 </li>
-                {% if request.user.is_authenticated %}
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'users:detail' request.user.pk %}">{% translate "My Profile" %}</a>
-                  </li>
+              {% else %}
+                {% if ACCOUNT_ALLOW_REGISTRATION %}
                   <li class="nav-item">
                     {# URL provided by django-allauth/account/urls.py #}
-                    <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
-                  </li>
-                {% else %}
-                  {% if ACCOUNT_ALLOW_REGISTRATION %}
-                    <li class="nav-item">
-                      {# URL provided by django-allauth/account/urls.py #}
-                      <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
-                    </li>
-                  {% endif %}
-                  <li class="nav-item">
-                    {# URL provided by django-allauth/account/urls.py #}
-                    <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+                    <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
                   </li>
                 {% endif %}
-              </ul>
-            </div>
+                <li class="nav-item">
+                  {# URL provided by django-allauth/account/urls.py #}
+                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+                </li>
+              {% endif %}
+            </ul>
           </div>
-        </nav>
-      </div>
-      <div class="container">
+        </div>
+      </nav>
+    </header>
+    {% block main %}
+      <main class="flex-grow-1 container my-3">
         {% if messages %}
           {% for message in messages %}
             <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
@@ -116,57 +117,57 @@
             </div>
           {% endfor %}
         {% endif %}
-        {% block main %}
-          {% block content %}
-            <p>Use this document as a way to quick start any new project.</p>
-          {% endblock content %}
-        {% endblock main %}
-      </div>
-    {% endblock body %}
+        {% block content %}
+          <p>Use this document as a way to quick start any new project.</p>
+        {% endblock content %}
+      </main>
+    {% endblock main %}
     {% block footer %}
-      <footer class="bg-light text-dark pt-5 pb-4">
-        <div class="container text-center text-md-left">
-          <div class="row text-center text-md-left">
-            <!-- Company Information -->
-            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Mhai</h5>
-              <p>
-                At Mhai, we believe that mental health support should be accessible, immediate, and personalized.
-              </p>
+      <footer class="mt-auto bg-light text-dark pt-3 pb-1 text-center text-md-left">
+        <div class="row text-center text-md-left justify-content-md-center">
+          <div class="col-9">
+            <div class="row text-center text-md-left">
+              <!-- Company Information -->
+              <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-2">
+                <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Mhai</h5>
+                <p>
+                  At Mhai, we believe that mental health support should be accessible, immediate, and personalized.
+                </p>
+              </div>
+              <!-- Useful Links -->
+              <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-2">
+                <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Quick Links</h5>
+                <p>
+                  <a href="/about/" class="text-dark" style="text-decoration: none;">About Us</a>
+                </p>
+              </div>
+              <!-- Contact Information -->
+              <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-2">
+                <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Contact</h5>
+                <p>
+                  <i class="fas fa-envelope mr-3"></i>
+                  <a href="mailto:connect@mymhai.com">connect@mymhai.com</a>
+                </p>
+              </div>
+              <!-- Social Media Links -->
+              <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-2">
+                <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Follow Us</h5>
+                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-linkedin-in"></i></a>
+              </div>
             </div>
-            <!-- Useful Links -->
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
-              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Quick Links</h5>
-              <p>
-                <a href="/about/" class="text-dark" style="text-decoration: none;">About Us</a>
-              </p>
-            </div>
-            <!-- Contact Information -->
-            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Contact</h5>
-              <p>
-                <i class="fas fa-envelope mr-3"></i>
-                <a href="mailto:connect@mymhai.com">connect@mymhai.com</a>
-              </p>
-            </div>
-            <!-- Social Media Links -->
-            <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-              <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Follow Us</h5>
-              <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-brands fa-facebook-f"></i></a>
-              <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-          </div>
-          <!-- Horizontal Divider -->
-          <hr class="mb-4" />
-          <!-- Copyright Information -->
-          <div class="row align-items-center">
-            <div class="col-md-7 col-lg-8">
-              <p class="text-center text-md-left">© 2024 Mhai. All rights reserved.</p>
-            </div>
-            <div class="col-md-5 col-lg-4">
-              <p class="text-center text-md-right">Made with ❤️ by Mhai</p>
+            <!-- Horizontal Divider -->
+            <hr class="mb-4" />
+            <!-- Copyright Information -->
+            <div class="row align-items-center">
+              <div class="col-md-7 col-lg-8">
+                <p class="text-center text-md-left">© 2024 Mhai. All rights reserved.</p>
+              </div>
+              <div class="col-md-5 col-lg-4">
+                <p class="text-center text-md-right">Made with ❤️ by Mhai</p>
+              </div>
             </div>
           </div>
         </div>

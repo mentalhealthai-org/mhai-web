@@ -37,29 +37,29 @@ router.register(
 
 urlpatterns = [
     path(
-        "",
+        "profile/",
         TemplateView.as_view(template_name="generic.html"),
         name="user-profile-general",
     ),
     path(
-        "bio/",
+        "profile/bio/",
         TemplateView.as_view(template_name="generic.html"),
         name="user-profile-bio",
     ),
     path(
-        "emotions/",
+        "profile/emotions/",
         TemplateView.as_view(template_name="generic.html"),
         name="user-profile-emotions",
     ),
     path(
-        "interests/",
+        "profile/interests/",
         TemplateView.as_view(template_name="generic.html"),
         name="user-profile-interests",
     ),
     path(
-        "events/",
+        "profile/events/",
         TemplateView.as_view(template_name="generic.html"),
         name="user-profile-events",
     ),
-    path("api/", include(router.urls)),
+    path("profile/api/", include(router.urls)),
 ]
