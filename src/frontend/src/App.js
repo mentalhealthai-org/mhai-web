@@ -17,9 +17,9 @@ function App() {
         {/* <Route path="*" element={<NotFound />} /> */}
 				<Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+				<Route path="/profile" element={<UserProfileGeneral />} />
 				<Route path="/profile/bio" element={<UserProfileBio />} />
 				<Route path="/profile/emotions" element={<UserProfileEmotions />} />
-				<Route path="/profile/general" element={<UserProfileGeneral />} />
 				<Route path="/profile/interests" element={<UserProfileInterests />} />
       </Routes>
     </Router>

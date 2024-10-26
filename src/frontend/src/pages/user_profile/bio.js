@@ -44,7 +44,7 @@ function UserProfileBio() {
     setError('');
     setSuccess('');
 
-    axios.put('/api/userprofile/', bio)
+    axios.put('/profile/api/bio/', bio)
       .then(response => {
         setSuccess('Bio information updated successfully.');
       })

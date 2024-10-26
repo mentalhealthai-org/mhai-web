@@ -9,27 +9,27 @@ from user_profile.api import views
 # Define a router for API endpoints
 router = DefaultRouter()
 router.register(
-    r"profile/general",
+    r"",
     views.UserProfileGeneralInfoView,
     basename="user-profile-general",
 )
 router.register(
-    r"profile/interests",
+    r"interests",
     views.UserProfileInterestsView,
     basename="user-profile-interests",
 )
 router.register(
-    r"profile/emotions",
+    r"emotions",
     views.UserProfileEmotionalProfileView,
     basename="user-profile-emotions",
 )
 router.register(
-    r"profile/biography",
+    r"bio",
     views.UserProfileBiographyView,
     basename="user-profile-bio",
 )
 router.register(
-    r"profile/events",
+    r"events",
     views.UserProfileCriticalEventView,
     basename="user-profile-events",
 )

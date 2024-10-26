@@ -8,7 +8,7 @@ function UserProfileEmotions() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    axios.get('/api/userprofile/')
+    axios.get('/profile/api/emotions/')
       .then(response => {
         setEmotionalProfile(response.data.emotional_profile);
         setLoading(false);

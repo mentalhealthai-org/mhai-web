@@ -37,17 +37,15 @@ groups:
 
   django:
     tasks:
-      runserver:
+      collectstatic:
         env-file: .envs/.env
+        dir: src/backend
         hooks:
           pre-run:
             - task: reactjs.install
             - task: reactjs.build
-        dir: src/backend
         run: |
-          if "${{ env.SUGAR_GROUP }}" == "prod":
-              python manage.py compress
-          python manage.py runserver
+          python manage.py collectstatic -v 3 --noinput  # --clear
 
       create-superuser:
         help: create an admin user
@@ -88,8 +86,6 @@ groups:
             - user_profile
         backend: bash
         run: |
-          CMD_FLAG="${{ '--check' if args.check else '' }} --no-input"
-          python manage.py makemigrations ${CMD_FLAG} ${{ matrix.app }}
 
       migrate:
         env-file: .envs/.env
@@ -101,15 +97,35 @@ groups:
         run: |
           python manage.py migrate ${{ matrix.app }}
 
-      collectstatic:
+      notebook:
+        help: Run the django environment in a jupyter notebook
         env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         dir: src/backend
+        run: python manage.py shell_plus --lab
+
+      runserver:
+        env-file: .envs/.env
         hooks:
           pre-run:
             - task: reactjs.install
             - task: reactjs.build
+        dir: src/backend
         run: |
-          python manage.py collectstatic -v 3 --noinput  # --clear
+          if "${{ env.SUGAR_GROUP }}" == "prod":
+              python manage.py compress
+          python manage.py runserver
+
+      shell:
+        help: Run the django environment in a jupyter notebook
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        dir: src/backend
+        run: python manage.py shell_plus
 
   tests:
     backend: bash

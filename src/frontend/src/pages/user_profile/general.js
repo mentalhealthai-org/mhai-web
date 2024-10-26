@@ -13,7 +13,7 @@ function UserProfileGeneral() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    axios.get('/api/userprofile/')
+    axios.get('/profile/api/')
       .then(response => {
         setProfile({
           name: response.data.name,
