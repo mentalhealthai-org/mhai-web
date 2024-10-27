@@ -1,36 +1,36 @@
 """User Profile urls.py"""
 
 from django.urls import include, path
-from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
-from user_profile.api import views
+from user_profile import views
+from user_profile.api import views as views_api
 
 # Define a router for API endpoints
 router = DefaultRouter()
 router.register(
     r"",
-    views.UserProfileGeneralInfoView,
+    views_api.UserProfileGeneralInfoView,
     basename="user-profile-general",
 )
 router.register(
     r"interests",
-    views.UserProfileInterestsView,
+    views_api.UserProfileInterestsView,
     basename="user-profile-interests",
 )
 router.register(
     r"emotions",
-    views.UserProfileEmotionalProfileView,
+    views_api.UserProfileEmotionsView,
     basename="user-profile-emotions",
 )
 router.register(
     r"bio",
-    views.UserProfileBiographyView,
+    views_api.UserProfileBiographyView,
     basename="user-profile-bio",
 )
 router.register(
     r"events",
-    views.UserProfileCriticalEventView,
+    views_api.UserProfileCriticalEventView,
     basename="user-profile-events",
 )
 
@@ -38,27 +38,27 @@ router.register(
 urlpatterns = [
     path(
         "profile/",
-        TemplateView.as_view(template_name="generic.html"),
+        views.UserProfileView.as_view(),
         name="user-profile-general",
     ),
     path(
         "profile/bio/",
-        TemplateView.as_view(template_name="generic.html"),
+        views.UserProfileView.as_view(),
         name="user-profile-bio",
     ),
     path(
         "profile/emotions/",
-        TemplateView.as_view(template_name="generic.html"),
+        views.UserProfileView.as_view(),
         name="user-profile-emotions",
     ),
     path(
         "profile/interests/",
-        TemplateView.as_view(template_name="generic.html"),
+        views.UserProfileView.as_view(),
         name="user-profile-interests",
     ),
     path(
         "profile/events/",
-        TemplateView.as_view(template_name="generic.html"),
+        views.UserProfileView.as_view(),
         name="user-profile-events",
     ),
     path("profile/api/", include(router.urls)),

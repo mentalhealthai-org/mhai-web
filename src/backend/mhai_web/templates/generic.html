@@ -4,5 +4,7 @@
 
 {% block content %}
   <div id="root"></div>
+  <!-- NOTE: KEEP IT IN JUST ONE LINE. Pass Django data to React -->
+  {{ context|json_script:"context-data" }}
   <script src="{% frontend_static 'main.js' %}"></script>
 {% endblock content %}

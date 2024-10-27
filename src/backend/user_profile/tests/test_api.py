@@ -33,7 +33,7 @@ def user_profile(user: UserClass):
         age=40,
         gender=GenderChoices.MALE,
         interests="video games, board games, nature",
-        emotional_profile="calm, workaholic",
+        emotions="calm, workaholic",
         bio_life="Life description here.",
         bio_education="Education details here.",
         bio_work="Work experience here.",
@@ -70,15 +70,15 @@ def test_update_user_profile_interests(api_client, user, user_profile):
 
 
 @pytest.mark.django_db
-def test_update_user_profile_emotional_profile(api_client, user, user_profile):
+def test_update_user_profile_emotions(api_client, user, user_profile):
     """Test updating emotional profile in the UserProfile model."""
     api_client.force_authenticate(user=user)
     url = reverse("user-profile-emotions-detail", args=[user_profile.id])
-    data = {"emotional_profile": "passionate, dedicated"}
+    data = {"emotions": "passionate, dedicated"}
     response = api_client.patch(url, data, format="json")
     assert response.status_code == status.HTTP_200_OK
     user_profile.refresh_from_db()
-    assert user_profile.emotional_profile == "passionate, dedicated"
+    assert user_profile.emotions == "passionate, dedicated"
 
 
 @pytest.mark.django_db

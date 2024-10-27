@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import getCSRFToken from '../../libs/csrf';
+import getContext from '../../libs/context';
+
+
 function UserProfileGeneral() {
+	const csrftoken = getCSRFToken();
+
   const [profile, setProfile] = useState({
     name: '',
     age: '',
@@ -12,9 +18,20 @@ function UserProfileGeneral() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+	const context = getContext();
+	const profile_id = context['profile_id'];
+	const api_url = '/profile/api/' + profile_id + '/';
+
   useEffect(() => {
-    axios.get('/profile/api/')
-      .then(response => {
+    axios.get(
+			api_url,
+			{
+				withCredentials: true,
+				headers: {
+					'X-CSRFToken': csrftoken,
+				},
+			}
+		).then(response => {
         setProfile({
           name: response.data.name,
           age: response.data.age,
@@ -38,8 +55,15 @@ function UserProfileGeneral() {
     setError('');
     setSuccess('');
 
-    axios.put('/api/userprofile/', profile)
-      .then(response => {
+    axios.put(
+			api_url,
+			profile, {
+				withCredentials: true,
+				headers: {
+					'X-CSRFToken': csrftoken,
+				},
+			}
+		).then(response => {
         setSuccess('Profile updated successfully.');
       })
       .catch(error => {

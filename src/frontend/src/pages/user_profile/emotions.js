@@ -10,7 +10,7 @@ function UserProfileEmotions() {
   useEffect(() => {
     axios.get('/profile/api/emotions/')
       .then(response => {
-        setEmotionalProfile(response.data.emotional_profile);
+        setEmotionalProfile(response.data.emotions);
         setLoading(false);
       })
       .catch(error => {
@@ -28,7 +28,7 @@ function UserProfileEmotions() {
     setError('');
     setSuccess('');
 
-    axios.put('/api/userprofile/', { emotional_profile: emotionalProfile })
+    axios.put('/profile/api/emotions/', { emotions: emotionalProfile })
       .then(response => {
         setSuccess('Emotional status updated successfully.');
       })
@@ -47,11 +47,11 @@ function UserProfileEmotions() {
       <form onSubmit={handleSubmit}>
         {/* Emotional Profile Textarea */}
         <div className="mb-3">
-          <label htmlFor="emotional_profile" className="form-label">Your Emotional Profile</label>
+          <label htmlFor="emotions" className="form-label">Your Emotional Profile</label>
           <textarea
             className="form-control"
-            id="emotional_profile"
-            name="emotional_profile"
+            id="emotions"
+            name="emotions"
             rows="5"
             value={emotionalProfile}
             onChange={handleChange}

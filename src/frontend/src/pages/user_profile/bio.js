@@ -16,7 +16,7 @@ function UserProfileBio() {
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    axios.get('/api/userprofile/')
+    axios.get('/profile/api/bio/')
       .then(response => {
         setBio({
           bio_life: response.data.bio_life,

@@ -85,7 +85,7 @@ groups:
             - mhai_web
             - user_profile
         backend: bash
-        run: |
+        run: python manage.py makemigrations ${{ matrix.app }}
 
       migrate:
         env-file: .envs/.env
@@ -94,8 +94,7 @@ groups:
           app:
             - ""
             - user_profile
-        run: |
-          python manage.py migrate ${{ matrix.app }}
+        run: python manage.py migrate ${{ matrix.app }}
 
       notebook:
         help: Run the django environment in a jupyter notebook

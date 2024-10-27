@@ -8,7 +8,7 @@ from user_profile.models import UserProfile, UserProfileCriticalEvent
 class UserProfileGeneralInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["user", "age", "gender", "gender_custom"]
+        fields = ["name", "age", "gender", "gender_custom"]
 
 
 class UserProfileInterestsSerializer(serializers.ModelSerializer):
@@ -17,10 +17,10 @@ class UserProfileInterestsSerializer(serializers.ModelSerializer):
         fields = ["interests"]
 
 
-class UserProfileEmotionalProfileSerializer(serializers.ModelSerializer):
+class UserProfileEmotionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ["emotional_profile"]
+        fields = ["emotions"]
 
 
 class UserProfileBiographySerializer(serializers.ModelSerializer):

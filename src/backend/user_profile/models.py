@@ -15,6 +15,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
+    name = models.CharField(max_length=256, blank=True)
     age = models.IntegerField()
 
     gender = models.CharField(
@@ -25,7 +26,7 @@ class UserProfile(models.Model):
     gender_custom = models.CharField(max_length=50, blank=True)
 
     interests = models.TextField(max_length=1000)
-    emotional_profile = models.TextField(max_length=1000)
+    emotions = models.TextField(max_length=1000)
     bio_life = models.TextField(max_length=4000)
     bio_education = models.TextField(max_length=4000)
     bio_work = models.TextField(max_length=4000)

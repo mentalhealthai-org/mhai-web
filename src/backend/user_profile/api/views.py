@@ -5,22 +5,20 @@ from __future__ import annotations
 from typing import cast
 
 from mhai_web.users.models import User
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from user_profile.api.serializers import (
     UserProfileBiographySerializer,
     UserProfileCriticalEventSerializer,
-    UserProfileEmotionalProfileSerializer,
+    UserProfileEmotionsSerializer,
     UserProfileGeneralInfoSerializer,
     UserProfileInterestsSerializer,
 )
 from user_profile.models import UserProfile, UserProfileCriticalEvent
 
 
-class UserProfileGeneralInfoView(
-    mixins.UpdateModelMixin, viewsets.GenericViewSet
-):
+class UserProfileGeneralInfoView(viewsets.ModelViewSet):
     """ViewSet for updating general information in the UserProfile model."""
 
     queryset = UserProfile.objects.all()
@@ -31,9 +29,7 @@ class UserProfileGeneralInfoView(
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileInterestsView(
-    mixins.UpdateModelMixin, viewsets.GenericViewSet
-):
+class UserProfileInterestsView(viewsets.ModelViewSet):
     """ViewSet for updating interests in the UserProfile model."""
 
     queryset = UserProfile.objects.all()
@@ -44,22 +40,18 @@ class UserProfileInterestsView(
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileEmotionalProfileView(
-    mixins.UpdateModelMixin, viewsets.GenericViewSet
-):
+class UserProfileEmotionsView(viewsets.ModelViewSet):
     """ViewSet for updating the emotional profile in the UserProfile model."""
 
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileEmotionalProfileSerializer
+    serializer_class = UserProfileEmotionsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileBiographyView(
-    mixins.UpdateModelMixin, viewsets.GenericViewSet
-):
+class UserProfileBiographyView(viewsets.ModelViewSet):
     """ViewSet for updating bio-related fields in the UserProfile model."""
 
     queryset = UserProfile.objects.all()

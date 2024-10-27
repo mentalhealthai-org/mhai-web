@@ -18,7 +18,7 @@ def test_user_profile_creation(user: User):
     age = 40
     gender = GenderChoices.MALE
     interests = "video games, board games, nature"
-    emotional_profile = "calm, workaholic"
+    emotions = "calm, workaholic"
     bio_life = "Life description here."
     bio_education = "Education details here."
     bio_work = "Work experience here."
@@ -32,7 +32,7 @@ def test_user_profile_creation(user: User):
         age=age,
         gender=gender,
         interests=interests,
-        emotional_profile=emotional_profile,
+        emotions=emotions,
         bio_life=bio_life,
         bio_education=bio_education,
         bio_work=bio_work,
@@ -44,7 +44,7 @@ def test_user_profile_creation(user: User):
     assert profile.age == age
     assert profile.gender == gender
     assert profile.interests == interests
-    assert profile.emotional_profile == emotional_profile
+    assert profile.emotions == emotions
     assert profile.bio_life == bio_life
     assert profile.bio_education == bio_education
     assert profile.bio_work == bio_work

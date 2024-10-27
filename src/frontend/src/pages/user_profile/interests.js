@@ -28,7 +28,7 @@ function UserProfileInterests() {
     setError('');
     setSuccess('');
 
-    axios.put('/api/userprofile/', { interests })
+    axios.put('/profile/api/interests/', { interests })
       .then(response => {
         setSuccess('Interests updated successfully.');
       })

@@ -98,7 +98,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "mhai_web.users",
     "mhai_web",
-    "user_profile",
+    "user_profile.apps.UserProfileConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -138,8 +138,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
+    },
 ]
 
 # MIDDLEWARE
@@ -253,7 +257,9 @@ ADMINS = [("""Ivan Ogasawara""", "ivan.ogasawara@gmail.com")]
 MANAGERS = ADMINS
 # https://cookiecutter-django.readthedocs.io/en/latest/settings.html#other-environment-settings
 # Force the `admin` sign in process to go through the `django-allauth` workflow
-DJANGO_ADMIN_FORCE_ALLAUTH = env.bool("DJANGO_ADMIN_FORCE_ALLAUTH", default=False)
+DJANGO_ADMIN_FORCE_ALLAUTH = env.bool(
+    "DJANGO_ADMIN_FORCE_ALLAUTH", default=False
+)
 
 # LOGGING
 # ------------------------------------------------------------------------------
@@ -314,7 +320,9 @@ CELERY_WORKER_SEND_TASK_EVENTS = True
 CELERY_TASK_SEND_SENT_EVENT = True
 # django-allauth
 # ------------------------------------------------------------------------------
-ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
+ACCOUNT_ALLOW_REGISTRATION = env.bool(
+    "DJANGO_ACCOUNT_ALLOW_REGISTRATION", True
+)
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 # https://docs.allauth.org/en/latest/account/configuration.html
@@ -346,7 +354,9 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 

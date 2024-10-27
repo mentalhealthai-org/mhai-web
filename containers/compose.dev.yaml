@@ -5,6 +5,8 @@ volumes:
 
 services:
   mhai-web:
+    stdin_open: true
+    tty: true
     volumes:
       - ..:/opt/services/mhai-web:z
 

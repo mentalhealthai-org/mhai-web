@@ -13,4 +13,4 @@ from user_profile.models import UserProfile
 def create_user_profile(sender, instance, created, **kwargs):
     """Creates a UserProfile automatically when a new User is created."""
     if created:
-        UserProfile.objects.create(user=instance, age=-1)
+        UserProfile.objects.create(user=instance, age=0)

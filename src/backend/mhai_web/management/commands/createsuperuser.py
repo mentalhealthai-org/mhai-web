@@ -42,17 +42,13 @@ class Command(SuperUserCommand):
 
         User = get_user_model()  # noqa: N806
 
-        try:
-            # fetch the created superuser
-            created_user = User.objects.get(email=options["email"])
+        # fetch the created superuser
+        created_user = User.objects.get(email=options["email"])
 
-            # activate the created superuser account
-            EmailAddress.objects.create(
-                user=created_user,
-                email=created_user.email,
-                primary=True,
-                verified=True,
-            )
-        except User.DoesNotExist:
-            # if user was not created, do nothing
-            pass
+        # activate the created superuser account
+        EmailAddress.objects.create(
+            user=created_user,
+            email=created_user.email,
+            primary=True,
+            verified=True,
+        )
