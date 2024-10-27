@@ -29,7 +29,7 @@ router.register(
     basename="user-profile-bio",
 )
 router.register(
-    r"events",
+    r"critical-events",
     views_api.UserProfileCriticalEventView,
     basename="user-profile-events",
 )
@@ -57,7 +57,7 @@ urlpatterns = [
         name="user-profile-interests",
     ),
     path(
-        "profile/events/",
+        "profile/critical-events/",
         views.UserProfileView.as_view(),
         name="user-profile-events",
     ),

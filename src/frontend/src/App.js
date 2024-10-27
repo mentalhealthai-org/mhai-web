@@ -8,6 +8,7 @@ import UserProfileBio from './pages/user_profile/bio';
 import UserProfileEmotions from './pages/user_profile/emotions';
 import UserProfileGeneral from './pages/user_profile/general';
 import UserProfileInterests from './pages/user_profile/interests';
+import UserProfileCriticalEvents from './pages/user_profile/critical_events';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/profile/bio" element={<UserProfileBio />} />
 				<Route path="/profile/emotions" element={<UserProfileEmotions />} />
 				<Route path="/profile/interests" element={<UserProfileInterests />} />
+				<Route path="/profile/critical-events" element={<UserProfileCriticalEvents />} />
       </Routes>
     </Router>
   );
