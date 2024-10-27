@@ -29,12 +29,6 @@ function ProfileSideBar({ active }) {
       >
         Emotions
       </a>
-      <a
-        href="/profile/critical-events/"
-        className={`list-group-item list-group-item-action ${active === 'critical-events' ? 'active' : ''}`}
-      >
-        Critical Events
-      </a>
     </div>
   );
 }
