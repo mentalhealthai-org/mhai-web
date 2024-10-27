@@ -83,8 +83,15 @@ python_files = [
 ]
 
 [tool.coverage.run]
-include = ["mhai_web/**"]
-omit = ["*/migrations/*", "*/tests/*", "scripts/*"]
+include = ["src/backend/**"]
+omit = [
+	"*/migrations/*",
+	"*/tests/*",
+	"scripts/*",
+	"manage.py",
+	"*/src/frontend/*",
+	"*.txt",
+]
 plugins = ["django_coverage_plugin"]
 
 [tool.mypy]
@@ -110,6 +117,7 @@ django_settings_module = "config.settings.test"
 
 
 [tool.ruff]
+line-length = 79
 target-version = "py312"
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [

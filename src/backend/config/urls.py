@@ -12,14 +12,17 @@ from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 from mhai_web.urls import urlpatterns as mhai_urls
+from user_profile.urls import urlpatterns as user_profile_urls
 
-urlpatterns = mhai_urls + [
+urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-        *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *mhai_urls,
+    *user_profile_urls,
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
@@ -63,4 +66,6 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+        urlpatterns = [
+            path("__debug__/", include(debug_toolbar.urls))
+        ] + urlpatterns

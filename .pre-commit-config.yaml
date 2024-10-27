@@ -53,7 +53,7 @@ repos:
       - id: ruff-format
         name: ruff-format
         entry: ruff format
-        exclude: "docs/|scripts/.*|migrations/.*|/urls.py"
+        exclude: "docs/|scripts/.*|migrations/.*"
         language: system
         pass_filenames: true
         types:
@@ -63,7 +63,7 @@ repos:
         name: ruff-linter
         entry: ruff check
         language: system
-        exclude: "docs/|scripts/.*|migrations/.*|/urls.py"
+        exclude: "docs/|scripts/.*|migrations/.*"
         pass_filenames: true
         types:
           - python

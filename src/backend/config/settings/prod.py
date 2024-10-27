@@ -20,18 +20,18 @@ from .base import (
 )
 
 # GENERAL
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["mhai.com"])
 
 # DATABASES
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)
 
 # CACHES
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -46,7 +46,7 @@ CACHES = {
 }
 
 # SECURITY
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
@@ -88,7 +88,7 @@ STORAGES = {
 }
 
 # EMAIL
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
@@ -104,12 +104,12 @@ EMAIL_SUBJECT_PREFIX = env(
 ACCOUNT_EMAIL_SUBJECT_PREFIX = EMAIL_SUBJECT_PREFIX
 
 # ADMIN
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Django Admin URL regex.
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 # Anymail
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
 INSTALLED_APPS += ["anymail", "django.contrib.humanize"]
 
@@ -120,7 +120,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 ANYMAIL: dict[str, str] = {}
 
 # STATIC
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -137,7 +137,7 @@ STATICFILES_FINDERS = [
 
 
 # django-compressor
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_ENABLED
 COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_STORAGE
@@ -145,7 +145,9 @@ COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
 COMPRESS_URL = STATIC_URL
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
-COMPRESS_OFFLINE = True  # Offline compression is required when using Whitenoise
+COMPRESS_OFFLINE = (
+    True  # Offline compression is required when using Whitenoise
+)
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_FILTERS
 COMPRESS_FILTERS = {
     "css": [
@@ -156,7 +158,7 @@ COMPRESS_FILTERS = {
 }
 
 # LOGGING
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
@@ -184,7 +186,11 @@ LOGGING = {
             "propagate": False,
         },
         # Errors logged by the SDK itself
-        "sentry_sdk": {"level": "ERROR", "handlers": ["console"], "propagate": False},
+        "sentry_sdk": {
+            "level": "ERROR",
+            "handlers": ["console"],
+            "propagate": False,
+        },
         "django.security.DisallowedHost": {
             "level": "ERROR",
             "handlers": ["console"],
@@ -194,7 +200,7 @@ LOGGING = {
 }
 
 # Sentry
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 SENTRY_DSN = env("SENTRY_DSN")
 SENTRY_LOG_LEVEL = env.int("DJANGO_SENTRY_LOG_LEVEL", logging.INFO)
 
@@ -216,7 +222,7 @@ sentry_sdk.init(
 )
 
 # django-rest-framework
-# -------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Tools that generate code samples can use SERVERS to point to the correct domain
 SPECTACULAR_SETTINGS["SERVERS"] = [
     {"url": "https://mhai.com", "description": "Production server"},

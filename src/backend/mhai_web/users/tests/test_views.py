@@ -15,7 +15,11 @@ from django.utils.translation import gettext_lazy as _
 from mhai_web.users.forms import UserAdminChangeForm
 from mhai_web.users.models import User
 from mhai_web.users.tests.factories import UserFactory
-from mhai_web.users.views import UserRedirectView, UserUpdateView, user_detail_view
+from mhai_web.users.views import (
+    UserRedirectView,
+    UserUpdateView,
+    user_detail_view,
+)
 
 pytestmark = pytest.mark.django_db
 

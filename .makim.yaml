@@ -1,5 +1,26 @@
 env-file: .envs/.django
 groups:
+  clean:
+    tasks:
+      tmp:
+        help: remove build artifacts, compiled files, and cache
+        backend: bash
+        run: |
+          find . -name '*.egg-info' -exec rm -rf {} +
+          find . -name '*.egg' -exec rm -f {} +
+          find . -name '*.pyc' -exec rm -f {} +
+          find . -name '*.pyo' -exec rm -f {} +
+          find . -name '__pycache__' -exec rm -rf {} +
+          find . -name '*~' -exec rm -f {} + || true
+          rm -rf build/
+          rm -rf dist/
+          rm -rf .eggs/
+          rm -f .coverage
+          rm -rf htmlcov/
+          rm -rf .pytest_cache
+          rm -rf .ruff_cache
+          rm -rf .mypy_cache
+
   reactjs:
     tasks:
       install:
@@ -16,26 +37,20 @@ groups:
 
   django:
     tasks:
-      runserver:
+      collectstatic:
         env-file: .envs/.env
+        dir: src/backend
         hooks:
           pre-run:
             - task: reactjs.install
             - task: reactjs.build
-        dir: src/backend
         run: |
-          if "${{ env.SUGAR_GROUP }}" == "prod":
-              python manage.py compress
-          python manage.py runserver
+          python manage.py collectstatic -v 3 --noinput  # --clear
 
       create-superuser:
         help: create an admin user
         args:
           email:
-            help: Specify the username
-            type: string
-            required: True
-          username:
             help: Specify the username
             type: string
             required: True
@@ -45,13 +60,13 @@ groups:
             type: string
             required: True
             interactive: True
+        env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
         dir: src/backend
         backend: bash
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
-          export DJANGO_SUPERUSER_USERNAME=${{ args.username }}
           python manage.py createsuperuser --noinput --email ${{ args.email }}
 
       makemigrations:
@@ -64,26 +79,52 @@ groups:
               Just check if the latest migration files were already created.
             type: bool
             action: store_true
+        matrix:
+          app:
+            - ""
+            - mhai_web
+            - user_profile
         backend: bash
-        run: |
-          CMD_FLAG="${{ '--check' if args.check else '' }} --no-input"
-          python manage.py makemigrations ${CMD_FLAG}
+        run: python manage.py makemigrations ${{ matrix.app }}
 
       migrate:
         env-file: .envs/.env
         dir: src/backend
-        run: |
-          python manage.py migrate
+        matrix:
+          app:
+            - ""
+            - user_profile
+        run: python manage.py migrate ${{ matrix.app }}
 
-      collectstatic:
+      notebook:
+        help: Run the django environment in a jupyter notebook
         env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         dir: src/backend
+        run: python manage.py shell_plus --lab
+
+      runserver:
+        env-file: .envs/.env
         hooks:
           pre-run:
             - task: reactjs.install
             - task: reactjs.build
+        dir: src/backend
         run: |
-          python manage.py collectstatic -v 3 --noinput  # --clear
+          if "${{ env.SUGAR_GROUP }}" == "prod":
+              python manage.py compress
+          python manage.py runserver
+
+      shell:
+        help: Run the django environment in a jupyter notebook
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        dir: src/backend
+        run: python manage.py shell_plus
 
   tests:
     backend: bash
@@ -97,7 +138,7 @@ groups:
           settings:
             help: Specify the Django settings module
             type: string
-            default: "config.settings.dev"
+            default: "config.settings.test"
           app:
             help: The name of the app
             type: string
@@ -114,7 +155,7 @@ groups:
         run: |
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
-            --ds=${{env.DJANGO_SETTINGS_MODULE or args.settings}} ${{ args.params }} ${{ args.app }}
+            --ds=${{ args.settings }} ${{ args.params }} ${{ args.app }}
 
       coverage-report:
         help: Generate coverage report
@@ -122,9 +163,9 @@ groups:
         env:
           POSTGRES_HOST: localhost
         run: |
-          coverage report -m --skip-empty --omit=*/config/*,*/migrations/*,*/tests/*,manage.py,src/frontend/*
+          coverage report -m --skip-empty
 
-      ci:
+      unit:
         help: Run the same the same tests executed on CI
         args:
           params:
@@ -138,6 +179,8 @@ groups:
         hooks:
           pre-run:
             - task: tests.coverage-gen-data
+              args:
+                params: "${{ args.params }}"
             - task: tests.coverage-report
 
   nginx:
