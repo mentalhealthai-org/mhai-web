@@ -9,9 +9,9 @@ function UserProfileEmotions() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/profile/api/' + profile_id + '/';
+  const api_url = '/profile/api/emotions/' + profile_id + '/';
 
-  const [emotionalProfile, setEmotionalProfile] = useState('');
+  const [emotions, setEmotions] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -25,17 +25,17 @@ function UserProfileEmotions() {
         },
       })
       .then((response) => {
-        setEmotionalProfile(response.data.emotional_profile || '');
+        setEmotions(response.data.emotions || '');
         setLoading(false);
       })
       .catch((error) => {
-        setError('Failed to fetch emotional status.');
+        setError('Failed to fetch emotions.');
         setLoading(false);
       });
   }, []);
 
   const handleChange = (e) => {
-    setEmotionalProfile(e.target.value);
+    setEmotions(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -46,7 +46,7 @@ function UserProfileEmotions() {
     axios
       .put(
         api_url,
-        { emotional_profile: emotionalProfile },
+        { emotions: emotions },
         {
           withCredentials: true,
           headers: {
@@ -55,10 +55,10 @@ function UserProfileEmotions() {
         }
       )
       .then((response) => {
-        setSuccess('Emotional status updated successfully.');
+        setSuccess('Emotions updated successfully.');
       })
       .catch((error) => {
-        setError('Failed to update emotional status.');
+        setError('Failed to update emotions.');
       });
   };
 
@@ -79,15 +79,15 @@ function UserProfileEmotions() {
           <form onSubmit={handleSubmit}>
             {/* Emotional Profile Textarea */}
             <div className="mb-3">
-              <label htmlFor="emotional_profile" className="form-label">
+              <label htmlFor="emotions" className="form-label">
                 Your Emotional Profile
               </label>
               <textarea
                 className="form-control"
-                id="emotional_profile"
-                name="emotional_profile"
+                id="emotions"
+                name="emotions"
                 rows="5"
-                value={emotionalProfile}
+                value={emotions}
                 onChange={handleChange}
                 required
               ></textarea>
