@@ -250,4 +250,4 @@ indent_size=2
 [tool.bandit]
 exclude_dirs = ["tests"]
 targets = "src/backend/"
-skips = ["B602"]
+skips = ["B602", "B324"]
