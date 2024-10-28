@@ -9,7 +9,7 @@ function UserProfileInterests() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/profile/api/' + profile_id + '/';
+  const api_url = '/profile/api/interests/' + profile_id + '/';
 
   const [interests, setInterests] = useState('');
   const [loading, setLoading] = useState(true);

@@ -1,5 +1,5 @@
 {% load static i18n compress %}
-{% load gravatar %}
+{% load dicebear %}
 
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
@@ -89,7 +89,7 @@
                      data-bs-toggle="dropdown"
                      aria-expanded="false">
                     <!-- Use the custom Gravatar filter here -->
-                    <img src="{{ request.user.email|gravatar_url:32 }}"
+                    <img src="{{ request.user.email|dicebear_url:32 }}"
                          alt="Profile"
                          class="rounded-circle"
                          style="width: 32px;

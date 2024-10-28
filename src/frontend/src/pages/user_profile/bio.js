@@ -11,7 +11,7 @@ function UserProfileBio() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/profile/api/' + profile_id + '/';
+  const api_url = '/profile/api/bio/' + profile_id + '/';
 
   const [bio, setBio] = useState({
     bio_life: '',
