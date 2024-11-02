@@ -1,6 +1,5 @@
 """Test for user profile module."""
 
-
 import pytest
 
 from mhai_web.users.models import User
