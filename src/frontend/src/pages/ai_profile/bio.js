@@ -10,8 +10,8 @@ import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 function AIProfileBio() {
   const csrftoken = getCSRFToken();
   const context = getContext();
-  const profile_id = context['profile_id'];
-  const api_url = '/api/ai-profile/bio/' + profile_id + '/';
+  const ai_profile_id = context['ai_profile_id'];
+  const api_url = '/api/ai-profile/bio/' + ai_profile_id + '/';
 
   const [bio, setBio] = useState({
     bio_life: '',
@@ -88,7 +88,7 @@ function AIProfileBio() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Bio</h2>
+          <h2>Mhai Bio</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Life */}

@@ -8,8 +8,8 @@ import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 function AIProfileInterests() {
   const csrftoken = getCSRFToken();
   const context = getContext();
-  const profile_id = context['profile_id'];
-  const api_url = '/api/ai-profile/interests/' + profile_id + '/';
+  const ai_profile_id = context['ai_profile_id'];
+  const api_url = '/api/ai-profile/interests/' + ai_profile_id + '/';
 
   const [interests, setInterests] = useState('');
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ function AIProfileInterests() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Interests</h2>
+          <h2>Mhai Interests</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Interests Textarea */}

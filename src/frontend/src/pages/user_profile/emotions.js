@@ -74,7 +74,7 @@ function UserProfileEmotions() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Emotional Status</h2>
+          <h2>Personal Emotional Status</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Emotional Profile Textarea */}

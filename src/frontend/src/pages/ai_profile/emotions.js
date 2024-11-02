@@ -8,8 +8,8 @@ import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 function AIProfileEmotions() {
   const csrftoken = getCSRFToken();
   const context = getContext();
-  const profile_id = context['profile_id'];
-  const api_url = '/api/ai-profile/emotions/' + profile_id + '/';
+  const ai_profile_id = context['ai_profile_id'];
+  const api_url = '/api/ai-profile/emotions/' + ai_profile_id + '/';
 
   const [emotions, setEmotions] = useState('');
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ function AIProfileEmotions() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Emotional Status</h2>
+          <h2>Mhai Emotional Status</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Emotional Profile Textarea */}

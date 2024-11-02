@@ -154,7 +154,7 @@ function UserProfileCriticalEvents() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Critical Events</h2>
+          <h2>Personal Critical Events</h2>
           {success && <div className="alert alert-success">{success}</div>}
           {error && <div className="alert alert-danger">{error}</div>}
           <button className="btn btn-primary mb-3" onClick={handleAddNew}>

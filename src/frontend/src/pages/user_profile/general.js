@@ -79,7 +79,7 @@ function UserProfileGeneral() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>General Information</h2>
+          <h2>Personal General Information</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Name */}

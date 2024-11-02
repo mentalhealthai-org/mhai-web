@@ -88,7 +88,7 @@ function UserProfileBio() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Bio</h2>
+          <h2>Personal Bio</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Life */}

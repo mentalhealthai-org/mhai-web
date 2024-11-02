@@ -74,7 +74,7 @@ function UserProfileInterests() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Interests</h2>
+          <h2>Personal Interests</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Interests Textarea */}
