@@ -29,26 +29,29 @@ router.register(
     basename="ai-profile-bio",
 )
 
-urlpatterns = [
+api_urlpatterns = [
+    path(r"", include(router.urls)),
+]
+
+views_urlpatterns = [
     path(
-        "profile/",
+        "ai-profile/",
         views.AIProfileView.as_view(),
         name="ai-profile-general",
     ),
     path(
-        "profile/bio/",
+        "ai-profile/bio/",
         views.AIProfileView.as_view(),
         name="ai-profile-bio",
     ),
     path(
-        "profile/emotions/",
+        "ai-profile/emotions/",
         views.AIProfileView.as_view(),
         name="ai-profile-emotions",
     ),
     path(
-        "profile/interests/",
+        "ai-profile/interests/",
         views.AIProfileView.as_view(),
         name="ai-profile-interests",
     ),
-    path("profile/api/", include(router.urls)),
 ]

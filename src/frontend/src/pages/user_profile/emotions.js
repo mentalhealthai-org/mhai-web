@@ -9,7 +9,7 @@ function UserProfileEmotions() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/profile/api/emotions/' + profile_id + '/';
+  const api_url = '/api/profile/emotions/' + profile_id + '/';
 
   const [emotions, setEmotions] = useState('');
   const [loading, setLoading] = useState(true);

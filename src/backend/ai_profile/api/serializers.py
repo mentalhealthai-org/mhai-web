@@ -1,30 +1,31 @@
 """User Profile Serializers."""
 
 from rest_framework import serializers
-from user_profile.models import UserProfile, UserProfileCriticalEvent
+
+from ai_profile.models import AIProfile
 
 
-class UserProfileGeneralInfoSerializer(serializers.ModelSerializer):
+class AIProfileGeneralInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = AIProfile
         fields = ["name", "age", "gender", "gender_custom"]
 
 
-class UserProfileInterestsSerializer(serializers.ModelSerializer):
+class AIProfileInterestsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = AIProfile
         fields = ["interests"]
 
 
-class UserProfileEmotionsSerializer(serializers.ModelSerializer):
+class AIProfileEmotionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = AIProfile
         fields = ["emotions"]
 
 
-class UserProfileBiographySerializer(serializers.ModelSerializer):
+class AIProfileBiographySerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = AIProfile
         fields = [
             "bio_life",
             "bio_education",
@@ -33,18 +34,4 @@ class UserProfileBiographySerializer(serializers.ModelSerializer):
             "bio_friends",
             "bio_pets",
             "bio_health",
-        ]
-
-
-class UserProfileCriticalEventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfileCriticalEvent
-        fields = [
-            "id",
-            "profile",
-            "date",
-            "description",
-            "impact",
-            "resolved",
-            "treated",
         ]

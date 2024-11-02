@@ -11,7 +11,7 @@ class GenderChoices(models.TextChoices):
     CUSTOM = "C", gettext_lazy("Custom")
 
 
-class UserProfile(models.Model):
+class AIProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )

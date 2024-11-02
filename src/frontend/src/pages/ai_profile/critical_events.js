@@ -3,13 +3,13 @@ import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
 import getContext from '../../libs/context';
-import ProfileSideBar from '../../components/user_profile/side_bar_menu';
+import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 
-function UserProfileCriticalEvents() {
+function AIProfileCriticalEvents() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = `/api/profile/critical-events/${profile_id}/`;
+  const api_url = `/api/ai-profile/critical-events/${profile_id}/`;
 
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -150,7 +150,7 @@ function UserProfileCriticalEvents() {
       <div className="row">
         {/* Sidebar */}
         <div className="col-md-3">
-          <ProfileSideBar active="critical-events" />
+          <AIProfileSideBar active="critical-events" />
         </div>
         {/* Main Content */}
         <div className="col-md-9">
@@ -299,4 +299,4 @@ function UserProfileCriticalEvents() {
   );
 }
 
-export default UserProfileCriticalEvents;
+export default AIProfileCriticalEvents;

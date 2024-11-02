@@ -3,15 +3,15 @@ import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
 import getContext from '../../libs/context';
-import ProfileSideBar from '../../components/user_profile/side_bar_menu';
+import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 
-function UserProfileInterests() {
+function AIProfileEmotions() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/api/profile/interests/' + profile_id + '/';
+  const api_url = '/api/ai-profile/emotions/' + profile_id + '/';
 
-  const [interests, setInterests] = useState('');
+  const [emotions, setEmotions] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -25,17 +25,17 @@ function UserProfileInterests() {
         },
       })
       .then((response) => {
-        setInterests(response.data.interests || '');
+        setEmotions(response.data.emotions || '');
         setLoading(false);
       })
       .catch((error) => {
-        setError('Failed to fetch interests.');
+        setError('Failed to fetch emotions.');
         setLoading(false);
       });
   }, []);
 
   const handleChange = (e) => {
-    setInterests(e.target.value);
+    setEmotions(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -46,7 +46,7 @@ function UserProfileInterests() {
     axios
       .put(
         api_url,
-        { interests },
+        { emotions: emotions },
         {
           withCredentials: true,
           headers: {
@@ -55,10 +55,10 @@ function UserProfileInterests() {
         }
       )
       .then((response) => {
-        setSuccess('Interests updated successfully.');
+        setSuccess('Emotions updated successfully.');
       })
       .catch((error) => {
-        setError('Failed to update interests.');
+        setError('Failed to update emotions.');
       });
   };
 
@@ -70,24 +70,24 @@ function UserProfileInterests() {
       <div className="row">
         {/* Sidebar */}
         <div className="col-md-3">
-          <ProfileSideBar active="interests" />
+          <AIProfileSideBar active="emotions" />
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Interests</h2>
+          <h2>Emotional Status</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
-            {/* Interests Textarea */}
+            {/* Emotional Profile Textarea */}
             <div className="mb-3">
-              <label htmlFor="interests" className="form-label">
-                Your Interests
+              <label htmlFor="emotions" className="form-label">
+                Your Emotional Profile
               </label>
               <textarea
                 className="form-control"
-                id="interests"
-                name="interests"
+                id="emotions"
+                name="emotions"
                 rows="5"
-                value={interests}
+                value={emotions}
                 onChange={handleChange}
                 required
               ></textarea>
@@ -95,7 +95,7 @@ function UserProfileInterests() {
 
             {/* Submit Button */}
             <button type="submit" className="btn btn-primary">
-              Save Interests
+              Save Emotional Status
             </button>
           </form>
         </div>
@@ -104,4 +104,4 @@ function UserProfileInterests() {
   );
 }
 
-export default UserProfileInterests;
+export default AIProfileEmotions;

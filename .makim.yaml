@@ -84,6 +84,7 @@ groups:
             - ""
             - mhai_web
             - user_profile
+            - ai_profile
         backend: bash
         run: python manage.py makemigrations ${{ matrix.app }}
 
@@ -94,6 +95,7 @@ groups:
           app:
             - ""
             - user_profile
+            - ai_profile
         run: python manage.py migrate ${{ matrix.app }}
 
       notebook:

@@ -7,68 +7,55 @@ from typing import cast
 from mhai_web.users.models import User
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from user_profile.api.serializers import (
-    UserProfileBiographySerializer,
-    UserProfileCriticalEventSerializer,
-    UserProfileEmotionsSerializer,
-    UserProfileGeneralInfoSerializer,
-    UserProfileInterestsSerializer,
+
+from ai_profile.api.serializers import (
+    AIProfileBiographySerializer,
+    AIProfileEmotionsSerializer,
+    AIProfileGeneralInfoSerializer,
+    AIProfileInterestsSerializer,
 )
-from user_profile.models import UserProfile, UserProfileCriticalEvent
+from ai_profile.models import AIProfile
 
 
-class UserProfileGeneralInfoView(viewsets.ModelViewSet):
-    """ViewSet for updating general information in the UserProfile model."""
+class AIProfileGeneralInfoView(viewsets.ModelViewSet):
+    """ViewSet for updating general information in the AIProfile model."""
 
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileGeneralInfoSerializer
+    queryset = AIProfile.objects.all()
+    serializer_class = AIProfileGeneralInfoSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileInterestsView(viewsets.ModelViewSet):
-    """ViewSet for updating interests in the UserProfile model."""
+class AIProfileInterestsView(viewsets.ModelViewSet):
+    """ViewSet for updating interests in the AIProfile model."""
 
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileInterestsSerializer
+    queryset = AIProfile.objects.all()
+    serializer_class = AIProfileInterestsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileEmotionsView(viewsets.ModelViewSet):
-    """ViewSet for updating the emotional profile in the UserProfile model."""
+class AIProfileEmotionsView(viewsets.ModelViewSet):
+    """ViewSet for updating the emotional profile in the AIProfile model."""
 
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileEmotionsSerializer
+    queryset = AIProfile.objects.all()
+    serializer_class = AIProfileEmotionsSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))
 
 
-class UserProfileBiographyView(viewsets.ModelViewSet):
-    """ViewSet for updating bio-related fields in the UserProfile model."""
+class AIProfileBiographyView(viewsets.ModelViewSet):
+    """ViewSet for updating bio-related fields in the AIProfile model."""
 
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileBiographySerializer
+    queryset = AIProfile.objects.all()
+    serializer_class = AIProfileBiographySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))
-
-
-class UserProfileCriticalEventView(viewsets.ModelViewSet):
-    """ViewSet for CRUD operations on the UserProfileCriticalEvent model."""
-
-    queryset = UserProfileCriticalEvent.objects.all()
-    serializer_class = UserProfileCriticalEventSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return self.queryset.filter(
-            profile__user=cast(User, self.request.user)
-        )

@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from user_profile.models import AIProfile
+
+from ai_profile.models import AIProfile
 
 if TYPE_CHECKING:
     from django.http import HttpRequest, HttpResponse

@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import getCSRFToken from '../../libs/csrf';
 import getContext from '../../libs/context';
-import ProfileSideBar from '../../components/user_profile/side_bar_menu';
+import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 
-function UserProfileGeneral() {
+function AIProfileGeneral() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/api/profile/' + profile_id + '/';
+  const api_url = '/api/ai-profile/' + profile_id + '/';
 
   const [profile, setProfile] = useState({
     name: '',
@@ -75,7 +75,7 @@ function UserProfileGeneral() {
       <div className="row">
         {/* Sidebar */}
         <div className="col-md-3">
-          <ProfileSideBar active="general" />
+          <AIProfileSideBar active="general" />
         </div>
         {/* Main Content */}
         <div className="col-md-9">
@@ -164,4 +164,4 @@ function UserProfileGeneral() {
   );
 }
 
-export default UserProfileGeneral;
+export default AIProfileGeneral;
