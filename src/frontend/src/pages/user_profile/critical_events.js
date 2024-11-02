@@ -9,7 +9,7 @@ function UserProfileCriticalEvents() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = `/profile/api/critical-events/${profile_id}/`;
+  const api_url = `/api/profile/critical-events/${profile_id}/`;
 
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -154,7 +154,7 @@ function UserProfileCriticalEvents() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Critical Events</h2>
+          <h2>Personal Critical Events</h2>
           {success && <div className="alert alert-success">{success}</div>}
           {error && <div className="alert alert-danger">{error}</div>}
           <button className="btn btn-primary mb-3" onClick={handleAddNew}>

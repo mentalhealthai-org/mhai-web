@@ -1,17 +1,17 @@
-// src/pages/userprofile/UserProfileBio.js
+// src/pages/userprofile/AIProfileBio.js
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
 import getContext from '../../libs/context';
-import ProfileSideBar from '../../components/user_profile/side_bar_menu';
+import AIProfileSideBar from '../../components/ai_profile/side_bar_menu';
 
-function UserProfileBio() {
+function AIProfileBio() {
   const csrftoken = getCSRFToken();
   const context = getContext();
-  const profile_id = context['profile_id'];
-  const api_url = '/api/profile/bio/' + profile_id + '/';
+  const ai_profile_id = context['ai_profile_id'];
+  const api_url = '/api/ai-profile/bio/' + ai_profile_id + '/';
 
   const [bio, setBio] = useState({
     bio_life: '',
@@ -84,11 +84,11 @@ function UserProfileBio() {
       <div className="row">
         {/* Sidebar */}
         <div className="col-md-3">
-          <ProfileSideBar active="bio" />
+          <AIProfileSideBar active="bio" />
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Personal Bio</h2>
+          <h2>Mhai Bio</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Life */}
@@ -191,4 +191,4 @@ function UserProfileBio() {
   );
 }
 
-export default UserProfileBio;
+export default AIProfileBio;

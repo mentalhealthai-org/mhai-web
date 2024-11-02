@@ -99,6 +99,7 @@ LOCAL_APPS = [
     "mhai_web.users",
     "mhai_web",
     "user_profile.apps.UserProfileConfig",
+    "ai_profile.apps.AIProfileConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

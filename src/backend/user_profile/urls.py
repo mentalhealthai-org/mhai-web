@@ -34,8 +34,12 @@ router.register(
     basename="user-profile-events",
 )
 
+# Separate API and non-API endpoints
+api_urlpatterns = [
+    path(r"", include(router.urls)),
+]
 
-urlpatterns = [
+views_urlpatterns = [
     path(
         "profile/",
         views.UserProfileView.as_view(),
@@ -61,5 +65,4 @@ urlpatterns = [
         views.UserProfileView.as_view(),
         name="user-profile-events",
     ),
-    path("profile/api/", include(router.urls)),
 ]

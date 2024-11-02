@@ -12,7 +12,14 @@ from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 from mhai_web.urls import urlpatterns as mhai_urls
-from user_profile.urls import urlpatterns as user_profile_urls
+from ai_profile.urls import (
+    api_urlpatterns as ai_profile_api_urls,
+    views_urlpatterns as ai_profile_views_urls,
+)
+from user_profile.urls import (
+    api_urlpatterns as user_profile_api_urls,
+    views_urlpatterns as user_profile_views_urls,
+)
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
@@ -20,8 +27,11 @@ urlpatterns = [
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    # apps
     *mhai_urls,
-    *user_profile_urls,
+    *user_profile_views_urls,
+    *ai_profile_views_urls,
+    # static
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
 if settings.DEBUG:
@@ -40,6 +50,9 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    # APPS
+    path("api/ai-profile/", include(ai_profile_api_urls)),
+    path("api/profile/", include(user_profile_api_urls)),
 ]
 
 if settings.DEBUG:

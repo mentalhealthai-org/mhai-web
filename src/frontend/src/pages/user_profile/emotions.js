@@ -9,7 +9,7 @@ function UserProfileEmotions() {
   const csrftoken = getCSRFToken();
   const context = getContext();
   const profile_id = context['profile_id'];
-  const api_url = '/profile/api/emotions/' + profile_id + '/';
+  const api_url = '/api/profile/emotions/' + profile_id + '/';
 
   const [emotions, setEmotions] = useState('');
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ function UserProfileEmotions() {
         </div>
         {/* Main Content */}
         <div className="col-md-9">
-          <h2>Emotional Status</h2>
+          <h2>Personal Emotional Status</h2>
           {success && <div className="alert alert-success">{success}</div>}
           <form onSubmit={handleSubmit}>
             {/* Emotional Profile Textarea */}
