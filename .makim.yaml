@@ -63,6 +63,12 @@ groups:
             type: string
             required: True
             interactive: True
+          generate-token:
+            help: |
+              If the token is already created, don't create it again.
+            type: bool
+            default: False
+            action: store_true
         env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
@@ -72,6 +78,9 @@ groups:
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
           python manage.py createsuperuser --noinput --email ${{ args.email }}
+          if [ "${{ args.generate_token }}" == "True" ]; then
+            python manage.py drf_create_token ${{ args.email }}
+          fi
 
       makemigrations:
         help: Run django makemigrations command (just for development)
