@@ -38,6 +38,17 @@ groups:
         - name: celerybeat
         - name: flower
 
+  test:
+    config-path:
+      - containers/compose.base.yaml
+      - containers/compose.dev.yaml
+    env-file: .envs/.env
+    services:
+      default: postgres,redis
+      available:
+        - name: postgres
+        - name: redis
+
   prod:
     config-path:
       - containers/compose.base.yaml

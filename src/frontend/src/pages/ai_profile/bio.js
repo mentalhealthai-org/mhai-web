@@ -36,13 +36,13 @@ function AIProfileBio() {
       })
       .then((response) => {
         setBio({
-          bio_life: response.data.bio_life,
-          bio_education: response.data.bio_education,
-          bio_work: response.data.bio_work,
-          bio_family: response.data.bio_family,
-          bio_friends: response.data.bio_friends,
-          bio_pets: response.data.bio_pets,
-          bio_health: response.data.bio_health,
+          bio_life: response.data.bio_life || '',
+          bio_education: response.data.bio_education || '',
+          bio_work: response.data.bio_work || '',
+          bio_family: response.data.bio_family || '',
+          bio_friends: response.data.bio_friends || '',
+          bio_pets: response.data.bio_pets || '',
+          bio_health: response.data.bio_health || '',
         });
         setLoading(false);
       })

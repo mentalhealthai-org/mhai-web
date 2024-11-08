@@ -2,6 +2,15 @@
 With these settings, tests run faster.
 """
 
+import os
+
+# note: keep this at the beginning to ensure it will be used by base and dev
+# settings
+os.environ["POSTGRES_HOST"] = "localhost"
+os.environ["REDIS_HOST"] = "localhost"
+
+import os
+
 from .base import TEMPLATES, env
 from .dev import *  # noqa: F403
 
@@ -33,3 +42,7 @@ TEMPLATES[0]["OPTIONS"]["debug"] = False  # type: ignore[index]
 # -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = "http://media.testserver"
+
+# CELERY
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True

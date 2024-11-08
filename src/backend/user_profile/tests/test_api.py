@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from mhai_web.users.models import User as UserClass
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from user_profile.models import (
     GenderChoices,
@@ -20,16 +19,11 @@ User = get_user_model()
 
 
 @pytest.fixture
-def api_client():
-    """Fixture to provide a reusable API client."""
-    return APIClient()
-
-
-@pytest.fixture
 def user_profile(user: UserClass):
     """Fixture to create a test UserProfile instance linked to the user."""
-    return UserProfile.objects.create(
-        user=user,
+    profiles = UserProfile.objects.filter(user=user)
+
+    profiles.update(
         age=40,
         gender=GenderChoices.MALE,
         interests="video games, board games, nature",
@@ -42,6 +36,8 @@ def user_profile(user: UserClass):
         bio_pets="Pets details here.",
         bio_health="Health details here.",
     )
+
+    return UserProfile.objects.get(user=user)
 
 
 @pytest.mark.django_db

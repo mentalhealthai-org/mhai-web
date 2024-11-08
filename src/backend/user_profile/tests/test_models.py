@@ -27,8 +27,9 @@ def test_user_profile_creation(user: User):
     bio_pets = "Pets details here."
     bio_health = "Health details here."
 
-    profile = UserProfile.objects.create(
-        user=user,
+    profiles = UserProfile.objects.filter(user=user)
+
+    profiles.update(
         age=age,
         gender=gender,
         interests=interests,
@@ -41,6 +42,9 @@ def test_user_profile_creation(user: User):
         bio_pets=bio_pets,
         bio_health=bio_health,
     )
+
+    profile = UserProfile.objects.get(user=user)
+
     assert profile.age == age
     assert profile.gender == gender
     assert profile.interests == interests
@@ -56,27 +60,31 @@ def test_user_profile_creation(user: User):
 
 @pytest.mark.django_db
 def test_user_profile_custom_gender(user: User):
-    profile = UserProfile.objects.create(
-        user=user,
-        age=28,
-        gender=GenderChoices.CUSTOM,
-        gender_custom="Genderqueer",
-    )
+    profile = UserProfile.objects.get(user=user)
+
+    profile.age = 28
+    profile.gender = GenderChoices.CUSTOM
+    profile.gender_custom = "Genderqueer"
+    profile.save()
+
+    profile = UserProfile.objects.get(user=user)
+
     assert profile.gender == GenderChoices.CUSTOM
     assert profile.gender_custom == "Genderqueer"
 
-    # Changing gender to non-custom should clear gender_custom
     profile.gender = GenderChoices.FEMALE
     profile.gender_custom = ""
     profile.save()
+
+    profile = UserProfile.objects.get(user=user)
+
     assert profile.gender_custom == ""
 
 
 @pytest.mark.django_db
 def test_user_profile_important_event(user: User):
-    profile = UserProfile.objects.create(
-        user=user, age=40, gender=GenderChoices.MALE
-    )
+    profile = UserProfile.objects.get(user=user)
+
     event = UserProfileCriticalEvent.objects.create(
         profile=profile,
         date=date(2019, 1, 1),
@@ -87,13 +95,16 @@ def test_user_profile_important_event(user: User):
     )
 
     assert event in profile.critical_events.all()
+
+    event = profile.critical_events.all()[0]
+
     assert event.date == date(2019, 1, 1)
     assert event.description == "My dog died in an accident."
     assert event.impact == "I am sad since then."
     assert event.resolved is False
     assert event.treated is False
 
-    # Update event resolution status
     event.resolved = True
     event.save()
+
     assert event.resolved is True

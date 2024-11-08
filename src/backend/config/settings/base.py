@@ -48,15 +48,15 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
 # -----------------------------------------------------------------------------
-# https://django-environ.readthedocs.io/en/latest/quickstart.html
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "mhai_web",
-        "USER": env("POSTGRES_USER", default="mhai"),
-        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
-        "HOST": env("POSTGRES_HOST", default="postgres"),
-        "PORT": env("POSTGRES_PORT", default="25432"),
+        "USER": env("POSTGRES_USER", default=""),
+        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
+        "HOST": env("POSTGRES_HOST", default=""),
+        "PORT": env("POSTGRES_PORT", default=""),
     },
     "test": {
         "ENGINE": "django.db.backends.postgresql",
@@ -112,6 +112,7 @@ LOCAL_APPS = [
     "mhai_web",
     "user_profile.apps.UserProfileConfig",
     "ai_profile.apps.AIProfileConfig",
+    "mhai_chat.apps.MhaiChatConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
