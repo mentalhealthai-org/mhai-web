@@ -14,6 +14,8 @@
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Mhai" />
+        <meta name="keywords"
+              content="mental health, support, Mhai, personalized, accessibility" />
         <meta name="author" content="Ivan Ogasawara" />
         <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
         {% block css %}
@@ -56,7 +58,10 @@
             <nav class="navbar navbar-expand-md navbar-light bg-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="{% url 'home' %}">
-                        <img src="{% static 'images/logo-small.png' %}" style="height: 50px" />
+                        <img src="{% static 'images/logo-small.png' %}"
+                             alt="Mhai Logo"
+                             width="50"
+                             height="50" />
                     </a>
                     <button class="navbar-toggler"
                             type="button"
@@ -87,12 +92,11 @@
                                        role="button"
                                        data-bs-toggle="dropdown"
                                        aria-expanded="false">
-                                        <!-- Use the custom Gravatar filter here -->
                                         <img src="{{ request.user.email|dicebear_url:32 }}"
                                              alt="Profile"
                                              class="rounded-circle"
-                                             style="width: 32px;
-                                                    height: 32px" />
+                                             width="32"
+                                             height="32" />
                                         <span class="ms-2">{{ user.email }}</span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end"
@@ -158,7 +162,7 @@
                             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-2">
                                 <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Quick Links</h5>
                                 <p>
-                                    <a href="/about/" class="text-dark" style="text-decoration: none;">About Us</a>
+                                    <a href="{% url 'about' %}" class="text-dark">About Us</a>
                                 </p>
                             </div>
                             <!-- Contact Information -->
@@ -172,7 +176,7 @@
                             <!-- Social Media Links -->
                             <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-2">
                                 <h5 class="text-uppercase mb-4 font-weight-bold text-primary">Follow Us</h5>
-                                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-brands fa-facebook-f"></i></a>
+                                <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-facebook-f"></i></a>
                                 <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-twitter"></i></a>
                                 <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-instagram"></i></a>
                                 <a href="#" class="btn btn-outline-dark btn-floating m-1"><i class="fab fa-linkedin-in"></i></a>

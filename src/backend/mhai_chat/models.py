@@ -37,4 +37,6 @@ class Message(models.Model):
         ordering = ["-timestamp"]
 
     def __str__(self):
-        return f"Message from {self.user or 'AI'} in {self.chat_room.name} at {self.timestamp}"
+        return f"Message from {
+            self.user or 'AI'
+            } in {self.chat_room.name} at {self.timestamp}"
