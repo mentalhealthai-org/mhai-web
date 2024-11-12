@@ -6,6 +6,7 @@ authors = ["Ivan Ogasawara <ivan.ogasawara@gmail.com>"]
 readme = "README.md"
 packages = [
   {include = "*", from="src/backend"},
+	{include = "*", from="src/libs"},
 ]
 
 [tool.poetry.dependencies]

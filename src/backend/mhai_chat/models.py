@@ -9,7 +9,7 @@ class MhaiChat(models.Model):
     Model representing a message within a chat room.
     """
 
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     user_input = models.TextField()
     ai_response = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -18,7 +18,7 @@ class MhaiChat(models.Model):
         ordering = ["-timestamp"]
 
     def __str__(self):
-        return f"MhaiChat ({self.user.name}): {self.timestamp} / #{self.id}"
+        return f"MhaiChat ({self.user}): {self.timestamp} / #{self.id}"
 
 
 class MhaiChatEvalMentBert(models.Model):
@@ -29,7 +29,7 @@ class MhaiChatEvalMentBert(models.Model):
     """
 
     mhai_chat = models.ForeignKey(
-        MhaiChat, null=True, on_delete=models.CASCADE
+        MhaiChat, null=False, on_delete=models.CASCADE
     )
     borderline = models.FloatField()
     anxiety = models.FloatField()
@@ -42,7 +42,7 @@ class MhaiChatEvalMentBert(models.Model):
     ptsd = models.FloatField()
 
     def __str__(self):
-        return f"MhaiChatEvalMentBert ({self.mhai_chat.user.name}) #{self.id}"
+        return f"MhaiChatEvalMentBert ({self.mhai_chat.user}) #{self.id}"
 
 
 class MhaiChatEvalPsychBert(models.Model):
@@ -53,7 +53,7 @@ class MhaiChatEvalPsychBert(models.Model):
     """
 
     mhai_chat = models.ForeignKey(
-        MhaiChat, null=True, on_delete=models.CASCADE
+        MhaiChat, null=False, on_delete=models.CASCADE
     )
     unrelated = models.FloatField()
     mental_illnesses = models.FloatField()
@@ -63,7 +63,7 @@ class MhaiChatEvalPsychBert(models.Model):
     loneliness = models.FloatField()
 
     def __str__(self):
-        return f"MhaiChatEvalPsychBert ({self.mhai_chat.user.name}) #{self.id}"
+        return f"MhaiChatEvalPsychBert ({self.mhai_chat.user}) #{self.id}"
 
 
 class MhaiChatEvalEmotions(models.Model):
@@ -74,7 +74,7 @@ class MhaiChatEvalEmotions(models.Model):
     """
 
     mhai_chat = models.ForeignKey(
-        MhaiChat, null=True, on_delete=models.CASCADE
+        MhaiChat, null=False, on_delete=models.CASCADE
     )
     neutral = models.FloatField()
     joy = models.FloatField()
@@ -85,4 +85,4 @@ class MhaiChatEvalEmotions(models.Model):
     fear = models.FloatField()
 
     def __str__(self):
-        return f"MhaiChatEvalEmotions ({self.mhai_chat.user.name}) #{self.id}"
+        return f"MhaiChatEvalEmotions ({self.mhai_chat.user}) #{self.id}"

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import cast
-
 import tiktoken
 
 from transformers import pipeline
@@ -45,40 +43,36 @@ def num_tokens_from_string(string: str) -> int:
     return len(encoding_cl100k_base.encode(string))
 
 
-def truncate_tokens(string: str, max_num_tokens: int) -> int:
+def truncate_tokens(string: str, max_num_tokens: int) -> str:
     """Returns the number of tokens in a text string."""
     tokens = encoding_cl100k_base.encode(string)
     return encoding_cl100k_base.decode(tokens[:max_num_tokens])
 
 
-def get_sentiment(text: str) -> int:
+def eval_sentiment(text: str) -> dict[str, float]:
     """
     Get the level of the sentimental.
 
     Restriction of 512 tokens.
-
-    Return
-    ------
-    int:
-        Where 1, is not good, and 5 is really good.
-        Returns -1 if the input is invalid.
     """
     if not text:
-        return -1
+        return {}
 
     if num_tokens_from_string(text) > MAX_TOKENS:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        result = sentiment_pipeline(text)
+        result_raw = sentiment_pipeline(text)
     except Exception:  # noqa: BLE001
-        return -1
-    label = result[0][0]["label"]
-    return int(label.split(" ")[0])
+        return {}
+
+    return {
+        row["label"].lower().replace(" ", "-"): row["score"]
+        for row in result_raw
+    }
 
 
-# Example function to get emotions
-def get_emotions(text: str) -> dict[str, float]:
+def eval_emotions(text: str) -> dict[str, float]:
     """
     Return
     ------
@@ -99,14 +93,16 @@ def get_emotions(text: str) -> dict[str, float]:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        results = emotion_pipeline(text)
+        result_raw = emotion_pipeline(text)
     except Exception:  # noqa: BLE001
         return {}
-    emotions = {result["label"]: result["score"] for result in results[0]}
-    return cast(dict[str, float], emotions)
+    return {
+        row["label"].lower().replace(" ", "-"): row["score"]
+        for row in result_raw
+    }
 
 
-def get_psychbert_classification(text: str) -> int:
+def eval_psychbert(text: str) -> dict[str, float]:
     """
     This is a version of
     https://huggingface.co/mnaylor/psychbert-cased
@@ -151,14 +147,15 @@ def get_psychbert_classification(text: str) -> int:
     except Exception:  # noqa: BLE001
         return {}
 
-    label = result_raw[0]["label"]
     return {
-        "psychbert_label": label_map.get(label, label),
-        "psychbert_score": result_raw[0]["score"],
+        (
+            label_map.get(row["label"], row["label"]).lower().replace(" ", "-")
+        ): row["score"]
+        for row in result_raw
     }
 
 
-def get_mentbert_classification(text: str) -> dict[str, str | float]:
+def eval_mentbert(text: str) -> dict[str, float]:
     """
     This model is a finetuned BERT (bert-base-uncased)
     model that predict different mental disorders.
@@ -198,6 +195,6 @@ def get_mentbert_classification(text: str) -> dict[str, str | float]:
         return {}
 
     return {
-        "mentbert_label": result_raw[0]["label"].lower(),
-        "mentbert_score": result_raw[0]["score"],
+        row["label"].lower().replace(" ", "-"): row["score"]
+        for row in result_raw
     }
