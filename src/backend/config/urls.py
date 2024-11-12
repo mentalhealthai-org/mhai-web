@@ -12,6 +12,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from mhai_web.urls import urlpatterns as mhai_urls
 from mhai_chat.urls import urlpatterns as mhai_chat_urls
 
+
 from ai_profile.urls import (
     api_urlpatterns as ai_profile_api_urls,
     views_urlpatterns as ai_profile_views_urls,
@@ -56,7 +57,7 @@ urlpatterns += [
     path("api/ai-profile/", include(ai_profile_api_urls)),
     path("api/profile/", include(user_profile_api_urls)),
     # mhai_chat URLs under `api/chat/`
-    path("api/chat/", include("mhai_chat.urls")),
+    path("api/mhai-chat/", include("mhai_chat.api.urls")),
 ]
 
 if settings.DEBUG:

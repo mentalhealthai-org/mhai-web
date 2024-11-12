@@ -4,39 +4,85 @@ from django.db import models
 User = get_user_model()
 
 
-class ChatRoom(models.Model):
-    """
-    Model representing a chat room.
-    """
-
-    name = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Message(models.Model):
+class MhaiChat(models.Model):
     """
     Model representing a message within a chat room.
     """
 
-    chat_room = models.ForeignKey(
-        ChatRoom, related_name="messages", on_delete=models.CASCADE
-    )
-    user = models.ForeignKey(
-        User, null=True, on_delete=models.SET_NULL
-    )  # Null for AI responses
-    content = models.TextField()
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    user_input = models.TextField()
+    ai_response = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    message_type = models.CharField(
-        max_length=10, choices=[("USER", "User"), ("AI", "AI")], default="USER"
-    )
 
     class Meta:
         ordering = ["-timestamp"]
 
     def __str__(self):
-        return f"Message from {
-            self.user or 'AI'
-            } in {self.chat_room.name} at {self.timestamp}"
+        return f"MhaiChat ({self.user.name}): {self.timestamp} / #{self.id}"
+
+
+class MhaiChatEvalMentBert(models.Model):
+    """
+    Store the scores from MentBert analysis from patient messsage.
+
+    Ref: https://huggingface.co/reab5555/mentBERT
+    """
+
+    mhai_chat = models.ForeignKey(
+        MhaiChat, null=True, on_delete=models.CASCADE
+    )
+    borderline = models.FloatField()
+    anxiety = models.FloatField()
+    depression = models.FloatField()
+    bipolar = models.FloatField()
+    ocd = models.FloatField()
+    adhd = models.FloatField()
+    schizophrenia = models.FloatField()
+    asperger = models.FloatField()
+    ptsd = models.FloatField()
+
+    def __str__(self):
+        return f"MhaiChatEvalMentBert ({self.mhai_chat.user.name}) #{self.id}"
+
+
+class MhaiChatEvalPsychBert(models.Model):
+    """
+    Store the scores from PsychBert analysis from patient messages.
+
+    Ref: https://huggingface.co/mnaylor/psychbert-finetuned-multiclass
+    """
+
+    mhai_chat = models.ForeignKey(
+        MhaiChat, null=True, on_delete=models.CASCADE
+    )
+    unrelated = models.FloatField()
+    mental_illnesses = models.FloatField()
+    anxiety = models.FloatField()
+    depression = models.FloatField()
+    social_anxiety = models.FloatField()
+    loneliness = models.FloatField()
+
+    def __str__(self):
+        return f"MhaiChatEvalPsychBert ({self.mhai_chat.user.name}) #{self.id}"
+
+
+class MhaiChatEvalEmotions(models.Model):
+    """
+    Store the scores from Emotion analysis from patient messages.
+
+    Ref: j-hartmann/emotion-english-distilroberta-base
+    """
+
+    mhai_chat = models.ForeignKey(
+        MhaiChat, null=True, on_delete=models.CASCADE
+    )
+    neutral = models.FloatField()
+    joy = models.FloatField()
+    disgust = models.FloatField()
+    sadness = models.FloatField()
+    anger = models.FloatField()
+    surprise = models.FloatField()
+    fear = models.FloatField()
+
+    def __str__(self):
+        return f"MhaiChatEvalEmotions ({self.mhai_chat.user.name}) #{self.id}"

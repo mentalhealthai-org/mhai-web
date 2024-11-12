@@ -1,21 +1,11 @@
-# mhai_chat/urls.py
+"""Mhai Chat URLs."""
+
+from __future__ import annotations
 
 from django.urls import path
 
-from .views import (
-    ChatRoomListView,
-    CreateChatRoomView,
-    GetMessagesView,
-    SendMessageView,
-)
+from mhai_chat import views
 
 urlpatterns = [
-    path("create-room/", CreateChatRoomView.as_view(), name="create-room"),
-    path("rooms/", ChatRoomListView.as_view(), name="chat-room-list"),
-    path("send-message/", SendMessageView.as_view(), name="send_message"),
-    path(
-        "messages/<int:room_id>/",
-        GetMessagesView.as_view(),
-        name="get_messages",
-    ),
+    path("mhai-chat/", views.MhaiChatView.as_view(), name="mhai-chat"),
 ]

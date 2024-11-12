@@ -1,48 +1,39 @@
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
+"""Mhai Chat views."""
 
-from .models import ChatRoom, Message
-from .serializers import ChatRoomSerializer, MessageSerializer
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
-class CreateChatRoomView(generics.CreateAPIView):
-    queryset = ChatRoom.objects.all()
-    serializer_class = ChatRoomSerializer
-    permission_classes = [AllowAny]  # No authentication required
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 
-
-class ChatRoomListView(generics.ListAPIView):
-    queryset = ChatRoom.objects.all()
-    serializer_class = ChatRoomSerializer
-    permission_classes = [AllowAny]  # No authentication required
+if TYPE_CHECKING:
+    from django.http import HttpRequest, HttpResponse
 
 
-class SendMessageView(generics.CreateAPIView):
-    """
-    API view to send a message to a chat room.
-    """
+@method_decorator(login_required, name="dispatch")
+class MhaiChatView(TemplateView):
+    template_name = "generic.html"
 
-    serializer_class = MessageSerializer
-    permission_classes = [AllowAny]  # No authentication required
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """
+        Render the mhai chat page.
 
-    def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user
-            if self.request.user.is_authenticated
-            else None
-        )
+        Parameters
+        ----------
+        request : HttpRequest
+            The HTTP request object.
 
+        Returns
+        -------
+        HttpResponse
+            The HTTP response with the rendered template.
+        """
+        context = super().get_context_data()
 
-class GetMessagesView(generics.ListAPIView):
-    """
-    API view to retrieve messages from a specific chat room.
-    """
-
-    serializer_class = MessageSerializer
-    permission_classes = [AllowAny]  # No authentication required
-
-    def get_queryset(self):
-        room_id = self.kwargs.get("room_id")
-        return Message.objects.filter(chat_room_id=room_id).order_by(
-            "timestamp"
-        )
+        context["context"] = {
+            "user_id": request.user.id,
+        }
+        return render(request, "generic.html", context)
