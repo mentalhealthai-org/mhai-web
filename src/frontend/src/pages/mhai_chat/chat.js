@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
-// import ProfileSideBar from '../../components/mhai_chat/side_bar_menu'; // Optional if you want to include the sidebar
+// import ProfileSideBar from '../../components/mhai_chat/side_bar_menu';
 
 function MhaiChat() {
   const csrftoken = getCSRFToken();
@@ -16,7 +16,7 @@ function MhaiChat() {
   const lastMessageIdRef = useRef(null);
   const pollingInterval = 5000; // X seconds in milliseconds
 
-  const apiUrl = '/api/chat/';
+  const apiUrl = '/api/mhai-chat/';
 
   // Function to fetch messages
   const fetchMessages = () => {

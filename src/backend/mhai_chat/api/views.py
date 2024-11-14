@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from rest_framework import viewsets
+from rest_framework import permissions, viewsets
 
 from mhai_chat.api.serializers import (
     MhaiChatEvalEmotionsSerializer,
@@ -23,14 +23,23 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
     API endpoint for managing chat messages in MhaiChat.
     """
 
-    queryset = MhaiChat.objects.all()
     serializer_class = MhaiChatSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            return MhaiChat.objects.filter(user=user)
+            queryset = MhaiChat.objects.filter(user=user).order_by("timestamp")
+            since_id = self.request.query_params.get("since_id")
+            if since_id:
+                queryset = queryset.filter(id__gt=since_id)
+            return queryset
         return MhaiChat.objects.none()
+
+    def perform_create(self, serializer):
+        user_input = serializer.validated_data.get("user_input")
+        print(user_input)
+        serializer.save(user=self.request.user, ai_response="")
 
 
 class MhaiChatEvalEmotionsViewSet(viewsets.ModelViewSet):

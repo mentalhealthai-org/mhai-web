@@ -18,6 +18,7 @@ class MhaiChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = MhaiChat
         fields = ["id", "user", "user_input", "ai_response", "timestamp"]
+        read_only_fields = ["id", "ai_response", "timestamp", "user"]
 
 
 class MhaiChatEvalMentBertSerializer(serializers.ModelSerializer):
