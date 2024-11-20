@@ -46,7 +46,14 @@ DJANGO_SECURE_SSL_REDIRECT=${DJANGO_SECURE_SSL_REDIRECT}
 # Email
 # ------------------------------------------------------------------------------
 DJANGO_SERVER_EMAIL=${DJANGO_SERVER_EMAIL}
-
+EMAIL_BACKEND=${EMAIL_BACKEND}
+EMAIL_HOST=${EMAIL_HOST}
+EMAIL_HOST_USER=${EMAIL_HOST_USER}
+EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+EMAIL_PORT=${EMAIL_PORT}
+EMAIL_SENDER=${EMAIL_SENDER}
+EMAIL_USE_TLS=${EMAIL_USE_TLS}
+EMAIL_USE_SSL=${EMAIL_USE_SSL}
 
 # django-allauth
 # ------------------------------------------------------------------------------

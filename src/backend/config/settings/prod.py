@@ -113,11 +113,19 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
 INSTALLED_APPS += ["anymail", "django.contrib.humanize"]
 
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 ANYMAIL: dict[str, str] = {}
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_PORT = env("EMAIL_PORT", default=25)
+EMAIL_SENDER = env("EMAIL_SENDER", default="admin")
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # STATIC
 # -----------------------------------------------------------------------------
