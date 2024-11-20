@@ -55,6 +55,7 @@ EMAIL_SENDER=${EMAIL_SENDER}
 EMAIL_USE_TLS=${EMAIL_USE_TLS}
 EMAIL_USE_SSL=${EMAIL_USE_SSL}
 
+
 # django-allauth
 # ------------------------------------------------------------------------------
 DJANGO_ACCOUNT_ALLOW_REGISTRATION=${DJANGO_ACCOUNT_ALLOW_REGISTRATION}
