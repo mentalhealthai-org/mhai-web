@@ -62,3 +62,15 @@ services:
           sleep 12h & wait $${!};
         done;
       '
+
+  celeryworker:
+    extends: mhai-web-base
+    build: !reset null
+
+  celerybeat:
+    extends: mhai-web-base
+    build: !reset null
+
+  flower:
+    extends: mhai-web-base
+    build: !reset null
