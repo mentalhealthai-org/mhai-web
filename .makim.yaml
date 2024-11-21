@@ -44,6 +44,9 @@ groups:
           pre-run:
             - task: reactjs.install
             - task: reactjs.build
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: |
           python manage.py collectstatic -v 3 --noinput  # --clear
 
@@ -63,6 +66,7 @@ groups:
         env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         dir: src/backend
         backend: bash
         run: |
@@ -86,6 +90,9 @@ groups:
             - user_profile
             - ai_profile
         backend: bash
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: python manage.py makemigrations ${{ matrix.app }}
 
       migrate:
@@ -96,6 +103,9 @@ groups:
             - ""
             - user_profile
             - ai_profile
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: python manage.py migrate ${{ matrix.app }}
 
       notebook:
@@ -114,6 +124,9 @@ groups:
             - task: reactjs.install
             - task: reactjs.build
         dir: src/backend
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: |
           if "${{ env.SUGAR_GROUP }}" == "prod":
               python manage.py compress
@@ -134,8 +147,6 @@ groups:
       coverage-gen-data:
         help: Generate coverage data with pytest
         env-file: .envs/.env
-        env:
-          POSTGRES_HOST: localhost
         args:
           settings:
             help: Specify the Django settings module
@@ -154,6 +165,9 @@ groups:
             help: Extra params for the test
             type: string
             default: ""
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: |
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
@@ -164,6 +178,7 @@ groups:
         env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
         run: |
           coverage report -m --skip-empty
 
