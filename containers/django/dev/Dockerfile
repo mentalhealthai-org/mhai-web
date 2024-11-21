@@ -41,7 +41,7 @@ RUN conda init bash \
   && conda env list \
   && /opt/deps/install-deps.sh
 
-COPY --chown=mhai-web:mhai-web src/ /opt/services/mhai-web/src
+COPY --chown=${USERNAME}:${USERNAME} src/ /opt/services/mhai-web/src
 
 ARG STATIC_ROOT
 ARG MEDIA_ROOT
@@ -55,17 +55,17 @@ WORKDIR /opt/services/mhai-web/src/backend
 ENV PYTHONPATH='/opt/services/mhai-web/src/backend'
 
 RUN sudo chown ${USERNAME}:${USERNAME} /opt/
-COPY --chown=mhai-web:mhai-web ./containers/django/scripts/entrypoint.sh /opt/entrypoint.sh
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/scripts/entrypoint.sh /opt/entrypoint.sh
 RUN sed -i 's/\r$//g' /opt/entrypoint.sh
 RUN chmod +x /opt/entrypoint.sh
 
-COPY --chown=mhai-web:mhai-web ./containers/django/dev/start /opt/start
+COPY --chown=${USERNAME}:${USERNAME} ./containers/django/dev/start /opt/start
 RUN sed -i 's/\r$//g' /opt/start
 RUN chmod +x /opt/start
 
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/worker/start /opt/start-celeryworker
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/beat/start /opt/start-celerybeat
-COPY --chown=mhai-web:mhai-web ./containers/celery/dev/flower/start /opt/start-flower
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/dev/worker/start /opt/start-celeryworker
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/dev/beat/start /opt/start-celerybeat
+COPY --chown=${USERNAME}:${USERNAME} ./containers/celery/dev/flower/start /opt/start-flower
 
 RUN sed -i 's/\r$//g' /opt/start-celeryworker \
   && sed -i 's/\r$//g' /opt/start-celerybeat \
@@ -75,7 +75,7 @@ RUN sed -i 's/\r$//g' /opt/start-celeryworker \
   && chmod +x /opt/start-flower
 
 # copy application code to WORKDIR
-COPY --chown=mhai-web:mhai-web . ${APP_HOME}
+COPY --chown=${USERNAME}:${USERNAME} . ${APP_HOME}
 
 ENTRYPOINT ["tini", "--", "/opt/entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

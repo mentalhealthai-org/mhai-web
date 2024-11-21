@@ -1,6 +1,5 @@
 name: CI
 
-# Enable Buildkit and let compose use it to speed up image building
 env:
   # SUGAR
   CELERY_FLOWER_USER: debug
@@ -26,6 +25,7 @@ env:
   POSTGRES_PASSWORD: debug
   USE_DOCKER: yes
   IPYTHONDIR: /app/.ipython
+  DOCKER_BUILDKIT: 0
 
 on:
   pull_request:
