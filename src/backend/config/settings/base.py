@@ -13,7 +13,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=True)
+READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
     environ.Env.read_env(str(BASE_DIR.parent.parent / ".envs" / ".env"))
@@ -53,11 +53,15 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 # -----------------------------------------------------------------------------
 # https://django-environ.readthedocs.io/en/latest/quickstart.html
 DATABASES = {
-    "default": env.db(default="sqlite:///db.sqlite3"),  # Fallback to SQLite
-    "extra": env.db_url(
-        "SQLITE_URL",
-        default=env("DATABASE_URL"),
-    ),
+    "default": env.db("DATABASE_URL", default="postgresql://"),
+    "test": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "test_mhai_web",
+        "USER": env("POSTGRES_USER", default="mhai"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": env("POSTGRES_HOST", default="postgres"),
+        "PORT": env("POSTGRES_PORT", default="25432"),
+    },
 }
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
