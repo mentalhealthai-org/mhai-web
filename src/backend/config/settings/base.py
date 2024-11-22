@@ -386,5 +386,3 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/",
     "SERVERS": [{"url": "http://localhost", "description": "local server"}],
 }
-
-POSTGRES_HOST = "localhost"

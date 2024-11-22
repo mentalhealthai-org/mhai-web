@@ -104,7 +104,6 @@ groups:
             - user_profile
             - ai_profile
         env:
-          READ_DOT_ENV_FILE: "True"
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
         run: python manage.py migrate ${{ matrix.app }}
