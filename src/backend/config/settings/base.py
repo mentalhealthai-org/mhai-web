@@ -19,6 +19,10 @@ if READ_DOT_ENV_FILE:
 # -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
+
+# Local dev settings
+SHELL_PLUS_DONT_LOAD = ["*"]
+
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -44,9 +48,16 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
 # -----------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# https://django-environ.readthedocs.io/en/latest/quickstart.html
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgresql://"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mhai_web",
+        "USER": env("POSTGRES_USER", default="mhai"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": env("POSTGRES_HOST", default="postgres"),
+        "PORT": env("POSTGRES_PORT", default="25432"),
+    },
     "test": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "test_mhai_web",
@@ -56,6 +67,7 @@ DATABASES = {
         "PORT": env("POSTGRES_PORT", default="25432"),
     },
 }
+
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
