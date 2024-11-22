@@ -1,8 +1,6 @@
 # ruff: noqa: E501
 import logging
 
-from typing import cast
-
 import sentry_sdk
 
 from sentry_sdk.integrations.celery import CeleryIntegration
@@ -124,7 +122,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
-EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_SENDER = env("EMAIL_SENDER", default="admin")
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
