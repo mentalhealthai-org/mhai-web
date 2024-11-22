@@ -8,10 +8,7 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # mhai_web/
 APPS_DIR = BASE_DIR / "mhai_web"
-env = environ.Env(
-    # set casting, default value
-    EMAIL_PORT=(int, 587),
-)
+env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
@@ -53,7 +50,14 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 # -----------------------------------------------------------------------------
 # https://django-environ.readthedocs.io/en/latest/quickstart.html
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgresql://"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mhai_web",
+        "USER": env("POSTGRES_USER", default="mhai"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": env("POSTGRES_HOST", default="postgres"),
+        "PORT": env("POSTGRES_PORT", default="25432"),
+    },
     "test": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "test_mhai_web",
@@ -382,3 +386,5 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/",
     "SERVERS": [{"url": "http://localhost", "description": "local server"}],
 }
+
+POSTGRES_HOST = "localhost"
