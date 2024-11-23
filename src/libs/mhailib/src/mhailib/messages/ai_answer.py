@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import yaml
+
 from mhailib.messages.config import MAX_TOKENS, client
 
 
@@ -37,7 +39,7 @@ def create_system_message(user_id: int) -> dict[str, Any]:
     user_profile = get_user_profile(user_id)
 
     ai_name = ai_profile.get("name", "Mhai")
-    user_name = user_profile.get("name", "User")
+    # user_name = user_profile.get("name", "User")
 
     system_content = (
         f"You are a person called {ai_name} and your purpose is to help "
@@ -88,8 +90,7 @@ def create_system_message(user_id: int) -> dict[str, Any]:
         f"```\n{yaml.dump(user_profile)}\n```"
     )
 
-    system_message = {"role": "system", "content": system_content}
-    return system_message
+    return {"role": "system", "content": system_content}
 
 
 def ask_ai(prompt: str, user_id: int) -> str:

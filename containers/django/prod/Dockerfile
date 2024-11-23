@@ -29,26 +29,24 @@ ARG HTTPS_PROXY
 ENV CONDA_PREFIX /opt/conda/envs/$ENV_NAME
 ENV PATH ${CONDA_PREFIX}/bin:$PATH
 
-COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/deps/
-COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/deps/install-deps.sh
-COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
-
-ARG ENV=prod
-
-RUN conda init bash \
-  && source ~/.bashrc \
-  && source /opt/activate.sh \
-  && conda env list \
-  && /opt/deps/install-deps.sh
-
-COPY --chown=${USERNAME}:${USERNAME} src/ /opt/services/mhai-web/src
-
+ARG ENV=dev
 ARG STATIC_ROOT
 ARG MEDIA_ROOT
 
 ENV STATIC_ROOT ${STATIC_ROOT}
 ENV MEDIA_ROOT ${MEDIA_ROOT}
 
+COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mhai-web
+COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
+COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/deps/install-deps.sh
+# note: src/libs/mhailib is a dependency now for the backend django
+COPY --chown=${USERNAME}:${USERNAME} src/ /opt/services/mhai-web/src
+
+RUN conda init bash \
+  && source ~/.bashrc \
+  && source /opt/activate.sh \
+  && conda env list \
+  && /opt/deps/install-deps.sh
 
 WORKDIR /opt/services/mhai-web/src/backend
 

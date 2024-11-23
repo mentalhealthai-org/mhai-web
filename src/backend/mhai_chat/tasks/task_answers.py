@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from celery import shared_task
-from mahilib.messages.ai_answer import ask_ai
+from mhailib.messages.ai_answer import ask_ai
 
 from mhai_chat.models import MhaiChat
 
@@ -33,3 +33,5 @@ def process_chat_answer(message_id: int, user_id: int) -> None:
     except MhaiChat.DoesNotExist:
         # Log error if the MhaiChat message with given ID does not exist
         print(f"Error: MhaiChat message with id {message_id} does not exist.")
+        chat_message.status = "error"
+        chat_message.save()
