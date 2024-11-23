@@ -21,18 +21,18 @@ function App() {
     <Router>
       <Routes>
         {/* <Route path="*" element={<NotFound />} /> */}
-				<Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-				<Route path="/ai-profile" element={<AIProfileGeneral />} />
-				<Route path="/ai-profile/bio" element={<AIProfileBio />} />
-				<Route path="/ai-profile/emotions" element={<AIProfileEmotions />} />
-				<Route path="/ai-profile/interests" element={<AIProfileInterests />} />
-				<Route path="/mhai-chat/" element={<MhaiChat />} />
-				<Route path="/profile" element={<UserProfileGeneral />} />
-				<Route path="/profile/bio" element={<UserProfileBio />} />
-				<Route path="/profile/emotions" element={<UserProfileEmotions />} />
-				<Route path="/profile/interests" element={<UserProfileInterests />} />
-				<Route path="/profile/critical-events" element={<UserProfileCriticalEvents />} />
+        <Route path="/ai-profile" element={<AIProfileGeneral />} />
+        <Route path="/ai-profile/bio" element={<AIProfileBio />} />
+        <Route path="/ai-profile/emotions" element={<AIProfileEmotions />} />
+        <Route path="/ai-profile/interests" element={<AIProfileInterests />} />
+        <Route path="/mhai-chat/" element={<MhaiChat />} />
+        <Route path="/profile" element={<UserProfileGeneral />} />
+        <Route path="/profile/bio" element={<UserProfileBio />} />
+        <Route path="/profile/emotions" element={<UserProfileEmotions />} />
+        <Route path="/profile/interests" element={<UserProfileInterests />} />
+        <Route path="/profile/critical-events" element={<UserProfileCriticalEvents />} />
       </Routes>
     </Router>
   );

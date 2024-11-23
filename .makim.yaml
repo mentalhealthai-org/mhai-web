@@ -37,6 +37,20 @@ groups:
 
   django:
     tasks:
+      bash:
+        env-file: .envs/.env
+        backend: bash
+        dir: src/backend
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          # note: it prints some messages like:
+          #   bash: cannot set terminal process group: Inappropriate ioctl for device
+          #   bash: no job control in this shell
+          # not sure how to handle that yet
+          bash --rcfile <(echo "source ~/.bashrc; conda activate mhai-web")
+
       collectstatic:
         env-file: .envs/.env
         dir: src/backend

@@ -120,16 +120,31 @@ function MhaiChat() {
         {/* Main Content */}
         <div className="col-md-12">
           <h2>Chat with AI</h2>
-          <div className="chat-container" style={{ maxHeight: '60vh', overflowY: 'auto', border: '1px solid #ccc', padding: '1rem' }}>
+
+          <div className="chat-container" style={{ maxHeight: '60vh', overflowY: 'auto', paddingTop: '1rem' }}>
             {messages.map((msg) => (
               <div key={msg.id}>
-                <div><strong>You:</strong> {msg.user_input}</div>
-                <div><strong>AI:</strong> {msg.ai_response}</div>
-                <hr />
+                {/* User Message */}
+                <div className="bg-success text-light p-3 rounded-3 mt-2 ms-5 position-relative">
+                  <strong>You: </strong>
+                  {msg.user_input}
+                  <div className="text-light small position-absolute" style={{ bottom: '5px', right: '10px' }}>
+                    2024-10-01 10:00:01
+                  </div>
+                </div>
+                {/* AI Response */}
+                <div className="bg-secondary text-light p-3 rounded-3 mt-2 me-5 position-relative">
+                  <strong>Mhai: </strong>
+                  {msg.ai_response}
+                  <div className="text-light small position-absolute" style={{ bottom: '5px', right: '10px' }}>
+                    2024-10-01 10:00:02
+                  </div>
+                </div>
               </div>
             ))}
             <div ref={messagesEndRef}></div>
           </div>
+
           <form onSubmit={handleSendMessage} className="mt-3">
             <div className="input-group">
               <input

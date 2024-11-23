@@ -9,10 +9,21 @@ class MhaiChat(models.Model):
     Model representing a message within a chat room.
     """
 
+    class StatusChoices(models.TextChoices):
+        STARTED = "started", "Started"
+        IN_PROGRESS = "in-progress", "In Progress"
+        COMPLETED = "completed", "Completed"
+        ERROR = "error", "Error"
+
     user = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     user_input = models.TextField()
     ai_response = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=StatusChoices.choices,
+        default=StatusChoices.STARTED,
+    )
 
     class Meta:
         ordering = ["-timestamp"]

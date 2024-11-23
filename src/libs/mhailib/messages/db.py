@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 from typing import Any
 
 from ai_profile.api.serializers import AIProfileSerializer
@@ -13,7 +12,7 @@ from mhai_chat.api.serializers import (
     MhaiChatEvalPsychBertSerializer,
     MhaiChatSerializer,
 )
-from mhai_chat.models import MhaiChat, MhaiChatEvalEmotions
+from mhai_chat.models import MhaiChat
 from user_profile.api.serializers import UserProfileSerializer
 from user_profile.models import UserProfile
 
@@ -28,7 +27,7 @@ def get_user_profile(user_id: int) -> dict[str, Any]:
     return UserProfileSerializer(user_profile).data
 
 
-def load_conversation_history(user_id: int) -> list[dict[str, Any]]:
+def load_chat_history(user_id: int, last_k: int = 10) -> list[dict[str, Any]]:
     """
     Load the conversation history for a given user using the MhaiChat model.
 
@@ -36,6 +35,7 @@ def load_conversation_history(user_id: int) -> list[dict[str, Any]]:
     ----------
     user_id : int
         The ID of the user whose conversation history is to be retrieved.
+    last_k: int, default 10
 
     Returns
     -------
@@ -43,7 +43,10 @@ def load_conversation_history(user_id: int) -> list[dict[str, Any]]:
         A list of dictionaries containing user and assistant messages
         with roles "user" or "assistant".
     """
-    messages = MhaiChat.objects.filter(user_id=user_id).order_by("timestamp")
+    # TODO: this should be changed to RAG approach with top 10
+    messages = MhaiChat.objects.filter(
+        user_id=user_id,
+    ).order_by("timestamp")[-last_k:]
 
     history = []
     for message in messages:
@@ -53,63 +56,11 @@ def load_conversation_history(user_id: int) -> list[dict[str, Any]]:
     return history
 
 
-def load_emotions(user_id: int) -> list[dict[str, Any]]:
+def load_chat_and_evaluation_history_last_k(
+    user_id: int, last_k: int = 10
+) -> list[dict[str, Any]]:
     """
-    Load the emotion analysis scores.
-
-    This function loads emotion's score for a given user's chat messages
-    using the MhaiChatEvalEmotions model.
-
-    Parameters
-    ----------
-    user_id : int
-        The ID of the user whose emotion analysis scores are to be retrieved.
-
-    Returns
-    -------
-    list[dict[str, Any]]
-        A list of dictionaries, each containing emotion scores for a specific
-        chat message.
-    """
-    emotion_scores = MhaiChatEvalEmotions.objects.filter(
-        mhai_chat__user_id=user_id
-    )
-
-    return [
-        MhaiChatEvalEmotionsSerializer(emotion).data
-        for emotion in emotion_scores
-    ]
-
-
-def get_emotions_top_3(data: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    for row in data:
-        emotions = {
-            "neutral": row["neutral"],
-            "joy": row["joy"],
-            "disgust": row["disgust"],
-            "sadness": row["sadness"],
-            "anger": row["anger"],
-            "surprise": row["surprise"],
-            "fear": row["fear"],
-        }
-        top_emotions = sorted(
-            emotions.items(), key=lambda x: x[1], reverse=True
-        )
-
-        if top_emotions[0][1] > 0.75:
-            for emotion in emotions:
-                row[emotion] = 1 if emotion == top_emotions[0][0] else 0
-        else:
-            top_3_emotions = [emotion[0] for emotion in top_emotions[:3]]
-            for emotion in emotions:
-                row[emotion] = 1 if emotion in top_3_emotions else 0
-
-    return data
-
-
-def load_conversation_history_last_24h(user_id: int) -> list[dict[str, Any]]:
-    """
-    Load the conversation history and evaluations from the last 24 hours.
+    Load the last k conversation history and its evaluations.
 
     Parameters
     ----------
@@ -122,11 +73,7 @@ def load_conversation_history_last_24h(user_id: int) -> list[dict[str, Any]]:
         A list of dictionaries containing user messages, AI responses,
         and associated evaluation scores.
     """
-    last_24h = datetime.now() - timedelta(days=1)
-
-    chat_entries = MhaiChat.objects.filter(
-        user_id=user_id, timestamp__gte=last_24h
-    )
+    chat_entries = MhaiChat.objects.filter(user_id=user_id)[-last_k:]
 
     history_data = []
 
