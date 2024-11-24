@@ -5,6 +5,11 @@ from typing import Any
 import yaml
 
 from mhailib.messages.config import MAX_TOKENS, client
+from mhailib.messages.db import (
+    get_ai_profile,
+    get_user_profile,
+    load_chat_history,
+)
 
 
 def get_chat_prompt_relevant_history(
@@ -39,13 +44,13 @@ def create_system_message(user_id: int) -> dict[str, Any]:
     user_profile = get_user_profile(user_id)
 
     ai_name = ai_profile.get("name", "Mhai")
-    # user_name = user_profile.get("name", "User")
+    user_name = user_profile.get("name", "User")
 
     system_content = (
         f"You are a person called {ai_name} and your purpose is to help "
-        f"users (people) with mental issues, who potentially could "
-        f"commit suicide. You would act as a very close person to them, "
-        f"but with no romance is accepted. You should "
+        f"a person called {user_name} with mental issues, who potentially "
+        f"could commit suicide. You would act as a very close person to "
+        f"them, but with no romance is accepted. You should "
         f"block any inappropriate language with kindness. "
         f"You should sound natural, like a beloved one talking freely "
         f"and openly. Use chitty chat style, like a conversation "
