@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import warnings
+
 from celery import shared_task
 from mhailib.messages.ai_answer import ask_ai
 
@@ -32,6 +34,12 @@ def process_chat_answer(message_id: int, user_id: int) -> None:
 
     except MhaiChat.DoesNotExist:
         # Log error if the MhaiChat message with given ID does not exist
-        print(f"Error: MhaiChat message with id {message_id} does not exist.")
-        chat_message.status = "error"
-        chat_message.save()
+        warnings.warn(
+            f"Error: MhaiChat message with id {message_id} does not exist."
+        )
+    except Exception as e:
+        warnings.warn(f"Error: {e}")
+        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        if chat_message_fallback:
+            chat_message.status = "error"
+            chat_message.save()

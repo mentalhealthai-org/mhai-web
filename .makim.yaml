@@ -169,7 +169,7 @@ groups:
   tests:
     backend: bash
     tasks:
-      coverage-gen-data:
+      unit:
         help: Generate coverage data with pytest
         env-file: .envs/.env
         args:
@@ -194,11 +194,12 @@ groups:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
         run: |
+          sugar --group test compose-ext restart --options -d
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
             --ds=${{ args.settings }} ${{ args.params }} ${{ args.app }}
 
-      coverage-report:
+      cov-report:
         help: Generate coverage report
         env-file: .envs/.env
         env:
@@ -207,7 +208,7 @@ groups:
         run: |
           coverage report -m --skip-empty
 
-      unit:
+      unit-cov:
         help: Run the same the same tests executed on CI
         args:
           params:
@@ -217,13 +218,13 @@ groups:
           settings:
             help: Specify the django settings module
             type: string
-            default: "config.settings.dev"
+            default: "config.settings.test"
         hooks:
           pre-run:
-            - task: tests.coverage-gen-data
+            - task: tests.unit
               args:
                 params: "${{ args.params }}"
-            - task: tests.coverage-report
+            - task: tests.cov-report
 
   nginx:
     tasks:

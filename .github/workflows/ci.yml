@@ -160,7 +160,7 @@ jobs:
         run: makim --verbose django.makemigrations --check
 
       - name: Run tests
-        run: makim --verbose tests.coverage-gen-data --append
+        run: makim --verbose tests.unit --append
 
       - name: Generate logs
         if: ${{ failure() }}
@@ -170,7 +170,7 @@ jobs:
       - name: Set coverage report
         id: parse-coverage-report
         run: |
-          COVERAGE_REPORT=$(makim tests.coverage-report)
+          COVERAGE_REPORT=$(makim tests.cov-report)
           COVERAGE_PERCENTAGE=$(echo $COVERAGE_REPORT | grep -oP "TOTAL.* \K(\d{1,3})%")
           COVERAGE_PERCENTAGE=${COVERAGE_PERCENTAGE%?}
           STATE=$(if ((COVERAGE_PERCENTAGE<50)); then echo "critical"; elif ((50<=COVERAGE_PERCENTAGE && COVERAGE_PERCENTAGE<=74)); then echo "yellow"; elif ((75<=COVERAGE_PERCENTAGE)); then echo "success"; fi)
