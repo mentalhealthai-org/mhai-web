@@ -22,13 +22,16 @@ from user_profile.urls import (
     views_urlpatterns as user_profile_views_urls,
 )
 
+
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    path("django_plotly_dash/", include("django_plotly_dash.urls")),
     # Application paths
+    path("dashboard/", include("dashboards.urls", namespace="dashboards")),
     *mhai_urls,
     *mhai_chat_urls,
     *user_profile_views_urls,

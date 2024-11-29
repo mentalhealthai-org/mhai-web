@@ -113,6 +113,7 @@ groups:
             - user_profile
             - ai_profile
             - mhai_chat
+            - dashboards
         backend: bash
         env:
           POSTGRES_HOST: localhost
@@ -128,6 +129,7 @@ groups:
             - user_profile
             - ai_profile
             - mhai_chat
+            - dashboards
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost

@@ -2,6 +2,7 @@
 """Base settings to build other settings files upon."""
 
 from pathlib import Path
+from urllib.parse import urlparse
 
 import environ
 
@@ -62,10 +63,10 @@ DATABASES = {
     "test": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "test_mhai_web",
-        "USER": env("POSTGRES_USER", default="mhai"),
-        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
-        "HOST": env("POSTGRES_HOST", default="postgres"),
-        "PORT": env("POSTGRES_PORT", default="25432"),
+        "USER": env("POSTGRES_USER", default=""),
+        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
+        "HOST": env("POSTGRES_HOST", default=""),
+        "PORT": env("POSTGRES_PORT", default=""),
     },
 }
 
@@ -74,6 +75,17 @@ DATABASES["default"]["ATOMIC_REQUESTS"] = False
 
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# REDIS
+
+REDIS_URL = env("REDIS_URL", default="")
+REDIS_HOST = ""
+REDIS_PORT = ""
+
+if REDIS_URL:
+    parsed_uri = urlparse(REDIS_URL)
+    REDIS_HOST = parsed_uri.hostname
+    REDIS_PORT = parsed_uri.port
 
 # URLS
 # -----------------------------------------------------------------------------
@@ -108,6 +120,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "simple_history",
+    "django_plotly_dash.apps.DjangoPlotlyDashConfig",
+    "channels",
+    # "channels.redis",
+    "dpd_static_support",
 ]
 
 LOCAL_APPS = [
@@ -117,6 +133,7 @@ LOCAL_APPS = [
     "ai_profile.apps.AIProfileConfig",
     "mhai_chat.apps.MhaiChatConfig",
     "mhailib",  # mhai internal library
+    "dashboards.apps.DashboardsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -180,6 +197,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "django_plotly_dash.middleware.BaseMiddleware",
+    "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
 ]
 
 # STATIC
@@ -197,6 +216,16 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "django_plotly_dash.finders.DashComponentFinder",
+    "django_plotly_dash.finders.DashAssetFinder",
+]
+
+PLOTLY_COMPONENTS = [
+    "dash_core_components",
+    "dash_html_components",
+    "dash_bootstrap_components",
+    "dash_renderer",
+    "dpd_components",
 ]
 
 # MEDIA
@@ -214,7 +243,10 @@ TEMPLATES = [
         # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-TEMPLATES-BACKEND
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         # https://docs.djangoproject.com/en/dev/ref/settings/#dirs
-        "DIRS": [str(APPS_DIR / "templates")],
+        "DIRS": [
+            str(APPS_DIR / "templates"),
+            str(BASE_DIR / "dashboards" / "templates"),
+        ],
         # https://docs.djangoproject.com/en/dev/ref/settings/#app-dirs
         "APP_DIRS": True,
         "OPTIONS": {
@@ -253,7 +285,7 @@ SESSION_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
-X_FRAME_OPTIONS = "DENY"
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # EMAIL
 # -----------------------------------------------------------------------------
@@ -390,4 +422,17 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
     "SERVERS": [{"url": "http://localhost", "description": "local server"}],
+}
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+ASGI_APPLICATION = "config.routing.application"
+
+CHANNELS_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
 }
