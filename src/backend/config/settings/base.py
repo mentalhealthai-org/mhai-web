@@ -105,6 +105,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "simple_history",
+    "django_plotly_dash.apps.DjangoPlotlyDashConfig",
+    "channels",
+    # "channels.redis",
+    "dpd_static_support",
 ]
 
 LOCAL_APPS = [
@@ -112,6 +116,8 @@ LOCAL_APPS = [
     "mhai_web",
     "user_profile.apps.UserProfileConfig",
     "ai_profile.apps.AIProfileConfig",
+    "dashboards.apps.DashboardsConfig",
+    # 'dash_simple.apps.DashSimpleConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -175,6 +181,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "django_plotly_dash.middleware.BaseMiddleware",
+    "django_plotly_dash.middleware.ExternalRedirectionMiddleware",
 ]
 
 # STATIC
@@ -192,6 +200,16 @@ STATICFILES_DIRS = [
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "django_plotly_dash.finders.DashComponentFinder",
+    "django_plotly_dash.finders.DashAssetFinder",
+]
+
+PLOTLY_COMPONENTS = [
+    "dash_core_components",
+    "dash_html_components",
+    "dash_bootstrap_components",
+    "dash_renderer",
+    "dpd_components",
 ]
 
 # MEDIA
@@ -248,7 +266,7 @@ SESSION_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
 CSRF_COOKIE_HTTPONLY = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
-X_FRAME_OPTIONS = "DENY"
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # EMAIL
 # -----------------------------------------------------------------------------
@@ -385,4 +403,17 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
     "SERVERS": [{"url": "http://localhost", "description": "local server"}],
+}
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+ASGI_APPLICATION = "config.routing.application"
+
+CHANNELS_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
 }

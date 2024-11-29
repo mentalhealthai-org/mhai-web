@@ -20,6 +20,8 @@ from user_profile.urls import (
     api_urlpatterns as user_profile_api_urls,
     views_urlpatterns as user_profile_views_urls,
 )
+# from dashboards.urls import urlpatterns as dashboards_urls
+
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
@@ -27,6 +29,9 @@ urlpatterns = [
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    # Dash
+    path("dashboard/", include("dashboards.urls", namespace="dashboards")),
+    path("django_plotly_dash/", include("django_plotly_dash.urls")),
     # apps
     *mhai_urls,
     *user_profile_views_urls,
