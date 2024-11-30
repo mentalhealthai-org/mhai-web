@@ -8,5 +8,4 @@ class AIProfileConfig(AppConfig):
     name = "ai_profile"
 
     def ready(self):
-        # Import signals to ensure they are registered
         pass

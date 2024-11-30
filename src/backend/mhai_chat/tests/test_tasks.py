@@ -1,11 +1,17 @@
 import pytest
 
+from ai_profile.models import AIProfile
+from mhai_web.users.models import User
+from user_profile.models import UserProfile
+
 from mhai_chat.models import MhaiChat
 from mhai_chat.tasks.task_answers import process_chat_answer
 
 
 @pytest.mark.django_db
-def test_process_chat_answer_success(user):
+def test_process_chat_answer_success(
+    user: User, ai_profile: AIProfile, user_profile: UserProfile
+):
     """
     Test the process_chat_answer task.
 
@@ -27,7 +33,6 @@ def test_process_chat_answer_message_does_not_exist(user):
     """
     Test the process_chat_answer task when the chat message does not exist.
     """
-    invalid_message_id = 999  # Assume this ID doesn't exist
-    process_chat_answer(message_id=invalid_message_id, user_id=user.id)
-
-    assert MhaiChat.objects.filter(id=invalid_message_id).count() == 0
+    invalid_message_id = 999  # this ID doesn't exist
+    with pytest.raises(MhaiChat.DoesNotExist):
+        process_chat_answer(message_id=invalid_message_id, user_id=user.id)

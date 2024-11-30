@@ -14,7 +14,7 @@ from mhailib.messages.db import (
 
 def get_chat_prompt_relevant_history(
     user_id: int, last_k: int = 10
-) -> tuple[list[dict[str, Any]], int]:
+) -> list[dict[str, Any]]:
     """
     Get the most relevant history from the chat.
 
@@ -24,7 +24,7 @@ def get_chat_prompt_relevant_history(
     chat_history = [system_message]
     chat_history.extend(load_chat_history(user_id, last_k=last_k))
 
-    return chat_history, user_id
+    return chat_history
 
 
 def create_system_message(user_id: int) -> dict[str, Any]:
@@ -123,7 +123,12 @@ def ask_ai(prompt: str, user_id: int) -> str:
         model="gpt-4o-mini",
         temperature=0.9,
         max_tokens=MAX_TOKENS,
-        messages=chat_history + messages,
+        messages=chat_history + messages,  # type: ignore[arg-type]
     )
 
-    return chat_completion.choices[0].message.content
+    response = chat_completion.choices[0].message.content
+
+    if not response:
+        raise Exception("No response available")
+
+    return response

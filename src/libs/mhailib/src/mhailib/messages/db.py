@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
+from collections.abc import Mapping
+from typing import Any, cast
 
 from ai_profile.api.serializers import AIProfileSerializer
 from ai_profile.models import AIProfile
@@ -23,7 +24,7 @@ def get_ai_profile(user_id: int) -> dict[str, Any]:
 
 
 def get_user_profile(user_id: int) -> dict[str, Any]:
-    user_profile = UserProfile.objects.get(id=user_id)
+    user_profile = UserProfile.objects.get(user_id=user_id)
     return UserProfileSerializer(user_profile).data
 
 
@@ -46,7 +47,9 @@ def load_chat_history(user_id: int, last_k: int = 10) -> list[dict[str, Any]]:
     # TODO: this should be changed to RAG approach with top 10
     messages = MhaiChat.objects.filter(
         user_id=user_id,
-    ).order_by("timestamp")[-last_k:]
+    ).order_by("timestamp")
+    idx_start = max(0, len(messages) - last_k)
+    messages = messages[idx_start:]
 
     history = []
     for message in messages:
@@ -58,7 +61,7 @@ def load_chat_history(user_id: int, last_k: int = 10) -> list[dict[str, Any]]:
 
 def load_chat_and_evaluation_history_last_k(
     user_id: int, last_k: int = 10
-) -> list[dict[str, Any]]:
+) -> list[Mapping[str, Any]]:
     """
     Load the last k conversation history and its evaluations.
 
@@ -69,7 +72,7 @@ def load_chat_and_evaluation_history_last_k(
 
     Returns
     -------
-    list[dict[str, Any]]
+    list[Mapping[str, Any]]
         A list of dictionaries containing user messages, AI responses,
         and associated evaluation scores.
     """
@@ -106,4 +109,4 @@ def load_chat_and_evaluation_history_last_k(
 
         history_data.append(chat_data)
 
-    return history_data
+    return cast(list[Mapping[str, Any]], history_data)

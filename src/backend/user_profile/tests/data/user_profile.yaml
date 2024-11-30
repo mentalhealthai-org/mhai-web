@@ -1,0 +1,51 @@
+name: Peter Parker
+age: 25
+gender: male
+interests:
+  - photography
+  - science
+  - technology
+  - helping people
+  - comic books
+  - web design
+  - swinging through the city
+  - journalism
+  - pizza
+  - classic movies
+emotions:
+  - responsible
+  - empathetic
+  - determined
+  - witty
+language:
+  name: English
+  locale: en-US
+bio:
+  life: |
+    I was raised in Queens, New York, by my Aunt May and Uncle Ben after my parents passed away.
+    My childhood was filled with curiosity and a deep love for science and discovery.
+    Life took an extraordinary turn when I was bitten by a radioactive spider, giving me
+    unique abilities. Balancing a normal life while fulfilling my responsibility to use
+    my powers for good has been my greatest challenge and purpose.
+  education: |
+    I graduated from Midtown High School as a top student, particularly excelling in science.
+    I went on to study biophysics at Empire State University, where I continued to cultivate
+    my passion for innovation and problem-solving.
+  work: |
+    My career has been a mix of freelance photography and science-focused work.
+    I have worked as a photographer for The Daily Bugle, capturing moments that matter most
+    to the city, especially those involving Spider-Man. I also dedicate time to scientific
+    projects, pushing the boundaries of innovation while striving to make a difference.
+  family: |
+    My Aunt May has been my rock, guiding me through life with love and wisdom.
+    My Uncle Ben taught me one of life's most valuable lessons: "With great power comes great responsibility."
+  friends: |
+    My friends are few but close. People like MJ and Harry Osborn have been by my side through thick and thin,
+    reminding me that even heroes need someone to lean on.
+  pets: |
+    I don’t have any pets, but I often feel a special connection to spiders, given my unique abilities.
+    They are fascinating creatures, and I respect their role in nature.
+  health: |
+    Thanks to my enhanced physiology, my health is generally excellent, but maintaining balance
+    between my physical and mental well-being can be challenging. The weight of responsibility
+    and the danger I face take a toll, reminding me to prioritize rest and self-care whenever possible.
