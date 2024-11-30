@@ -2023,6 +2023,17 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "joblib"
+version = "1.4.2"
+description = "Lightweight pipelining with Python functions"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "joblib-1.4.2-py3-none-any.whl", hash = "sha256:06d478d5674cbc267e7496a410ee875abd68e4340feff4490bcb7afb88060ae6"},
+    {file = "joblib-1.4.2.tar.gz", hash = "sha256:2382c5816b2636fbd20a09e0f4e9dad4736765fdfb7dca582943b9c1366b3f0e"},
+]
+
+[[package]]
 name = "jsbeautifier"
 version = "1.15.1"
 description = "JavaScript unobfuscator and beautifier."
@@ -4970,4 +4981,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.*"
-content-hash = "b1f371679b7d8424840b8a4a73ca70f919bde276c1a38f1699a4a97b389af0fb"
+content-hash = "0bc45b9fa6810336c453389df129b09b1c7338ec6d17f4dbc3c1426f432b71e0"

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from dashboards.dash_apps.finished_apps import simpleexample
+from dashboards.health_charts import patient
 
 from . import views
 

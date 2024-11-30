@@ -16,6 +16,8 @@ services:
       - ../.envs/.django
       - ../.envs/.postgres
     command: /opt/start
+    volumes:
+      - ../tests/data:/opt/services/mhai-web/data
 
   mhai-web:
     extends: mhai-web-base
