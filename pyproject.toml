@@ -196,7 +196,7 @@ select = [
   "PTH",
   "ERA",
   "PD",
-  "PGH",  # PGH004 Use specific rule codes when using noqa
+  "PGH",
   "PL",
   # "TRY",
   "FLY",
