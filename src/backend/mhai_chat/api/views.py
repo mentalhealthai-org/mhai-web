@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from celery import chord
 from rest_framework import permissions, viewsets
 
 from mhai_chat.api.serializers import (
@@ -16,7 +17,15 @@ from mhai_chat.models import (
     MhaiChatEvalMentBert,
     MhaiChatEvalPsychBert,
 )
-from mhai_chat.tasks.task_answers import ask_ai
+from mhai_chat.tasks.task_answers import (
+    finish_answering,
+    process_chat_answer,
+)
+from mhai_chat.tasks.task_evaluations import (
+    evaluate_emotions,
+    evaluate_mentbert,
+    evaluate_psychbert,
+)
 
 
 class MhaiChatViewSet(viewsets.ModelViewSet):
@@ -38,12 +47,27 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
         return MhaiChat.objects.none()
 
     def perform_create(self, serializer):
-        user_input = serializer.validated_data.get("user_input")
-        ai_response = ask_ai(
-            prompt=user_input,
-            user_id=self.request.user.id,
+        user_id = self.request.user.id
+
+        serializer.save(user=user_id, status="started")
+
+        message_id = serializer.validated_data.get("id")
+
+        task_question = process_chat_answer.s(
+            message_id=message_id,
+            user_id=user_id,
         )
-        serializer.save(user=self.request.user, ai_response=ai_response)
+        task_eval_emotions = evaluate_emotions.s(message_id)
+        task_eval_mentbert = evaluate_mentbert.s(message_id)
+        task_eval_psychbert = evaluate_psychbert.s(message_id)
+
+        pipeline = chord(
+            task_question,
+            task_eval_emotions,
+            task_eval_mentbert,
+            task_eval_psychbert,
+        )(finish_answering.s(message_id))
+        pipeline.apply_async()
 
 
 class MhaiChatEvalEmotionsViewSet(viewsets.ModelViewSet):

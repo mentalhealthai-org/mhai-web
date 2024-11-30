@@ -46,3 +46,27 @@ def process_chat_answer(message_id: int, user_id: int) -> None:
             chat_message.status = "error"
             chat_message.save()
         raise e
+
+
+@shared_task
+def finish_answering(message_id: int, user_id: int) -> None:
+    try:
+        # Retrieve the MhaiChat message instance by ID
+        chat_message = MhaiChat.objects.get(id=message_id)
+        chat_message.status = "completed"
+        chat_message.save()
+
+    except MhaiChat.DoesNotExist as e:
+        # Log error if the MhaiChat message with given ID does not exist
+        warnings.warn(
+            f"Error: MhaiChat message with id {message_id} does not exist.",
+            stacklevel=2,
+        )
+        raise e
+    except Exception as e:
+        warnings.warn(f"Error: {e}", stacklevel=2)
+        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        if chat_message_fallback:
+            chat_message.status = "error"
+            chat_message.save()
+        raise e
