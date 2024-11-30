@@ -16,6 +16,7 @@ from mhai_chat.models import (
     MhaiChatEvalMentBert,
     MhaiChatEvalPsychBert,
 )
+from mhai_chat.tasks.task_answers import ask_ai
 
 
 class MhaiChatViewSet(viewsets.ModelViewSet):
@@ -38,8 +39,11 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         user_input = serializer.validated_data.get("user_input")
-        print(user_input)
-        serializer.save(user=self.request.user, ai_response="")
+        ai_response = ask_ai(
+            prompt=user_input,
+            user_id=self.request.user.id,
+        )
+        serializer.save(user=self.request.user, ai_response=ai_response)
 
 
 class MhaiChatEvalEmotionsViewSet(viewsets.ModelViewSet):

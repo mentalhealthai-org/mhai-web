@@ -36,7 +36,7 @@ ARG MEDIA_ROOT
 ENV STATIC_ROOT ${STATIC_ROOT}
 ENV MEDIA_ROOT ${MEDIA_ROOT}
 
-COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mhai-web
+COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mhai-web/
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/deps/install-deps.sh
 # note: src/libs/mhailib is a dependency now for the backend django

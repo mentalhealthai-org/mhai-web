@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from celery import shared_task
 from mhailib.messages.evaluations import (
     eval_emotions,
@@ -15,6 +17,9 @@ from mhai_chat.models import (
     MhaiChatEvalMentBert,
     MhaiChatEvalPsychBert,
 )
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -40,7 +45,9 @@ def evaluate_emotions(message_id: int) -> None:
         )
 
     except MhaiChat.DoesNotExist:
-        print(f"Error: MhaiChat message with id {message_id} does not exist.")
+        logger.error(
+            f"Error: MhaiChat message with id {message_id} does not exist."
+        )
         chat_message.status = "error"
         chat_message.save()
 
@@ -68,7 +75,9 @@ def evaluate_mentbert(message_id: int) -> None:
         )
 
     except MhaiChat.DoesNotExist:
-        print(f"Error: MhaiChat message with id {message_id} does not exist.")
+        logger.error(
+            f"Error: MhaiChat message with id {message_id} does not exist."
+        )
         chat_message.status = "error"
         chat_message.save()
 
@@ -96,6 +105,8 @@ def evaluate_psychbert(message_id: int) -> None:
         )
 
     except MhaiChat.DoesNotExist:
-        print(f"Error: MhaiChat message with id {message_id} does not exist.")
+        logger.error(
+            f"Error: MhaiChat message with id {message_id} does not exist."
+        )
         chat_message.status = "error"
         chat_message.save()

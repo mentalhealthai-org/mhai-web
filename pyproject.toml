@@ -176,7 +176,7 @@ select = [
   "FA",
   'ISC',
   "ICN",
-  "G",
+  # "G",  # Logging statement uses f-string
   'INP',
   'PIE',
   "T20",

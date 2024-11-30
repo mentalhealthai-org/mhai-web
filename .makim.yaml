@@ -168,7 +168,26 @@ groups:
 
   tests:
     backend: bash
+    env-file: .envs/.env
     tasks:
+      setup:
+        help: Setup the infrastructure for the tests
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          sugar --group test compose-ext restart --options -d
+
+      teardown:
+        help: Teardown the infrastructure for the tests
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          sugar --group test compose-ext stop
+
       unit:
         help: Generate coverage data with pytest
         env-file: .envs/.env
@@ -193,8 +212,12 @@ groups:
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
+        hooks:
+          pre-run:
+            - task: tests.setup
+          post-run:
+            - task: tests.teardown
         run: |
-          sugar --group test compose-ext restart --options -d
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
             --ds=${{ args.settings }} ${{ args.params }} ${{ args.app }}
