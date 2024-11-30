@@ -192,11 +192,11 @@ select = [
   "TID",
   "TCH",
   "INT",
-  # "ARG", # Unused function argument
+  # "ARG",  # Unused function argument
   "PTH",
   "ERA",
   "PD",
-  "PGH",
+  # "PGH",  # PGH004 Use specific rule codes when using noqa
   "PL",
   # "TRY",
   "FLY",

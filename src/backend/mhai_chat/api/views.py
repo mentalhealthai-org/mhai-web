@@ -46,7 +46,7 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
             return queryset
         return MhaiChat.objects.none()
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         user_id = self.request.user.id
 
         serializer.save(user=user_id, status="started")
