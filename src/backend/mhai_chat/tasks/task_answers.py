@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import warnings
 
+from typing import Any
+
 from celery import shared_task
 from mhailib.messages.ai_answer import ask_ai
 
@@ -49,7 +51,7 @@ def process_chat_answer(message_id: int, user_id: int) -> None:
 
 
 @shared_task
-def finish_answering(message_id: int, user_id: int) -> None:
+def finish_answering(result: list[Any], message_id: int) -> None:
     try:
         # Retrieve the MhaiChat message instance by ID
         chat_message = MhaiChat.objects.get(id=message_id)

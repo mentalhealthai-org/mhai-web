@@ -6,7 +6,6 @@ from simple_history.utils import update_change_reason
 
 from .models import User
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

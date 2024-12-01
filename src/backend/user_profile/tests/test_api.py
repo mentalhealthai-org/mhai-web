@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from mhai_web.users.models import User as UserClass
 from rest_framework import status
-from rest_framework.test import APIClient
 
 from user_profile.models import (
     GenderChoices,
@@ -17,12 +16,6 @@ from user_profile.models import (
 )
 
 User = get_user_model()
-
-
-@pytest.fixture
-def api_client():
-    """Fixture to provide a reusable API client."""
-    return APIClient()
 
 
 @pytest.fixture

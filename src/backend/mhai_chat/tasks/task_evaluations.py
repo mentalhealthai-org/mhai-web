@@ -18,8 +18,15 @@ from mhai_chat.models import (
     MhaiChatEvalPsychBert,
 )
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def clean_name(
+    data: dict[str, float],
+    rename: dict[str, str] = {},  # noqa: B006
+) -> dict[str, float]:
+    """Clean the key attribute to be used as a field."""
+    return {rename.get(k, k).replace("-", "_"): v for k, v in data.items()}
 
 
 @shared_task
@@ -36,7 +43,7 @@ def evaluate_emotions(message_id: int) -> None:
         chat_message = MhaiChat.objects.get(id=message_id)
 
         # Example placeholder for the actual emotion analysis logic
-        emotions_data = eval_emotions(chat_message.user_input)
+        emotions_data = clean_name(eval_emotions(chat_message.user_input))
 
         # Save the analysis results to MhaiChatEvalEmotions
         MhaiChatEvalEmotions.objects.update_or_create(
@@ -44,12 +51,18 @@ def evaluate_emotions(message_id: int) -> None:
             defaults=emotions_data,
         )
 
-    except MhaiChat.DoesNotExist:
+    except MhaiChat.DoesNotExist as e:
         logger.error(
             f"Error: MhaiChat message with id {message_id} does not exist."
         )
-        chat_message.status = "error"
-        chat_message.save()
+        raise e
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        if chat_message_fallback:
+            chat_message.status = "error"
+            chat_message.save()
+        raise e
 
 
 @shared_task
@@ -66,7 +79,7 @@ def evaluate_mentbert(message_id: int) -> None:
         chat_message = MhaiChat.objects.get(id=message_id)
 
         # Example placeholder for the actual MentBERT analysis logic
-        mentbert_data = eval_mentbert(chat_message.user_input)
+        mentbert_data = clean_name(eval_mentbert(chat_message.user_input))
 
         # Save the analysis results to MhaiChatEvalMentBert
         MhaiChatEvalMentBert.objects.update_or_create(
@@ -74,12 +87,18 @@ def evaluate_mentbert(message_id: int) -> None:
             defaults=mentbert_data,
         )
 
-    except MhaiChat.DoesNotExist:
+    except MhaiChat.DoesNotExist as e:
         logger.error(
             f"Error: MhaiChat message with id {message_id} does not exist."
         )
-        chat_message.status = "error"
-        chat_message.save()
+        raise e
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        if chat_message_fallback:
+            chat_message.status = "error"
+            chat_message.save()
+        raise e
 
 
 @shared_task
@@ -96,7 +115,10 @@ def evaluate_psychbert(message_id: int) -> None:
         chat_message = MhaiChat.objects.get(id=message_id)
 
         # Example placeholder for the actual PsychBERT analysis logic
-        psychbert_data = eval_psychbert(chat_message.user_input)
+        psychbert_data = clean_name(
+            eval_psychbert(chat_message.user_input),
+            {"negative": "unrelated"},
+        )
 
         # Save the analysis results to MhaiChatEvalPsychBert
         MhaiChatEvalPsychBert.objects.update_or_create(
@@ -104,9 +126,15 @@ def evaluate_psychbert(message_id: int) -> None:
             defaults=psychbert_data,
         )
 
-    except MhaiChat.DoesNotExist:
+    except MhaiChat.DoesNotExist as e:
         logger.error(
             f"Error: MhaiChat message with id {message_id} does not exist."
         )
-        chat_message.status = "error"
-        chat_message.save()
+        raise e
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        if chat_message_fallback:
+            chat_message.status = "error"
+            chat_message.save()
+        raise e

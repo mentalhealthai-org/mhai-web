@@ -62,7 +62,7 @@ def eval_sentiment(text: str) -> dict[str, float]:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        result_raw = sentiment_pipeline(text)
+        result_raw = sentiment_pipeline(text)[0]
     except Exception:  # noqa: BLE001
         return {}
 
@@ -93,9 +93,10 @@ def eval_emotions(text: str) -> dict[str, float]:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        result_raw = emotion_pipeline(text)
+        result_raw = emotion_pipeline(text)[0]
     except Exception:  # noqa: BLE001
         return {}
+
     return {
         row["label"].lower().replace(" ", "-"): row["score"]
         for row in result_raw
@@ -143,7 +144,7 @@ def eval_psychbert(text: str) -> dict[str, float]:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        result_raw = psychbert_pipeline(text)
+        result_raw = psychbert_pipeline(text)[0]
     except Exception:  # noqa: BLE001
         return {}
 
@@ -190,7 +191,7 @@ def eval_mentbert(text: str) -> dict[str, float]:
         text = truncate_tokens(text, MAX_TOKENS)
 
     try:
-        result_raw = mentbert_pipeline(text)
+        result_raw = mentbert_pipeline(text)[0]
     except Exception:  # noqa: BLE001
         return {}
 

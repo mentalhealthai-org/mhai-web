@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from celery import chord
+from django.contrib.auth import get_user_model
 from rest_framework import permissions, viewsets
 
 from mhai_chat.api.serializers import (
@@ -27,6 +28,8 @@ from mhai_chat.tasks.task_evaluations import (
     evaluate_psychbert,
 )
 
+User = get_user_model()
+
 
 class MhaiChatViewSet(viewsets.ModelViewSet):
     """
@@ -49,9 +52,11 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer) -> None:
         user_id = self.request.user.id
 
-        serializer.save(user=user_id, status="started")
+        user = User.objects.get(id=user_id)
 
-        message_id = serializer.validated_data.get("id")
+        serializer.save(user=user, status="started")
+
+        message_id = serializer.instance.id
 
         task_question = process_chat_answer.s(
             message_id=message_id,
@@ -61,12 +66,14 @@ class MhaiChatViewSet(viewsets.ModelViewSet):
         task_eval_mentbert = evaluate_mentbert.s(message_id)
         task_eval_psychbert = evaluate_psychbert.s(message_id)
 
-        pipeline = chord(
+        tasks = [
             task_question,
             task_eval_emotions,
             task_eval_mentbert,
             task_eval_psychbert,
-        )(finish_answering.s(message_id))
+        ]
+
+        pipeline = chord(tasks, finish_answering.s(message_id))
         pipeline.apply_async()
 
 

@@ -7,6 +7,8 @@ import yaml
 
 from ai_profile.models import AIProfile
 from mhai_web.users.models import User
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 from user_profile.models import UserProfile
 
 
@@ -111,3 +113,17 @@ def user_profile(db, user) -> UserProfile:
         raise Exception("No user profile available for given user.")
 
     return profile
+
+
+@pytest.fixture
+def api_client():
+    """Fixture for creating an API client."""
+    return APIClient()
+
+
+@pytest.fixture
+def auth_client(api_client, user):
+    """Fixture for authenticating the API client."""
+    token = Token.objects.create(user=user)
+    api_client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    return api_client
