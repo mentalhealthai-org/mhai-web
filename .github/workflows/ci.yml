@@ -26,6 +26,7 @@ env:
   USE_DOCKER: yes
   IPYTHONDIR: /app/.ipython
   DOCKER_BUILDKIT: 0
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 on:
   pull_request:
