@@ -32,7 +32,7 @@ function AIProfileInterests() {
         setError('Failed to fetch interests.');
         setLoading(false);
       });
-  }, []);
+  }, [api_url, csrftoken]);
 
   const handleChange = (e) => {
     setInterests(e.target.value);

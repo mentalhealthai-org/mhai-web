@@ -41,7 +41,7 @@ function AIProfileGeneral() {
         setError('Failed to fetch profile data.');
         setLoading(false);
       });
-  }, []);
+  }, [api_url, csrftoken]);
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });

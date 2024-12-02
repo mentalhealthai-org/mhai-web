@@ -32,7 +32,7 @@ function UserProfileEmotions() {
         setError('Failed to fetch emotions.');
         setLoading(false);
       });
-  }, []);
+  }, [api_url, csrftoken]);
 
   const handleChange = (e) => {
     setEmotions(e.target.value);

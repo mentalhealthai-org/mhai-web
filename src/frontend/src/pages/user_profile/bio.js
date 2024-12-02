@@ -50,7 +50,7 @@ function UserProfileBio() {
         setError('Failed to fetch bio information.');
         setLoading(false);
       });
-  }, []);
+  }, [api_url, csrftoken]);
 
   const handleChange = (e) => {
     setBio({ ...bio, [e.target.name]: e.target.value });
