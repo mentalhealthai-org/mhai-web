@@ -37,6 +37,20 @@ groups:
 
   django:
     tasks:
+      bash:
+        env-file: .envs/.env
+        backend: bash
+        dir: src/backend
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          # note: it prints some messages like:
+          #   bash: cannot set terminal process group: Inappropriate ioctl for device
+          #   bash: no job control in this shell
+          # not sure how to handle that yet
+          bash --rcfile <(echo "source ~/.bashrc; conda activate mhai-web")
+
       collectstatic:
         env-file: .envs/.env
         dir: src/backend
@@ -63,6 +77,12 @@ groups:
             type: string
             required: True
             interactive: True
+          generate-token:
+            help: |
+              If the token is already created, don't create it again.
+            type: bool
+            default: False
+            action: store_true
         env-file: .envs/.env
         env:
           POSTGRES_HOST: localhost
@@ -72,6 +92,9 @@ groups:
         run: |
           export DJANGO_SUPERUSER_PASSWORD=${{ args.password }}
           python manage.py createsuperuser --noinput --email ${{ args.email }}
+          if [ "${{ args.generate_token }}" == "True" ]; then
+            python manage.py drf_create_token ${{ args.email }}
+          fi
 
       makemigrations:
         help: Run django makemigrations command (just for development)
@@ -89,6 +112,7 @@ groups:
             - mhai_web
             - user_profile
             - ai_profile
+            - mhai_chat
         backend: bash
         env:
           POSTGRES_HOST: localhost
@@ -103,6 +127,7 @@ groups:
             - ""
             - user_profile
             - ai_profile
+            - mhai_chat
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
@@ -143,8 +168,27 @@ groups:
 
   tests:
     backend: bash
+    env-file: .envs/.env
     tasks:
-      coverage-gen-data:
+      setup:
+        help: Setup the infrastructure for the tests
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          sugar --group test compose-ext restart --options -d
+
+      teardown:
+        help: Teardown the infrastructure for the tests
+        env-file: .envs/.env
+        env:
+          POSTGRES_HOST: localhost
+          REDIS_HOST: localhost
+        run: |
+          sugar --group test compose-ext stop
+
+      unit:
         help: Generate coverage data with pytest
         env-file: .envs/.env
         args:
@@ -168,12 +212,17 @@ groups:
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
+        hooks:
+          pre-run:
+            - task: tests.setup
+          post-run:
+            - task: tests.teardown
         run: |
           COVERAGE_FLAG=${{ "--cov-append" if args.append else "" }}
           pytest --cov=. $COVERAGE_FLAG \
             --ds=${{ args.settings }} ${{ args.params }} ${{ args.app }}
 
-      coverage-report:
+      cov-report:
         help: Generate coverage report
         env-file: .envs/.env
         env:
@@ -182,7 +231,7 @@ groups:
         run: |
           coverage report -m --skip-empty
 
-      unit:
+      unit-cov:
         help: Run the same the same tests executed on CI
         args:
           params:
@@ -192,13 +241,13 @@ groups:
           settings:
             help: Specify the django settings module
             type: string
-            default: "config.settings.dev"
+            default: "config.settings.test"
         hooks:
           pre-run:
-            - task: tests.coverage-gen-data
+            - task: tests.unit
               args:
                 params: "${{ args.params }}"
-            - task: tests.coverage-report
+            - task: tests.cov-report
 
   nginx:
     tasks:
@@ -217,6 +266,18 @@ groups:
           pre-run:
             - task: nginx.proxydomain
             - task: nginx.generate-certificate
+
+  docs:
+    tasks:
+      build:
+        help: Build documentation
+        run: |
+          mkdocs build --config-file mkdocs.yaml
+
+      preview:
+        help: Preview documentation page locally
+        run: |
+          mkdocs serve --watch docs --config-file mkdocs.yaml
 
   release:
     vars:

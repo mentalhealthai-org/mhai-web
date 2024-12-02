@@ -8,5 +8,4 @@ class UserProfileConfig(AppConfig):
     name = "user_profile"
 
     def ready(self):
-        # Import signals to ensure they are registered
-        pass
+        import user_profile.signals  # noqa: F401

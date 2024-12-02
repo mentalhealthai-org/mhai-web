@@ -7,16 +7,16 @@ import os
 from pathlib import Path
 from typing import cast
 
+from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
-from dotenv import load_dotenv
-env_dir = Path('__file__').resolve().parent
+env_dir = Path("__file__").resolve().parent
 load_dotenv(env_dir / ".envs" / ".env")
 
 ENV = os.environ.get("ENV", "prod")
 DOMAIN_ENV = os.environ.get("CERTBOT_DOMAIN")
 
-print(f"Generating nginx config for: {DOMAIN_ENV}...")
+print(f"Generating nginx config for: {DOMAIN_ENV}...")  # noqa: T201
 
 # Set up Jinja2 environment
 templates = Environment(

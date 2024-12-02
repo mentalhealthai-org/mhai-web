@@ -3,15 +3,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.urls import include
-from django.urls import path
+from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
-from drf_spectacular.views import SpectacularAPIView
-from drf_spectacular.views import SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 from mhai_web.urls import urlpatterns as mhai_urls
+from mhai_chat.urls import urlpatterns as mhai_chat_urls
+
+
 from ai_profile.urls import (
     api_urlpatterns as ai_profile_api_urls,
     views_urlpatterns as ai_profile_views_urls,
@@ -27,20 +28,22 @@ urlpatterns = [
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    # apps
+    # Application paths
     *mhai_urls,
+    *mhai_chat_urls,
     *user_profile_views_urls,
     *ai_profile_views_urls,
-    # static
+    # Static files serving
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
+
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
     urlpatterns += staticfiles_urlpatterns()
 
-# API URLS
+# API URLs
 urlpatterns += [
-    # API base url
+    # Base API path
     path("api/", include("config.api_router")),
     # DRF auth token
     path("api/auth-token/", obtain_auth_token),
@@ -50,14 +53,15 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    # APPS
+    # Application API endpoints
     path("api/ai-profile/", include(ai_profile_api_urls)),
     path("api/profile/", include(user_profile_api_urls)),
+    # mhai_chat URLs under `api/chat/`
+    path("api/mhai-chat/", include("mhai_chat.api.urls")),
 ]
 
 if settings.DEBUG:
-    # This allows the error pages to be debugged during development, just visit
-    # these url in browser to see how these error pages look like.
+    # Debug error pages
     urlpatterns += [
         path(
             "400/",

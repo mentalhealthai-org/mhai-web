@@ -43,7 +43,7 @@ function UserProfileCriticalEvents() {
         setError('Failed to fetch critical events.');
         setLoading(false);
       });
-  }, []);
+  }, [api_url, csrftoken]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
