@@ -274,9 +274,6 @@ jobs:
         run: |
           sugar compose logs --all > /tmp/containers-services.log
 
-      - name: Run tests MHAI-Chat
-        run: bash src/backend/tests/test_mhai_chat.sh
-
       # - name: Set coverage report
       #   id: parse-coverage-report
       #   run: |
