@@ -113,6 +113,7 @@ LOCAL_APPS = [
     "user_profile.apps.UserProfileConfig",
     "ai_profile.apps.AIProfileConfig",
     "mhai_chat.apps.MhaiChatConfig",
+    "mhailib",  # mhai internal library
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

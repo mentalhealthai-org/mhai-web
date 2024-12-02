@@ -39,9 +39,8 @@ ENV MEDIA_ROOT ${MEDIA_ROOT}
 COPY --chown=${USERNAME}:${USERNAME} pyproject.toml poetry.lock /opt/services/mhai-web/
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/activate.sh /opt/activate.sh
 COPY --chown=${USERNAME}:${USERNAME} containers/django/scripts/install-deps.sh /opt/deps/install-deps.sh
-# note: src/libs/mhailib is a dependency now for the backend django
-RUN mkdir /opt/services/mhai-web/src
-COPY --chown=${USERNAME}:${USERNAME} src/libs /opt/services/mhai-web/src/libs
+
+RUN mkdir -p /opt/services/mhai-web/src/backend
 
 RUN conda init bash \
   && source ~/.bashrc \
@@ -49,8 +48,7 @@ RUN conda init bash \
   && conda env list \
   && /opt/deps/install-deps.sh
 
-COPY --chown=${USERNAME}:${USERNAME} src/backend /opt/services/mhai-web/src/backend
-COPY --chown=${USERNAME}:${USERNAME} src/frontend /opt/services/mhai-web/src/frontend
+COPY --chown=${USERNAME}:${USERNAME} src /opt/services/mhai-web/src
 
 WORKDIR /opt/services/mhai-web/src/backend
 

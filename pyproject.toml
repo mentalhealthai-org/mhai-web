@@ -6,7 +6,6 @@ authors = ["Ivan Ogasawara <ivan.ogasawara@gmail.com>"]
 readme = "README.md"
 packages = [
   {include = "*", from="src/backend"},
-  {include = "mhailib", from="src/libs"},
 ]
 
 [build-system]
@@ -51,13 +50,12 @@ pandas = "^2.2.2"
 joblib = ">=1.4.2"
 tiktoken = "^0.7.0"
 # local libs
-mhailib = { path = "src/libs/mhailib",  develop = true }
 transformers = ">=4.46"
 
 
 [tool.poetry.group.dev.dependencies]
 makim = "1.19.0"
-compose-go = "^2.29.7"
+compose-go = ">=2.29.7,<2.31.0"
 containers-sugar = "1.16.1"
 ruff = "^0.6.8"
 watchdog = "^5.0.2"
