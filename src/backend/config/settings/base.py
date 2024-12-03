@@ -49,20 +49,14 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 # DATABASES
 # -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-
-POSTGRES_USER = env("POSTGRES_USER", default="mhai")
-POSTGRES_PASSWORD = env("POSTGRES_PASSWORD", default="postgres")
-POSTGRES_HOST = env("POSTGRES_HOST", default="localhost")
-POSTGRES_PORT = env("POSTGRES_PORT", default="25432")
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "mhai_web",
-        "USER": POSTGRES_USER,
-        "PASSWORD": POSTGRES_PASSWORD,
-        "HOST": POSTGRES_HOST,
-        "PORT": POSTGRES_PORT,
+        "USER": env("POSTGRES_USER", default=""),
+        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
+        "HOST": env("POSTGRES_HOST", default=""),
+        "PORT": env("POSTGRES_PORT", default=""),
         "OPTIONS": {
             "pool": True,
             "maxconn": 20,
@@ -73,10 +67,10 @@ DATABASES = {
     "test": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "test_mhai_web",
-        "USER": POSTGRES_USER,
-        "PASSWORD": POSTGRES_PASSWORD,
-        "HOST": POSTGRES_HOST,
-        "PORT": str(int(POSTGRES_PORT) + 1000),
+        "USER": env("POSTGRES_USER", default="mhai"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="postgres"),
+        "HOST": env("POSTGRES_HOST", default="postgres"),
+        "PORT": env("POSTGRES_PORT", default="25432"),
     },
 }
 
