@@ -57,6 +57,7 @@ DATABASES = {
         "PASSWORD": env("POSTGRES_PASSWORD", default=""),
         "HOST": env("POSTGRES_HOST", default=""),
         "PORT": env("POSTGRES_PORT", default=""),
+        "CONN_MAX_AGE": 60,
     },
     "test": {
         "ENGINE": "django.db.backends.postgresql",
@@ -68,7 +69,9 @@ DATABASES = {
     },
 }
 
-DATABASES["default"]["ATOMIC_REQUESTS"] = True
+# Disable atomic requests to avoid holding connections longer than necessary
+DATABASES["default"]["ATOMIC_REQUESTS"] = False
+
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
