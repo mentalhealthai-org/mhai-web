@@ -57,12 +57,7 @@ DATABASES = {
         "PASSWORD": env("POSTGRES_PASSWORD", default=""),
         "HOST": env("POSTGRES_HOST", default=""),
         "PORT": env("POSTGRES_PORT", default=""),
-        "OPTIONS": {
-            "pool": True,
-            "maxconn": 20,
-            "minconn": 1,
-            "timeout": 30,
-        },
+        "CONN_MAX_AGE": 60,
     },
     "test": {
         "ENGINE": "django.db.backends.postgresql",
