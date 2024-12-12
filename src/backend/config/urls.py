@@ -29,7 +29,7 @@ urlpatterns = [
     # User management
     path("users/", include("mhai_web.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    path("django_plotly_dash/", include("django_plotly_dash.urls")),
+    path("dash/", include("django_plotly_dash.urls")),
     # Application paths
     path("dashboard/", include("dashboards.urls", namespace="dashboards")),
     *mhai_urls,

@@ -130,6 +130,7 @@ groups:
             - ai_profile
             - mhai_chat
             - dashboards
+            - django_plotly_dash
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost

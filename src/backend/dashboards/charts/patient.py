@@ -1,337 +1,178 @@
-#!/usr/bin/env python
+"""Create the dashboard for patient analysis."""
 
-# In[1]:
+from __future__ import annotations
 
+from datetime import datetime
 
-from datetime import datetime, timedelta
-
-import joblib
-import numpy as np
 import pandas as pd
 import plotly.express as px
 
-from dash import Input, Output, callback, dcc, html
+from asgiref.sync import async_to_sync, sync_to_async
+from dash import Input, Output, dcc, html
 from dateutil.relativedelta import relativedelta
 from django_plotly_dash import DjangoDash
-
-
-def random_date(days_ago):
-    end = datetime.now()
-    start = end - timedelta(days=days_ago)
-    return start + (end - start) * np.random.rand()
-
-
-# Add pathlib to handle the data path in basedir
-df = joblib.load("/opt/services/mhai-web/data/result.pkl")
-
-
-df = df[df["question"].notnull()]
-
-
-df["date"] = [random_date(365) for _ in range(len(df))]
-df.insert(0, "date", df.pop("date"))
-
-
-categories = [
-    {"label": "Mental", "value": "mentbert"},
-    {"label": "Psychological", "value": "psychbert"},
-    {"label": "Emotional", "value": "emotion"},
-]
-
-
-emotions = [
-    "fear",
-    "sadness",
-    "neutral",
-    "joy",
-    "surprise",
-    "anger",
-    "disgust",
-]
-
-df["emotion_idx"] = np.argmax(
-    [
-        df["fear"],
-        df["sadness"],
-        df["neutral"],
-        df["joy"],
-        df["surprise"],
-        df["anger"],
-        df["disgust"],
-    ],
-    axis=0,
+from mhai_chat.models import (
+    MhaiChat,
+    MhaiChatEvalEmotions,
+    MhaiChatEvalMentBert,
+    MhaiChatEvalPsychBert,
 )
-df["emotion_label"] = df.apply(lambda x: emotions[x["emotion_idx"]], axis=1)
-
-df_filtered = df.copy()
 
 
-def get_col_name(label):
-    global categories
+async def fetch_model_data(model) -> pd.DataFrame:
+    """Fetch data from a Django model asynchronously and convert it to a DataFrame."""
 
-    col_name = [
-        item["value"] + "_label"
-        for item in categories
-        if item["label"] == label
-    ][0]
+    @sync_to_async
+    def query_model():
+        return pd.DataFrame.from_records(model.objects.all().values())
 
-    return col_name
+    return await query_model()
 
 
-def get_df_filtered(df, start_date=None, end_date=None):
-    if start_date == None:
-        start_date = df["date"].min()
+async def prepare_user_data() -> pd.DataFrame:
+    """Prepare user data by merging relevant model data."""
+    df_chat = await fetch_model_data(MhaiChat)
+    df_emotions = await fetch_model_data(MhaiChatEvalEmotions)
+    df_mentbert = await fetch_model_data(MhaiChatEvalMentBert)
+    df_psychbert = await fetch_model_data(MhaiChatEvalPsychBert)
 
-    if end_date == None:
-        end_date = datetime.today().date()
+    # Merge dataframes on the common key `id`
+    df = df_chat.merge(
+        df_emotions, left_on="id", right_on="mhai_chat_id", how="left"
+    )
+    df = df.merge(
+        df_mentbert, left_on="id", right_on="mhai_chat_id", how="left"
+    )
+    df = df.merge(
+        df_psychbert, left_on="id", right_on="mhai_chat_id", how="left"
+    )
 
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-
-    df_filtered = df[(df["date"] >= start_date) & (df["date"] < end_date)]
-
-    return df_filtered
+    # Ensure only valid rows with user input
+    return df[df["user_prompt"].notnull()]
 
 
-def get_df_freq(df, label, top, start_date=None, end_date=None):
-    col_name = get_col_name(label)
+def process_emotions(df: pd.DataFrame) -> pd.DataFrame:
+    """Add emotion labels to the DataFrame."""
+    emotions = [
+        "fear",
+        "sadness",
+        "neutral",
+        "joy",
+        "surprise",
+        "anger",
+        "disgust",
+    ]
+    df["emotion_label"] = df[emotions].idxmax(axis=1)
+    return df
 
-    df_freq = (
+
+def filter_data_by_date(
+    df: pd.DataFrame, start_date: datetime | None = None
+) -> pd.DataFrame:
+    """Filter the DataFrame based on a date range."""
+    if start_date:
+        df = df[df["timestamp_prompt"] >= start_date]
+    return df
+
+
+def get_frequent_labels(
+    df: pd.DataFrame, category: str, top: int
+) -> pd.DataFrame:
+    """Retrieve the most frequent labels for a specific category."""
+    col_name = f"{category.lower()}_label"
+    return (
         df[col_name]
         .value_counts()
-        .to_frame()
+        .head(top)
         .reset_index()
-        .rename(columns={col_name: "label"})
+        .rename(columns={col_name: "count", "index": "label"})
     )
 
-    return df_freq[0:top]
+
+def create_bar_chart(df: pd.DataFrame, category: str, top: int) -> dcc.Graph:
+    """Create a bar chart for the top labels in a category."""
+    frequent_labels = get_frequent_labels(df, category, top)
+    fig = px.bar(frequent_labels, x="label", y="count")
+    fig.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+    return dcc.Graph(figure=fig)
 
 
-def get_df_timeseries(df, label, top, start_date=None, end_date=None):
-    col_name = get_col_name(label)
-
-    top_items = get_df_freq(df, label, top, start_date, end_date)[
-        "label"
-    ].values
-
-    df_ts = df[["date", col_name]].rename(columns={col_name: "label"})
-    df_ts = df_ts[df_ts["label"].isin(top_items)]
-    df_ts["month_year"] = df_ts["date"].dt.to_period("M").dt.to_timestamp()
-    df_ts_grouped = (
-        df_ts.groupby(["month_year", "label"]).size().reset_index(name="count")
+def create_timeseries_chart(
+    df: pd.DataFrame, category: str, top: int
+) -> dcc.Graph:
+    """Create a time series chart for the top labels in a category."""
+    col_name = f"{category.lower()}_label"
+    top_labels = get_frequent_labels(df, category, top)["label"].tolist()
+    df_ts = (
+        df[df[col_name].isin(top_labels)]
+        .groupby(["timestamp_prompt", col_name])
+        .size()
+        .reset_index(name="count")
     )
-    df_ts_pivot = df_ts_grouped.pivot(
-        index="month_year", columns="label", values="count"
-    ).reset_index()
-    df_ts_pivot = df_ts_pivot.fillna(0)
-
-    return df_ts_pivot
+    fig = px.line(df_ts, x="timestamp_prompt", y="count", color=col_name)
+    fig.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+    return dcc.Graph(figure=fig)
 
 
-label_mental = "Mental"
-label_psych = "Psychological"
-label_emotion = "Emotional"
-
-periods = ["Max", "1 month", "3 months", "6 months", "12 months"]
-
-style_block = {
-    "border": "1px solid #ccc",
-    "border-radius": "10px",
-    "padding": "10px",
-    "box-shadow": "2px 2px 8px rgba(0, 0, 0, 0.1)",
-    "width": "30%",
-    "background-color": "#f9f9f9",
-}
-
-style_label = {
-    "display": "block",
-    "margin-bottom": "10px",
-    "font-weight": "bold",
-}
-
-style_input = {
-    "width": "80px",
-    "border": "1px solid #ccc",
-    "border-radius": "5px",
-    "padding": "10px",
-}
-
-
+# Initialize Dash App
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+app = DjangoDash(
+    "DashboardPatientView", external_stylesheets=external_stylesheets
+)
 
-app = DjangoDash("SimpleExample4", external_stylesheets=external_stylesheets)
-
-
-def get_bar_graph(category_label, n_top, period):
-    global df_filtered
-
-    if category_label == None:
-        return None
-
-    start_date = None
-
-    if period != None and period != "Max":
-        months = int(period.split(" ")[0])
-        start_date = datetime.today().date() - relativedelta(months=months)
-
-    df_freq = get_df_freq(df_filtered, category_label, n_top, start_date)
-
-    fig = px.bar(data_frame=df_freq, x="label", y="count")
-    fig.update_traces(width=0.5)
-    fig.update_xaxes(title_text="", tickfont=dict(size=12), tickangle=345)
-    fig.update_yaxes(title_text="Frequency")
-    fig.update_layout(height=260, margin=dict(l=0, r=0, t=25, b=30))
-
-    return dcc.Graph(id=category_label.lower() + "-graph", figure=fig)
-
-
-def get_timeseries_graph(category_label, n_top, period):
-    global df_filtered
-
-    if category_label == None:
-        return None
-
-    start_date = None
-
-    if period != None and period != "Max":
-        months = int(period.split(" ")[0])
-        start_date = datetime.today().date() - relativedelta(months=months)
-
-    df_ts = get_df_timeseries(df_filtered, category_label, n_top, start_date)
-
-    fig = px.line(df_ts, x="month_year", y=df_ts.columns)
-    fig.update_xaxes(title_text="", tickfont=dict(size=12), tickangle=345)
-    fig.update_yaxes(title_text="")
-    fig.update_layout(height=260, margin=dict(l=0, r=0, t=25, b=30))
-
-    return dcc.Graph(id=category_label.lower() + "-graph-ts", figure=fig)
-
-
+# Layout Definition
+# Updated Layout
 app.layout = html.Div(
     children=[
         html.Div(
-            style={"display": "flex", "justify-content": "space-between"},
             children=[
-                html.Div(
-                    style=style_block,
-                    children=[
-                        html.Label("Top Items", style=style_label),
-                        dcc.Input(
-                            id="txt-n-top",
-                            value=3,
-                            type="number",
-                            min=2,
-                            max=10,
-                            step=1,
-                            style=style_input,
-                        ),
+                html.Label("Number of Top Items"),
+                dcc.Input(
+                    id="top-input", type="number", value=3, min=1, step=1
+                ),
+                html.Label("Time Period"),
+                dcc.Dropdown(
+                    id="period-dropdown",
+                    options=[
+                        {"label": "1 Month", "value": "1m"},
+                        {"label": "3 Months", "value": "3m"},
+                        {"label": "6 Months", "value": "6m"},
+                        {"label": "1 Year", "value": "1y"},
+                        {"label": "All Time", "value": "max"},
                     ],
+                    value="max",
                 ),
-                html.Div(
-                    style=style_block,
-                    children=[
-                        html.Label("Period", style=style_label),
-                        html.Div(
-                            style={"display": "inline-flex"},
-                            children=[
-                                dcc.Dropdown(
-                                    id="drop-period",
-                                    options=periods,
-                                    value="Max",
-                                    style={"width": "200px"},
-                                )
-                            ],
-                        ),
-                    ],
-                ),
-                html.Div(
-                    style=style_block,
-                    children=[
-                        html.Label("Records", style=style_label),
-                        dcc.Input(
-                            id="txt-records", disabled=True, style=style_input
-                        ),
-                    ],
-                ),
-            ],
-        ),
-        html.Div(
-            children=[
-                html.H2(
-                    label_mental,
-                    style={"text-align": "center", "margin": "20px 0 0 0"},
-                ),
-                html.Div(
-                    style={
-                        "display": "flex",
-                        "justify-content": "space-between",
-                    },
-                    children=[
-                        html.Div(
-                            style={"width": "35%"},
-                            children=[html.Div(id="div-mental")],
-                        ),
-                        html.Div(
-                            style={"width": "65%"},
-                            children=[html.Div(id="div-mental-ts")],
-                        ),
-                    ],
-                ),
+                html.Label("Number of Records"),
+                dcc.Input(id="txt-records", disabled=True),
             ]
         ),
         html.Div(
             children=[
-                html.H2(
-                    label_psych,
-                    style={"text-align": "center", "margin": "20px 0 0 0"},
-                ),
-                html.Div(
-                    style={
-                        "display": "flex",
-                        "justify-content": "space-between",
-                    },
-                    children=[
-                        html.Div(
-                            style={"width": "35%"},
-                            children=[html.Div(id="div-psychological")],
-                        ),
-                        html.Div(
-                            style={"width": "65%"},
-                            children=[html.Div(id="div-psychological-ts")],
-                        ),
-                    ],
-                ),
+                html.H2("Mental"),
+                html.Div(id="div-mental"),
+                html.Div(id="div-mental-ts"),
             ]
         ),
         html.Div(
             children=[
-                html.H2(
-                    label_emotion,
-                    style={"text-align": "center", "margin": "20px 0 0 0"},
-                ),
-                html.Div(
-                    style={
-                        "display": "flex",
-                        "justify-content": "space-between",
-                    },
-                    children=[
-                        html.Div(
-                            style={"width": "35%"},
-                            children=[html.Div(id="div-emotional")],
-                        ),
-                        html.Div(
-                            style={"width": "65%"},
-                            children=[html.Div(id="div-emotional-ts")],
-                        ),
-                    ],
-                ),
+                html.H2("Psychological"),
+                html.Div(id="div-psychological"),
+                html.Div(id="div-psychological-ts"),
+            ]
+        ),
+        html.Div(
+            children=[
+                html.H2("Emotional"),
+                html.Div(id="div-emotional"),
+                html.Div(id="div-emotional-ts"),
             ]
         ),
     ]
 )
 
 
-@callback(
+# Updated Callback
+@app.callback(
     Output("div-mental", "children"),
     Output("div-psychological", "children"),
     Output("div-emotional", "children"),
@@ -339,27 +180,29 @@ app.layout = html.Div(
     Output("div-psychological-ts", "children"),
     Output("div-emotional-ts", "children"),
     Output("txt-records", "value"),
-    Input("txt-n-top", "value"),
-    Input("drop-period", "value"),
+    Input("top-input", "value"),
+    Input("period-dropdown", "value"),
 )
-def update_graphs(n_top, period):
-    global df_filtered
+def update_dashboard(n_top: int, period: str):
+    df = async_to_sync(prepare_user_data)()
+    df = process_emotions(df)
 
-    start_date = None
+    # Date range filtering
+    if period != "max":
+        months = int(period[:-1])
+        start_date = datetime.now() - relativedelta(months=months)
+        df = filter_data_by_date(df, start_date=start_date)
 
-    if period != None and period != "Max":
-        months = int(period.split(" ")[0])
-        start_date = datetime.today().date() - relativedelta(months=months)
+    mental_bar = create_bar_chart(df, "Mental", n_top)
+    psych_bar = create_bar_chart(df, "Psychological", n_top)
+    emotion_bar = create_bar_chart(df, "Emotional", n_top)
 
-    df_filtered = get_df_filtered(df, start_date)
+    # For time series
+    mental_ts = create_timeseries_chart(df, "Mental", n_top)
+    psych_ts = create_timeseries_chart(df, "Psychological", n_top)
+    emotion_ts = create_timeseries_chart(df, "Emotional", n_top)
 
-    mental_bar = get_bar_graph(label_mental, n_top, period)
-    psych_bar = get_bar_graph(label_psych, n_top, period)
-    emotion_bar = get_bar_graph(label_emotion, n_top, period)
-    mental_ts = get_timeseries_graph(label_mental, n_top, period)
-    psych_ts = get_timeseries_graph(label_psych, n_top, period)
-    emotion_ts = get_timeseries_graph(label_emotion, n_top, period)
-    n_records = len(df_filtered)
+    n_records = len(df)
 
     return (
         mental_bar,
