@@ -106,35 +106,19 @@ groups:
               Just check if the latest migration files were already created.
             type: bool
             action: store_true
-        matrix:
-          app:
-            - ""
-            - mhai_web
-            - user_profile
-            - ai_profile
-            - mhai_chat
-            - dashboards
         backend: bash
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
-        run: python manage.py makemigrations ${{ matrix.app }}
+        run: python manage.py makemigrations
 
       migrate:
         env-file: .envs/.env
         dir: src/backend
-        matrix:
-          app:
-            - ""
-            - user_profile
-            - ai_profile
-            - mhai_chat
-            - dashboards
-            - django_plotly_dash
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
-        run: python manage.py migrate ${{ matrix.app }}
+        run: python manage.py migrate
 
       notebook:
         help: Run the django environment in a jupyter notebook
@@ -147,10 +131,10 @@ groups:
 
       runserver:
         env-file: .envs/.env
-        hooks:
-          pre-run:
-            - task: reactjs.install
-            - task: reactjs.build
+        # hooks:
+        #   pre-run:
+        #     - task: reactjs.install
+        #     - task: reactjs.build
         dir: src/backend
         env:
           POSTGRES_HOST: localhost
@@ -180,7 +164,7 @@ groups:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost
         run: |
-          sugar --group test compose-ext restart --options -d
+          sugar --group test compose-ext restart --options "-d"
 
       teardown:
         help: Teardown the infrastructure for the tests

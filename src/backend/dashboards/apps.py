@@ -6,4 +6,4 @@ class DashboardsConfig(AppConfig):
     name = "dashboards"
 
     def ready(self):
-        pass
+        from dashboards.libs.charts import patient  # noqa: F401
