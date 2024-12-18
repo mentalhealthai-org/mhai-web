@@ -108,6 +108,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "simple_history",
+    "stronghold",
 ]
 
 LOCAL_APPS = [
@@ -140,6 +141,13 @@ LOGIN_REDIRECT_URL = "user-profile-general"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
+STRONGHOLD_PUBLIC_URLS = (
+    r"^/accounts/login/",  # Exclude login page
+    r"^/accounts/logout/",  # Exclude logout page
+    r"^/accounts/signup/",  # Exclude signup page
+    r"^/static/",  # Allow access to static files
+    r"^/media/",  # Allow media files
+)
 # PASSWORDS
 # -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
@@ -180,6 +188,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "stronghold.middleware.LoginRequiredMiddleware",
 ]
 
 # STATIC
