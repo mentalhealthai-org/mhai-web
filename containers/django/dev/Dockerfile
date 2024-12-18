@@ -16,8 +16,11 @@ USER root
 ENV USERNAME=mhai
 
 RUN mkdir -p /opt/services/mhai-web \
-  && chmod -R a+rwx /opt/services/mhai-web \
-  && chown ${USERNAME}:${USERNAME} /opt/services
+    /home/${USERNAME}/.cache/huggingface/hub && \
+    chmod -R a+rwx /opt/services/mhai-web && \
+    chmod -R a+rwx /home/${USERNAME}/.cache/huggingface/hub && \
+    chown -R ${USERNAME}:${USERNAME} /opt/services/mhai-web \
+    /home/${USERNAME}/.cache/huggingface/hub
 
 USER ${USERNAME}
 
