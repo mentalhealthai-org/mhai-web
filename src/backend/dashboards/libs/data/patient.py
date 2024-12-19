@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
@@ -13,11 +13,13 @@ from mhai_chat.models import (
     MhaiChatEvalMentBert,
     MhaiChatEvalPsychBert,
 )
+from typeguard import typechecked
 
 if TYPE_CHECKING:
     from datetime import datetime
 
 
+@typechecked
 async def fetch_model_data(
     model, filters: dict[str, Any] = {}
 ) -> pd.DataFrame:
@@ -32,6 +34,7 @@ async def fetch_model_data(
     return await query_model()
 
 
+@typechecked
 async def prepare_user_data() -> pd.DataFrame:
     """Prepare user data by merging relevant model data."""
     df_chat = await fetch_model_data(MhaiChat, filters={"status": "completed"})
@@ -89,10 +92,16 @@ async def prepare_user_data() -> pd.DataFrame:
         suffixes=("", "_y"),
     )
 
-    # Ensure only valid rows with user input
-    return df_complete[df_complete["prompt"].notna()]
+    df_complete = df_complete[df_complete["prompt"].notna()]
+    import joblib
+
+    joblib.dump(
+        df_complete, "~/dev/mentalhealthai-org/notebook/data/result.pkl"
+    )
+    return df_complete
 
 
+@typechecked
 def process_emotions(df_complete: pd.DataFrame) -> pd.DataFrame:
     """Add emotion labels to the DataFrame."""
     emotions = [
@@ -108,6 +117,7 @@ def process_emotions(df_complete: pd.DataFrame) -> pd.DataFrame:
     return df_complete
 
 
+@typechecked
 def filter_data_by_date(
     df_complete: pd.DataFrame, start_date: datetime | None = None
 ) -> pd.DataFrame:
@@ -119,6 +129,7 @@ def filter_data_by_date(
     return df_complete
 
 
+@typechecked
 def get_most_frequent_labels(
     df_complete: pd.DataFrame, category: str, top: int
 ) -> pd.DataFrame:

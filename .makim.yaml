@@ -131,10 +131,10 @@ groups:
 
       runserver:
         env-file: .envs/.env
-        # hooks:
-        #   pre-run:
-        #     - task: reactjs.install
-        #     - task: reactjs.build
+        hooks:
+          pre-run:
+            - task: reactjs.install
+            - task: reactjs.build
         dir: src/backend
         env:
           POSTGRES_HOST: localhost

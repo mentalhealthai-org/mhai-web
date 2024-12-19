@@ -8,16 +8,17 @@ import plotly.express as px
 from asgiref.sync import async_to_sync
 from dash import Input, Output, dcc, html
 from dashboards.libs.data.patient import (
-    async_to_sync,
     filter_data_by_date,
     get_most_frequent_labels,
-    process_emotions,
+    prepare_user_data,
 )
 from dateutil.relativedelta import relativedelta
 from django.utils.timezone import now
 from django_plotly_dash import DjangoDash
+from typeguard import typechecked
 
 
+@typechecked
 def create_bar_chart(
     df_complete: pd.DataFrame, category: str, top: int
 ) -> dcc.Graph:
@@ -28,6 +29,7 @@ def create_bar_chart(
     return dcc.Graph(figure=fig)
 
 
+@typechecked
 def create_timeseries_chart(
     df_complete: pd.DataFrame, category: str, top: int
 ) -> dcc.Graph:
@@ -103,7 +105,47 @@ app.layout = html.Div(
 )
 
 
-# Updated Callback
+@typechecked
+def generate_dashboard_data(
+    df_complete: pd.DataFrame, n_top: int, period: str
+):
+    """
+    Generate data for the dashboard components: bar charts and time series charts.
+
+    Parameters
+    ----------
+    df_complete : pd.DataFrame
+        The complete user data.
+    n_top : int
+        Number of top items to display.
+    period : str
+        Time period filter.
+
+    Returns
+    -------
+    dict
+        Dictionary containing all chart components and record count.
+    """
+    # df_complete = process_emotions(df_complete)
+
+    if period != "max":
+        months = int(period[:-1])
+        start_date = now() - relativedelta(months=months)
+        df_complete = filter_data_by_date(df_complete, start_date=start_date)
+
+    return {
+        "mental_bar": create_bar_chart(df_complete, "Mental", n_top),
+        "psych_bar": create_bar_chart(df_complete, "Psychological", n_top),
+        "emotion_bar": create_bar_chart(df_complete, "Emotional", n_top),
+        "mental_ts": create_timeseries_chart(df_complete, "Mental", n_top),
+        "psych_ts": create_timeseries_chart(
+            df_complete, "Psychological", n_top
+        ),
+        "emotion_ts": create_timeseries_chart(df_complete, "Emotional", n_top),
+        "n_records": len(df_complete),
+    }
+
+
 @app.callback(
     Output("div-mental", "children"),
     Output("div-psychological", "children"),
@@ -115,33 +157,18 @@ app.layout = html.Div(
     Input("top-input", "value"),
     Input("period-dropdown", "value"),
 )
+@typechecked
 def update_dashboard(n_top: int, period: str):
     df_complete = async_to_sync(prepare_user_data)()
-    df_complete = process_emotions(df_complete)
 
-    # Date range filtering
-    if period != "max":
-        months = int(period[:-1])
-        start_date = now() - relativedelta(months=months)
-        df_complete = filter_data_by_date(df_complete, start_date=start_date)
-
-    mental_bar = create_bar_chart(df_complete, "Mental", n_top)
-    psych_bar = create_bar_chart(df_complete, "Psychological", n_top)
-    emotion_bar = create_bar_chart(df_complete, "Emotional", n_top)
-
-    # For time series
-    mental_ts = create_timeseries_chart(df_complete, "Mental", n_top)
-    psych_ts = create_timeseries_chart(df_complete, "Psychological", n_top)
-    emotion_ts = create_timeseries_chart(df_complete, "Emotional", n_top)
-
-    n_records = len(df_complete)
+    dashboard_data = generate_dashboard_data(df_complete, n_top, period)
 
     return (
-        mental_bar,
-        psych_bar,
-        emotion_bar,
-        mental_ts,
-        psych_ts,
-        emotion_ts,
-        n_records,
+        dashboard_data["mental_bar"],
+        dashboard_data["psych_bar"],
+        dashboard_data["emotion_bar"],
+        dashboard_data["mental_ts"],
+        dashboard_data["psych_ts"],
+        dashboard_data["emotion_ts"],
+        dashboard_data["n_records"],
     )
