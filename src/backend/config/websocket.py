@@ -1,4 +1,8 @@
+"""Web socket for the dashboards."""
+
+
 async def websocket_application(scope, receive, send):
+    """Run the Web socket for the dashboards."""
     while True:
         event = await receive()
 

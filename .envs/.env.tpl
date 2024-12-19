@@ -15,9 +15,6 @@ DATABASE_URL=${DATABASE_URL}
 # ------------------------------------------------------------------------------
 USE_DOCKER=${USE_DOCKER}
 IPYTHONDIR=${IPYTHONDIR}
-# Redis
-# ------------------------------------------------------------------------------
-REDIS_URL=${REDIS_URL}
 
 # Celery
 # ------------------------------------------------------------------------------
@@ -55,7 +52,6 @@ EMAIL_SENDER=${EMAIL_SENDER}
 EMAIL_USE_TLS=${EMAIL_USE_TLS}
 EMAIL_USE_SSL=${EMAIL_USE_SSL}
 
-
 # django-allauth
 # ------------------------------------------------------------------------------
 DJANGO_ACCOUNT_ALLOW_REGISTRATION=${DJANGO_ACCOUNT_ALLOW_REGISTRATION}
@@ -68,17 +64,9 @@ WEB_CONCURRENCY=${WEB_CONCURRENCY}
 # ------------------------------------------------------------------------------
 SENTRY_DSN=${SENTRY_DSN}
 
-
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=${REDIS_URL}
-
-# Celery
-# ------------------------------------------------------------------------------
-
-# Flower
-CELERY_FLOWER_USER=${CELERY_FLOWER_USER}
-CELERY_FLOWER_PASSWORD=${CELERY_FLOWER_PASSWORD}
 
 # Nginx
 CERTBOT_DOMAIN=${CERTBOT_DOMAIN}

@@ -7,7 +7,7 @@ dependencies:
   - compilers
   - nodejs >=18
   - yarn
-  - poetry
+  - poetry >=1.8.5
   - pip
   - pip:
       - compose-go

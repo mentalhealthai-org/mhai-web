@@ -63,6 +63,8 @@
         <script defer src="{% static 'js/project.js' %}"></script>
       {% endcompress %}
     {% endblock javascript %}
+    {% block javascript_extras %}
+    {% endblock javascript_extras %}
   </head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Header or Navbar -->
@@ -93,6 +95,9 @@
               {% if request.user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'mhai-chat' %}">Mhai Chat</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'dashboards:patient' %}">Dashboards</a>
                 </li>
               {% endif %}
               <li class="nav-item">
