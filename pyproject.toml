@@ -6,7 +6,7 @@ authors = [
   { name = "Ivan Ogasawara", email = "ivan.ogasawara@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.12,<4"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
   "python-slugify >=8.0.4",
@@ -44,8 +44,23 @@ dependencies = [
   "django-stronghold >=0.4.0",
   "psycopg2-binary[pool] (>=2.9.9,<3.0.0)",
   "django-allauth[mfa] (>=65.0.1,<66.0.0)",
-  "torch (>=2.3.0+cpu,<3.0.0)",
+  "torch (>=2.3.0,<3.0.0)",
   "uvicorn[standard] (>=0.30.6,<0.31.0)",
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+blis = "<1.2"
+numpy = "<2"
+torch = [
+  {version = ">=2.5.0", source="pytorch-cpu"},
+]
+torchvision = [
+  {version = ">=0.20.0", source="pytorch-cpu"},
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -84,19 +99,15 @@ mkdocs-material = ">=9.1.15"
 mkdocstrings = {version=">=0.24.3", extras=["python"]}
 mkdocs-gen-files = ">=0.5.0"
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.poetry]
 packages = [
   {include = "*", from="src/backend"},
 ]
 
 [[tool.poetry.source]]
-name = "pytorch-cpu-src"
+name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
-priority = "explicit"
+priority = "supplemental"
 
 [tool.pytest.ini_options]
 minversion = "6.0"

@@ -12,3 +12,5 @@ dependencies:
   - pip:
       - compose-go
       - packaging>=24.2 # Poetry requires
+      - jsbeautifier==1.15.1 # fix issues with distlib
+      - paginate # fix issues with distlib
