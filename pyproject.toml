@@ -120,12 +120,12 @@ python_files = [
 [tool.coverage.run]
 include = ["src/backend/**"]
 omit = [
-	"*/migrations/*",
-	"*/tests/*",
-	"scripts/*",
-	"manage.py",
-	"*/src/frontend/*",
-	"*.txt",
+  "*/migrations/*",
+  "*/tests/*",
+  "scripts/*",
+  "manage.py",
+  "*/src/frontend/*",
+  "*.txt",
 ]
 plugins = ["django_coverage_plugin"]
 
