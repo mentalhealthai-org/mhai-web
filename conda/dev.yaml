@@ -7,7 +7,10 @@ dependencies:
   - compilers
   - nodejs >=18
   - yarn
-  - poetry
+  - poetry >=2.0.0
   - pip
   - pip:
-      - compose-go
+      - compose-go >=2.20.2,<2.31.0
+      - packaging>=24.2 # Poetry requires
+      - jsbeautifier==1.15.1 # fix issues with distlib
+      - paginate # fix issues with distlib
