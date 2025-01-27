@@ -124,6 +124,7 @@ def api_client():
 @pytest.fixture
 def auth_client(api_client, user):
     """Fixture for authenticating the API client."""
-    token = Token.objects.create(user=user)
+    token, _ = Token.objects.get_or_create(user=user)
     api_client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
+    api_client.force_authenticate(user=user)
     return api_client

@@ -13,14 +13,10 @@ from mhai_web.urls import urlpatterns as mhai_urls
 from mhai_chat.urls import urlpatterns as mhai_chat_urls
 
 
-from ai_profile.urls import (
-    api_urlpatterns as ai_profile_api_urls,
-    views_urlpatterns as ai_profile_views_urls,
-)
-from user_profile.urls import (
-    api_urlpatterns as user_profile_api_urls,
-    views_urlpatterns as user_profile_views_urls,
-)
+from ai_profile.urls import urlpatterns as ai_profile_views_urls
+from ai_profile.api.urls import urlpatterns as ai_profile_api_urls
+from user_profile.api.urls import urlpatterns as user_profile_api_urls
+from user_profile.urls import urlpatterns as user_profile_views_urls
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
@@ -37,9 +33,13 @@ urlpatterns = [
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
 
+# Serve static and media files in development
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
 
 # API URLs
 urlpatterns += [

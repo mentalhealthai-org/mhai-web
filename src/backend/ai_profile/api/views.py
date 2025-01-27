@@ -6,7 +6,7 @@ from typing import cast
 
 from mhai_web.users.models import User
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from ai_profile.api.serializers import (
     AIProfileBiographySerializer,
@@ -22,7 +22,7 @@ class AIProfileGeneralInfoView(viewsets.ModelViewSet):
 
     queryset = AIProfile.objects.all()
     serializer_class = AIProfileGeneralInfoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return self.queryset.filter(user=cast(User, self.request.user))

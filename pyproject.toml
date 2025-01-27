@@ -46,6 +46,7 @@ dependencies = [
   "django-allauth[mfa] (>=65.0.1,<66.0.0)",
   "torch (>=2.3.0,<3.0.0)",
   "uvicorn[standard] (>=0.30.6,<0.31.0)",
+  "django-stronghold >=0.4.0",
 ]
 
 [build-system]

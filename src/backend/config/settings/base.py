@@ -108,6 +108,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "simple_history",
+    "stronghold",
 ]
 
 LOCAL_APPS = [
@@ -140,6 +141,21 @@ LOGIN_REDIRECT_URL = "user-profile-general"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
 
+STRONGHOLD_DEFAULTS = True
+
+STRONGHOLD_PUBLIC_NAMED_URLS = [
+    "api-auth-login",  # Allow login endpoint
+]
+
+STRONGHOLD_PUBLIC_URLS = (
+    r"^/accounts/(.+)?$",
+    r"^/account/(.+)?$",
+    r"^/static/(.+)?$",  # Allow access to static files
+    r"^/media/(.+)?$",  # Allow media files
+    r"^/admin/(.+)?$",
+    # https://github.com/mgrouchy/django-stronghold/issues/59#issuecomment-326842358
+    r"^/api/(.+)?$",  # stronghold doesn't work properly with DRF
+)
 # PASSWORDS
 # -----------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
@@ -180,6 +196,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "stronghold.middleware.LoginRequiredMiddleware",
 ]
 
 # STATIC
