@@ -38,12 +38,13 @@ def ai_profile(user: UserClass):
 
 
 @pytest.mark.django_db
-def test_update_ai_profile_general_info(api_client, user, ai_profile):
+def test_update_ai_profile_general_info(auth_client, user, ai_profile):
     """Test updating general information in the AIProfile model."""
-    api_client.force_authenticate(user=user)
     url = reverse("ai-profile-general-detail", args=[ai_profile.id])
     data = {"age": 41, "gender": GenderChoices.FEMALE, "custom_gender": ""}
-    response = api_client.patch(url, data, format="json")
+
+    response = auth_client.patch(url, data, format="json")
+
     assert response.status_code == status.HTTP_200_OK
     ai_profile.refresh_from_db()
     assert ai_profile.age == 41  # noqa: PLR2004
