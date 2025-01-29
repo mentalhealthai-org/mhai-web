@@ -148,6 +148,8 @@ STRONGHOLD_PUBLIC_NAMED_URLS = [
 ]
 
 STRONGHOLD_PUBLIC_URLS = (
+    r"^/$",
+    r"^/about/$",
     r"^/accounts/(.+)?$",
     r"^/account/(.+)?$",
     r"^/static/(.+)?$",  # Allow access to static files
