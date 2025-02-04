@@ -2,8 +2,6 @@
 
 set -ex
 
-export STAGING_MODE=1
-
 # Check if sugar is avaiable
 if ! [ -x "$(command -v sugar)" ]; then
     echo "Error: sugar is not installed." >&2
@@ -108,7 +106,7 @@ sugar compose run --service certbot \
 echo "----> Reloading nginx ..."
 sugar compose exec --service nginx --cmd "nginx -s reload"
 
-nginx_conf="/etc/nginx/conf.d/${CERTBOT_DOMAIN:0:8}.nginx.conf"
+nginx_conf="/etc/nginx/conf.d/${CERTBOT_DOMAIN:0:6}.nginx.conf"
 
 if sugar compose exec --service nginx --cmd "test -f $nginx_conf"; then
     echo "✅ Nginx configuration file found. Updating..."
