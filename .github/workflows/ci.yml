@@ -193,7 +193,7 @@ jobs:
           repo-token-user-login: "github-actions[bot]"
 
       - name: Archive log artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
           name: test-containers-services
@@ -299,7 +299,7 @@ jobs:
       #     repo-token-user-login: 'github-actions[bot]'
 
       - name: Archive log artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
           name: test-containers-services
