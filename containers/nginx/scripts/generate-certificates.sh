@@ -1,19 +1,19 @@
 #!/bin/bash
 
+set -ex
+
 # Check if sugar is avaiable
 if ! [ -x "$(command -v sugar)" ]; then
     echo "Error: sugar is not installed." >&2
     exit 1
 fi
 
-# get script directory
-# Use the script_dir variable to construct paths
 script_dir="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
-
 echo ${script_dir}
+
 # project directory (root of the literev project)
 project_dir="$script_dir/.envs"
-echo ${project_dir}
+echo "${project_dir}"
 
 # Check .env exists for environment variabes
 if [ -f "$project_dir/.env" ]; then
@@ -52,29 +52,29 @@ EMAIL=${CERTBOT_EMAIL}
 echo "----> Creating dummy certificate for $DOMAINS ..."
 path="/etc/letsencrypt/live/$DOMAINS"
 
-sugar compose run --service certbot --options "--rm --remove-orphans" --cmd "--entrypoint" --cmd "mkdir -p $path"
+sudo mkdir -p /var/log/letsencrypt
 
-sugar compose run --service certbot --options "--rm --remove-orphans" --cmd "--entrypoint" "\
-  openssl req -x509 -nodes -newkey rsa:$RSA_KEY_SIZE -days 1\
-    -keyout "$path/privkey.pem" \
-    -out "$path/fullchain.pem" \
--subj "/CN=localhost""
-echo
+sugar compose run --service certbot \
+    --options "--rm --remove-orphans --entrypoint mkdir" --cmd "-p $path"
+
+sugar compose run --service certbot \
+    --options "--rm --remove-orphans --entrypoint openssl" \
+    --cmd "req -x509 -nodes -newkey rsa:$RSA_KEY_SIZE -days 1 \
+        -keyout $path/privkey.pem \
+        -out $path/fullchain.pem \
+        -subj /CN=localhost"
 
 echo "----> Starting nginx ..."
-    sugar compose up --services nginx --options "--force-recreate -d"
-echo
+sugar compose up --services nginx --options "--force-recreate -d"
 
 echo "----> Deleting dummy certificate for $DOMAINS ..."
-sugar compose run --service certbot --options --rm "--remove-orphans --entrypoint" "\
-    rm -Rf /etc/letsencrypt/live/$DOMAINS && \
-    rm -Rf /etc/letsencrypt/archive/$DOMAINS && \
-    rm -Rf /etc/letsencrypt/renewal/$DOMAINS.conf"
-echo
+sugar compose run --service certbot \
+    --options "--rm --remove-orphans --entrypoint rm" \
+    --cmd "-Rf /etc/letsencrypt/live/$DOMAINS \
+        -Rf /etc/letsencrypt/archive/$DOMAINS \
+        -Rf /etc/letsencrypt/renewal/$DOMAINS.conf"
 
-
-echo "----> Requesting Let"s Encrypt certificate for $DOMAINS ..."
-#Join $DOMAINS to -d args (this is useful for cases where multiple DOMAINS certificates are necessary)
+echo "----> Requesting Let's Encrypt certificate for $DOMAINS ..."
 domain_args=""
 for domain in "${DOMAINS[@]}"; do
     domain_args="$domain_args -d $domain"
@@ -87,18 +87,49 @@ case "$EMAIL" in
 esac
 
 # Enable staging mode if needed
-if [ "${STAGING_MODE:-0}" != "0" ]; then staging_arg="--dry-run"; fi
+staging_arg=""
+if [ "${STAGING_MODE:-0}" != "0" ]; then
+    staging_arg="--dry-run"
+fi
 
-sugar compose run --service certbot --options --rm "--remove-orphans --entrypoint" "\
-  certbot -v certonly --webroot -w /var/www/certbot \
-    $staging_arg \
-    $email_arg \
-    $domain_args \
-    --rsa-key-size $RSA_KEY_SIZE \
-    --agree-tos \
-    --no-eff-email \
-    --force-renewal"
-echo
+sugar compose run --service certbot \
+    --options "--rm --remove-orphans --entrypoint certbot" \
+    --cmd "certonly --webroot -w /var/www/certbot \
+        $staging_arg \
+        $email_arg \
+        $domain_args \
+        --rsa-key-size $RSA_KEY_SIZE \
+        --agree-tos \
+        --no-eff-email \
+        --force-renewal"
 
 echo "----> Reloading nginx ..."
 sugar compose exec --service nginx --cmd "nginx -s reload"
+
+nginx_conf="/etc/nginx/conf.d/${CERTBOT_DOMAIN:0:6}.nginx.conf"
+
+if sugar compose exec --service nginx --cmd "test -f $nginx_conf"; then
+    echo "✅ Nginx configuration file found. Updating..."
+
+    sugar compose exec --service nginx --cmd \
+        "sed -i 's/listen[[:space:]]*443;/listen 443 ssl;/' $nginx_conf"
+
+    echo "----> Enabling SSL certificates in Nginx configuration..."
+
+    sugar compose exec --service nginx --cmd \
+        "sed -i 's|# ssl_certificate /etc/letsencrypt/live/$CERTBOT_DOMAIN/fullchain.pem;|ssl_certificate /etc/letsencrypt/live/$CERTBOT_DOMAIN/fullchain.pem;|' $nginx_conf"
+
+    sugar compose exec --service nginx --cmd \
+        "sed -i 's|# ssl_certificate_key /etc/letsencrypt/live/$CERTBOT_DOMAIN/privkey.pem;|ssl_certificate_key /etc/letsencrypt/live/$CERTBOT_DOMAIN/privkey.pem;|' $nginx_conf"
+
+    echo "✅ SSL certificate paths have been uncommented in Nginx configuration."
+
+else
+    echo "⚠️ Nginx configuration file not found inside the container!"
+    exit 1
+fi
+
+echo "----> Reloading Nginx with SSL ..."
+sugar compose exec --service nginx --cmd "nginx -s reload"
+
+echo "✅ SSL setup complete!"
