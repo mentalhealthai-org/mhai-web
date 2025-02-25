@@ -1,11 +1,11 @@
-// src/pages/chat/MhaiChat.js
+// src/pages/chat/MhaiDiary.js
 
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
 
-function MhaiChat() {
+function MhaiDiary() {
   const csrftoken = getCSRFToken();
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
@@ -201,4 +201,4 @@ function MhaiChat() {
   );
 }
 
-export default MhaiChat;
+export default MhaiDiary;

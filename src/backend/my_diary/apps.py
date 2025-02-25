@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class MhaiChatConfig(AppConfig):
+class MhaiDiaryConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "mhai_chat"
+    name = "my_diary"

@@ -3,7 +3,7 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from mhai_chat.models import MhaiChat
+from my_diary.models import MhaiDiary
 
 
 @pytest.mark.django_db
@@ -16,9 +16,9 @@ def test_create_chat_message(auth_client, user):
     response = auth_client.post(url, payload, format="json")
 
     assert response.status_code == status.HTTP_201_CREATED
-    assert MhaiChat.objects.filter(user=user).count() == 1
+    assert MhaiDiary.objects.filter(user=user).count() == 1
 
-    chat_message = MhaiChat.objects.get(user=user)
+    chat_message = MhaiDiary.objects.get(user=user)
     assert chat_message.prompt == "Hello, AI!"
     # note: tasks celery is running in sequence
     assert chat_message.status == "completed"
@@ -31,10 +31,10 @@ def test_get_chat_messages(auth_client, user):
     Test retrieving chat messages for the authenticated user.
     """
     # Create some chat messages
-    MhaiChat.objects.create(
+    MhaiDiary.objects.create(
         user=user, prompt="First message", status="completed"
     )
-    MhaiChat.objects.create(
+    MhaiDiary.objects.create(
         user=user, prompt="Second message", status="completed"
     )
 
@@ -50,10 +50,10 @@ def test_filter_chat_messages_since_id(auth_client, user):
     """
     Test filtering chat messages using since_id.
     """
-    message1 = MhaiChat.objects.create(
+    message1 = MhaiDiary.objects.create(
         user=user, prompt="First message", status="completed"
     )
-    message2 = MhaiChat.objects.create(
+    message2 = MhaiDiary.objects.create(
         user=user, prompt="Second message", status="completed"
     )
 

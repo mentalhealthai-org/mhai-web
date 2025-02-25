@@ -10,7 +10,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
 from mhai_web.urls import urlpatterns as mhai_urls
-from mhai_chat.urls import urlpatterns as mhai_chat_urls
+from my_diary.urls import urlpatterns as my_diary_urls
 
 
 from ai_profile.urls import urlpatterns as ai_profile_views_urls
@@ -26,7 +26,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Application paths
     *mhai_urls,
-    *mhai_chat_urls,
+    *my_diary_urls,
     *user_profile_views_urls,
     *ai_profile_views_urls,
     # Static files serving
@@ -56,8 +56,8 @@ urlpatterns += [
     # Application API endpoints
     path("api/ai-profile/", include(ai_profile_api_urls)),
     path("api/profile/", include(user_profile_api_urls)),
-    # mhai_chat URLs under `api/chat/`
-    path("api/mhai-chat/", include("mhai_chat.api.urls")),
+    # my_diary URLs under `api/chat/`
+    path("api/mhai-chat/", include("my_diary.api.urls")),
 ]
 
 if settings.DEBUG:
