@@ -11,21 +11,21 @@ from my_diary.api.views import (
 )
 
 router = DefaultRouter()
-router.register(r"", MhaiDiaryViewSet, basename="mhai-chat")
+router.register(r"", MhaiDiaryViewSet, basename="mhai-diary")
 router.register(
     r"eval/mentbert",
     MhaiDiaryEvalMentBertViewSet,
-    basename="mhai-chat-eval-mentbert",
+    basename="mhai-diary-eval-mentbert",
 )
 router.register(
     r"eval/psychbert",
     MhaiDiaryEvalPsychBertViewSet,
-    basename="mhai-chat-eval-psychbert",
+    basename="mhai-diary-eval-psychbert",
 )
 router.register(
     r"eval/emotions",
     MhaiDiaryEvalEmotionsViewSet,
-    basename="mhai-chat-eval-emotions",
+    basename="mhai-diary-eval-emotions",
 )
 
 urlpatterns = [

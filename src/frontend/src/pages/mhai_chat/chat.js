@@ -16,7 +16,7 @@ function MhaiDiary() {
   const lastMessageIdRef = useRef(null);
   const pollingInterval = 1000; // 1 second in milliseconds
 
-  const apiUrl = '/api/mhai-chat/';
+  const apiUrl = '/api/mhai-diary/';
 
   // Function to fetch messages
   const fetchMessages = () => {

@@ -27,7 +27,7 @@ function App() {
         <Route path="/ai-profile/bio" element={<AIProfileBio />} />
         <Route path="/ai-profile/emotions" element={<AIProfileEmotions />} />
         <Route path="/ai-profile/interests" element={<AIProfileInterests />} />
-        <Route path="/mhai-chat/" element={<MhaiDiary />} />
+        <Route path="/mhai-diary/" element={<MhaiDiary />} />
         <Route path="/profile" element={<UserProfileGeneral />} />
         <Route path="/profile/bio" element={<UserProfileBio />} />
         <Route path="/profile/emotions" element={<UserProfileEmotions />} />

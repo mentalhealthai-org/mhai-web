@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('anger', models.FloatField()),
                 ('surprise', models.FloatField()),
                 ('fear', models.FloatField()),
-                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.MhaiChat')),
+                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.mhaidiary')),
             ],
         ),
         migrations.CreateModel(
@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
                 ('schizophrenia', models.FloatField()),
                 ('asperger', models.FloatField()),
                 ('ptsd', models.FloatField()),
-                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.MhaiChat')),
+                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.mhaidiary')),
             ],
         ),
         migrations.CreateModel(
@@ -69,7 +69,7 @@ class Migration(migrations.Migration):
                 ('depression', models.FloatField()),
                 ('social_anxiety', models.FloatField()),
                 ('loneliness', models.FloatField()),
-                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.MhaiChat')),
+                ('my_diary', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='my_diary.mhaidiary')),
             ],
         ),
     ]

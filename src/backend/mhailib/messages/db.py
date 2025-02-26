@@ -84,18 +84,18 @@ def load_chat_and_evaluation_history_last_k(
         chat_data = MhaiDiarySerializer(chat).data
 
         emotions_data = (
-            MhaiDiaryEvalEmotionsSerializer(chat.MhaiDiaryevalemotions).data
-            if hasattr(chat, "MhaiDiaryevalemotions")
+            MhaiDiaryEvalEmotionsSerializer(chat.mhaidiaryevalemotions).data
+            if hasattr(chat, "mhaidiaryevalemotions")
             else {}
         )
         mentbert_data = (
-            MhaiDiaryEvalMentBertSerializer(chat.MhaiDiaryevalmentbert).data
-            if hasattr(chat, "MhaiDiaryevalmentbert")
+            MhaiDiaryEvalMentBertSerializer(chat.mhaidiaryevalmentbert).data
+            if hasattr(chat, "mhaidiaryevalmentbert")
             else {}
         )
         psychbert_data = (
-            MhaiDiaryEvalPsychBertSerializer(chat.MhaiDiaryevalpsychbert).data
-            if hasattr(chat, "MhaiDiaryevalpsychbert")
+            MhaiDiaryEvalPsychBertSerializer(chat.mhaidiaryevalpsychbert).data
+            if hasattr(chat, "mhaidiaryevalpsychbert")
             else {}
         )
 
