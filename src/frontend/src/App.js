@@ -8,7 +8,7 @@ import AIProfileBio from './pages/ai_profile/bio';
 import AIProfileEmotions from './pages/ai_profile/emotions';
 import AIProfileGeneral from './pages/ai_profile/general';
 import AIProfileInterests from './pages/ai_profile/interests';
-import MhaiDiary from './pages/my_diary/chat';
+import MyDiary from './pages/my_diary/diary';
 import UserProfileBio from './pages/user_profile/bio';
 import UserProfileEmotions from './pages/user_profile/emotions';
 import UserProfileGeneral from './pages/user_profile/general';
@@ -27,7 +27,7 @@ function App() {
         <Route path="/ai-profile/bio" element={<AIProfileBio />} />
         <Route path="/ai-profile/emotions" element={<AIProfileEmotions />} />
         <Route path="/ai-profile/interests" element={<AIProfileInterests />} />
-        <Route path="/mhai-diary/" element={<MhaiDiary />} />
+        <Route path="/my-diary/" element={<MyDiary />} />
         <Route path="/profile" element={<UserProfileGeneral />} />
         <Route path="/profile/bio" element={<UserProfileBio />} />
         <Route path="/profile/emotions" element={<UserProfileEmotions />} />

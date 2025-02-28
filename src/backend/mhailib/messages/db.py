@@ -13,7 +13,7 @@ from my_diary.api.serializers import (
     MhaiDiaryEvalPsychBertSerializer,
     MhaiDiarySerializer,
 )
-from my_diary.models import MhaiDiary
+from my_diary.models import MyDiary
 from user_profile.api.serializers import UserProfileSerializer
 from user_profile.models import UserProfile
 
@@ -30,7 +30,7 @@ def get_user_profile(user_id: int) -> dict[str, Any]:
 
 def load_chat_history(user_id: int, last_k: int = 10) -> list[dict[str, Any]]:
     """
-    Load the conversation history for a given user using the MhaiDiary model.
+    Load the conversation history for a given user using the MyDiary model.
 
     Parameters
     ----------
@@ -45,7 +45,7 @@ def load_chat_history(user_id: int, last_k: int = 10) -> list[dict[str, Any]]:
         with roles "user" or "assistant".
     """
     # TODO: this should be changed to RAG approach with top 10
-    messages = MhaiDiary.objects.filter(
+    messages = MyDiary.objects.filter(
         user_id=user_id,
     ).order_by("prompt_timestamp")
     idx_start = max(0, len(messages) - last_k)
@@ -76,7 +76,7 @@ def load_chat_and_evaluation_history_last_k(
         A list of dictionaries containing user messages, AI responses,
         and associated evaluation scores.
     """
-    chat_entries = MhaiDiary.objects.filter(user_id=user_id)[-last_k:]
+    chat_entries = MyDiary.objects.filter(user_id=user_id)[-last_k:]
 
     history_data = []
 

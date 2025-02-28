@@ -7,5 +7,5 @@ from django.urls import path
 from my_diary import views
 
 urlpatterns = [
-    path("mhai-diary/", views.MhaiDiaryView.as_view(), name="mhai-diary"),
+    path("my-diary/", views.MhaiDiaryView.as_view(), name="my-diary"),
 ]

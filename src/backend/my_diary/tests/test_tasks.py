@@ -4,7 +4,7 @@ from ai_profile.models import AIProfile
 from mhai_web.users.models import User
 from user_profile.models import UserProfile
 
-from my_diary.models import MhaiDiary
+from my_diary.models import MyDiary
 from my_diary.tasks.task_answers import process_chat_answer
 
 
@@ -17,7 +17,7 @@ def test_process_chat_answer_success(
 
     Check the result when the chat message exists and processing succeeds.
     """
-    chat_message = MhaiDiary.objects.create(
+    chat_message = MyDiary.objects.create(
         user=user, prompt="Hello, AI!", response="", status="started"
     )
 
@@ -34,5 +34,5 @@ def test_process_chat_answer_message_does_not_exist(user):
     Test the process_chat_answer task when the chat message does not exist.
     """
     invalid_message_id = 999  # this ID doesn't exist
-    with pytest.raises(MhaiDiary.DoesNotExist):
+    with pytest.raises(MyDiary.DoesNotExist):
         process_chat_answer(message_id=invalid_message_id, user_id=user.id)

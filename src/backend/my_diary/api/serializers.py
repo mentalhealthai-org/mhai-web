@@ -5,18 +5,18 @@ from __future__ import annotations
 from rest_framework import serializers
 
 from my_diary.models import (
-    MhaiDiary,
     MhaiDiaryEvalEmotions,
     MhaiDiaryEvalMentBert,
     MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 
 
 class MhaiDiarySerializer(serializers.ModelSerializer):
-    """Serializer for the MhaiDiary model."""
+    """Serializer for the MyDiary model."""
 
     class Meta:
-        model = MhaiDiary
+        model = MyDiary
         fields = [
             "id",
             "user",

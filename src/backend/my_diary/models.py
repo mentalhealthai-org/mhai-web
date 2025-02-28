@@ -4,7 +4,7 @@ from django.db import models
 User = get_user_model()
 
 
-class MhaiDiary(models.Model):
+class MyDiary(models.Model):
     """
     Model representing a message within a chat room.
     """
@@ -30,7 +30,7 @@ class MhaiDiary(models.Model):
         ordering = ["-prompt_timestamp"]
 
     def __str__(self):
-        return f"MhaiDiary ({self.user}): {self.prompt_timestamp} / #{self.id}"
+        return f"MyDiary ({self.user}): {self.prompt_timestamp} / #{self.id}"
 
 
 class MhaiDiaryEvalMentBert(models.Model):
@@ -40,9 +40,7 @@ class MhaiDiaryEvalMentBert(models.Model):
     Ref: https://huggingface.co/reab5555/mentBERT
     """
 
-    my_diary = models.ForeignKey(
-        MhaiDiary, null=False, on_delete=models.CASCADE
-    )
+    my_diary = models.ForeignKey(MyDiary, null=False, on_delete=models.CASCADE)
     borderline = models.FloatField()
     anxiety = models.FloatField()
     depression = models.FloatField()
@@ -64,9 +62,7 @@ class MhaiDiaryEvalPsychBert(models.Model):
     Ref: https://huggingface.co/mnaylor/psychbert-finetuned-multiclass
     """
 
-    my_diary = models.ForeignKey(
-        MhaiDiary, null=False, on_delete=models.CASCADE
-    )
+    my_diary = models.ForeignKey(MyDiary, null=False, on_delete=models.CASCADE)
     unrelated = models.FloatField()
     mental_illnesses = models.FloatField()
     anxiety = models.FloatField()
@@ -85,9 +81,7 @@ class MhaiDiaryEvalEmotions(models.Model):
     Ref: j-hartmann/emotion-english-distilroberta-base
     """
 
-    my_diary = models.ForeignKey(
-        MhaiDiary, null=False, on_delete=models.CASCADE
-    )
+    my_diary = models.ForeignKey(MyDiary, null=False, on_delete=models.CASCADE)
     neutral = models.FloatField()
     joy = models.FloatField()
     disgust = models.FloatField()

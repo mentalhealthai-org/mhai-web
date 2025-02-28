@@ -57,7 +57,7 @@ urlpatterns += [
     path("api/ai-profile/", include(ai_profile_api_urls)),
     path("api/profile/", include(user_profile_api_urls)),
     # my_diary URLs under `api/chat/`
-    path("api/mhai-diary/", include("my_diary.api.urls")),
+    path("api/my-diary/", include("my_diary.api.urls")),
 ]
 
 if settings.DEBUG:

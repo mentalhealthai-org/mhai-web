@@ -13,10 +13,10 @@ from my_diary.api.serializers import (
     MhaiDiarySerializer,
 )
 from my_diary.models import (
-    MhaiDiary,
     MhaiDiaryEvalEmotions,
     MhaiDiaryEvalMentBert,
     MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 from my_diary.tasks.task_answers import (
     finish_answering,
@@ -33,7 +33,7 @@ User = get_user_model()
 
 class MhaiDiaryViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for managing chat messages in MhaiDiary.
+    API endpoint for managing chat messages in MyDiary.
     """
 
     serializer_class = MhaiDiarySerializer
@@ -42,14 +42,14 @@ class MhaiDiaryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            queryset = MhaiDiary.objects.filter(user=user).order_by(
+            queryset = MyDiary.objects.filter(user=user).order_by(
                 "prompt_timestamp"
             )
             since_id = self.request.query_params.get("since_id")
             if since_id:
                 queryset = queryset.filter(id__gt=since_id)
             return queryset
-        return MhaiDiary.objects.none()
+        return MyDiary.objects.none()
 
     def perform_create(self, serializer) -> None:
         user_id = self.request.user.id
@@ -96,7 +96,7 @@ class MhaiDiaryEvalEmotionsViewSet(viewsets.ModelViewSet):
 
 class MhaiDiaryEvalMentBertViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for managing MentBERT analysis scores linked to MhaiDiary.
+    API endpoint for managing MentBERT analysis scores linked to MyDiary.
     """
 
     queryset = MhaiDiaryEvalMentBert.objects.all()
@@ -111,7 +111,7 @@ class MhaiDiaryEvalMentBertViewSet(viewsets.ModelViewSet):
 
 class MhaiDiaryEvalPsychBertViewSet(viewsets.ModelViewSet):
     """
-    API endpoint for managing PsychBERT analysis scores linked to MhaiDiary.
+    API endpoint for managing PsychBERT analysis scores linked to MyDiary.
     """
 
     queryset = MhaiDiaryEvalPsychBert.objects.all()

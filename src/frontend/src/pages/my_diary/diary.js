@@ -1,11 +1,11 @@
-// src/pages/chat/MhaiDiary.js
+// src/pages/chat/MyDiary.js
 
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 import getCSRFToken from '../../libs/csrf';
 
-function MhaiDiary() {
+function MyDiary() {
   const csrftoken = getCSRFToken();
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
@@ -16,7 +16,7 @@ function MhaiDiary() {
   const lastMessageIdRef = useRef(null);
   const pollingInterval = 1000; // 1 second in milliseconds
 
-  const apiUrl = '/api/mhai-diary/';
+  const apiUrl = '/api/my-diary/';
 
   // Function to fetch messages
   const fetchMessages = () => {
@@ -201,4 +201,4 @@ function MhaiDiary() {
   );
 }
 
-export default MhaiDiary;
+export default MyDiary;

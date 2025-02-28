@@ -3,16 +3,16 @@
 from django.contrib import admin
 
 from my_diary.models import (
-    MhaiDiary,
     MhaiDiaryEvalEmotions,
     MhaiDiaryEvalMentBert,
     MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 
 
-@admin.register(MhaiDiary)
+@admin.register(MyDiary)
 class MhaiDiaryAdmin(admin.ModelAdmin):
-    """Admin configuration for MhaiDiary."""
+    """Admin configuration for MyDiary."""
 
     list_display = (
         "id",

@@ -12,10 +12,10 @@ from mhailib.messages.evaluations import (
 )
 
 from my_diary.models import (
-    MhaiDiary,
     MhaiDiaryEvalEmotions,
     MhaiDiaryEvalMentBert,
     MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 
 logger = logging.getLogger(__name__)
@@ -37,10 +37,10 @@ def evaluate_emotions(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiDiary message to analyze emotions.
+        The ID of the MyDiary message to analyze emotions.
     """
     try:
-        chat_message = MhaiDiary.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual emotion analysis logic
         emotions_data = clean_name(eval_emotions(chat_message.prompt))
@@ -51,14 +51,14 @@ def evaluate_emotions(message_id: int) -> None:
             defaults=emotions_data,
         )
 
-    except MhaiDiary.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiDiary message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiDiary.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()
@@ -73,10 +73,10 @@ def evaluate_mentbert(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiDiary message to analyze with MentBERT.
+        The ID of the MyDiary message to analyze with MentBERT.
     """
     try:
-        chat_message = MhaiDiary.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual MentBERT analysis logic
         mentbert_data = clean_name(eval_mentbert(chat_message.prompt))
@@ -87,14 +87,14 @@ def evaluate_mentbert(message_id: int) -> None:
             defaults=mentbert_data,
         )
 
-    except MhaiDiary.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiDiary message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiDiary.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()
@@ -109,10 +109,10 @@ def evaluate_psychbert(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiDiary message to analyze with PsychBERT.
+        The ID of the MyDiary message to analyze with PsychBERT.
     """
     try:
-        chat_message = MhaiDiary.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual PsychBERT analysis logic
         psychbert_data = clean_name(
@@ -126,14 +126,14 @@ def evaluate_psychbert(message_id: int) -> None:
             defaults=psychbert_data,
         )
 
-    except MhaiDiary.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiDiary message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiDiary.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()
