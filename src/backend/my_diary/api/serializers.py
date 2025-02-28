@@ -1,22 +1,22 @@
-"""Serializers for mhai_chat."""
+"""Serializers for my_diary."""
 
 from __future__ import annotations
 
 from rest_framework import serializers
 
-from mhai_chat.models import (
-    MhaiChat,
-    MhaiChatEvalEmotions,
-    MhaiChatEvalMentBert,
-    MhaiChatEvalPsychBert,
+from my_diary.models import (
+    MhaiDiaryEvalEmotions,
+    MhaiDiaryEvalMentBert,
+    MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 
 
-class MhaiChatSerializer(serializers.ModelSerializer):
-    """Serializer for the MhaiChat model."""
+class MhaiDiarySerializer(serializers.ModelSerializer):
+    """Serializer for the MyDiary model."""
 
     class Meta:
-        model = MhaiChat
+        model = MyDiary
         fields = [
             "id",
             "user",
@@ -34,14 +34,14 @@ class MhaiChatSerializer(serializers.ModelSerializer):
         ]
 
 
-class MhaiChatEvalMentBertSerializer(serializers.ModelSerializer):
-    """Serializer for the MhaiChatEvalMentBert model."""
+class MhaiDiaryEvalMentBertSerializer(serializers.ModelSerializer):
+    """Serializer for the MhaiDiaryEvalMentBert model."""
 
     class Meta:
-        model = MhaiChatEvalMentBert
+        model = MhaiDiaryEvalMentBert
         fields = [
             "id",
-            "mhai_chat",
+            "my_diary",
             "borderline",
             "anxiety",
             "depression",
@@ -54,14 +54,14 @@ class MhaiChatEvalMentBertSerializer(serializers.ModelSerializer):
         ]
 
 
-class MhaiChatEvalPsychBertSerializer(serializers.ModelSerializer):
-    """Serializer for the MhaiChatEvalPsychBert model."""
+class MhaiDiaryEvalPsychBertSerializer(serializers.ModelSerializer):
+    """Serializer for the MhaiDiaryEvalPsychBert model."""
 
     class Meta:
-        model = MhaiChatEvalPsychBert
+        model = MhaiDiaryEvalPsychBert
         fields = [
             "id",
-            "mhai_chat",
+            "my_diary",
             "unrelated",
             "mental_illnesses",
             "anxiety",
@@ -71,18 +71,18 @@ class MhaiChatEvalPsychBertSerializer(serializers.ModelSerializer):
         ]
 
 
-class MhaiChatEvalEmotionsSerializer(serializers.ModelSerializer):
+class MhaiDiaryEvalEmotionsSerializer(serializers.ModelSerializer):
     """
-    Serializer for the MhaiChatEvalEmotions model.
+    Serializer for the MhaiDiaryEvalEmotions model.
 
     It stores emotion analysis scores.
     """
 
     class Meta:
-        model = MhaiChatEvalEmotions
+        model = MhaiDiaryEvalEmotions
         fields = [
             "id",
-            "mhai_chat",
+            "my_diary",
             "neutral",
             "joy",
             "disgust",

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from django.urls import path
 
-from mhai_chat import views
+from my_diary import views
 
 urlpatterns = [
-    path("mhai-chat/", views.MhaiChatView.as_view(), name="mhai-chat"),
+    path("my-diary/", views.MhaiDiaryView.as_view(), name="my-diary"),
 ]

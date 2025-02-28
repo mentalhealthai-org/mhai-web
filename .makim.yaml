@@ -112,7 +112,7 @@ groups:
             - mhai_web
             - user_profile
             - ai_profile
-            - mhai_chat
+            - my_diary
         backend: bash
         env:
           POSTGRES_HOST: localhost
@@ -127,7 +127,7 @@ groups:
             - ""
             - user_profile
             - ai_profile
-            - mhai_chat
+            - my_diary
         env:
           POSTGRES_HOST: localhost
           REDIS_HOST: localhost

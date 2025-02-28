@@ -1,4 +1,4 @@
-# mhai_chat/tasks/evaluations.py
+# my_diary/tasks/evaluations.py
 
 from __future__ import annotations
 
@@ -11,11 +11,11 @@ from mhailib.messages.evaluations import (
     eval_psychbert,
 )
 
-from mhai_chat.models import (
-    MhaiChat,
-    MhaiChatEvalEmotions,
-    MhaiChatEvalMentBert,
-    MhaiChatEvalPsychBert,
+from my_diary.models import (
+    MhaiDiaryEvalEmotions,
+    MhaiDiaryEvalMentBert,
+    MhaiDiaryEvalPsychBert,
+    MyDiary,
 )
 
 logger = logging.getLogger(__name__)
@@ -37,28 +37,28 @@ def evaluate_emotions(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiChat message to analyze emotions.
+        The ID of the MyDiary message to analyze emotions.
     """
     try:
-        chat_message = MhaiChat.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual emotion analysis logic
         emotions_data = clean_name(eval_emotions(chat_message.prompt))
 
-        # Save the analysis results to MhaiChatEvalEmotions
-        MhaiChatEvalEmotions.objects.update_or_create(
-            mhai_chat=chat_message,
+        # Save the analysis results to MhaiDiaryEvalEmotions
+        MhaiDiaryEvalEmotions.objects.update_or_create(
+            my_diary=chat_message,
             defaults=emotions_data,
         )
 
-    except MhaiChat.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiChat message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()
@@ -73,28 +73,28 @@ def evaluate_mentbert(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiChat message to analyze with MentBERT.
+        The ID of the MyDiary message to analyze with MentBERT.
     """
     try:
-        chat_message = MhaiChat.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual MentBERT analysis logic
         mentbert_data = clean_name(eval_mentbert(chat_message.prompt))
 
-        # Save the analysis results to MhaiChatEvalMentBert
-        MhaiChatEvalMentBert.objects.update_or_create(
-            mhai_chat=chat_message,
+        # Save the analysis results to MhaiDiaryEvalMentBert
+        MhaiDiaryEvalMentBert.objects.update_or_create(
+            my_diary=chat_message,
             defaults=mentbert_data,
         )
 
-    except MhaiChat.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiChat message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()
@@ -109,10 +109,10 @@ def evaluate_psychbert(message_id: int) -> None:
     Parameters
     ----------
     message_id : int
-        The ID of the MhaiChat message to analyze with PsychBERT.
+        The ID of the MyDiary message to analyze with PsychBERT.
     """
     try:
-        chat_message = MhaiChat.objects.get(id=message_id)
+        chat_message = MyDiary.objects.get(id=message_id)
 
         # Example placeholder for the actual PsychBERT analysis logic
         psychbert_data = clean_name(
@@ -120,20 +120,20 @@ def evaluate_psychbert(message_id: int) -> None:
             {"negative": "unrelated"},
         )
 
-        # Save the analysis results to MhaiChatEvalPsychBert
-        MhaiChatEvalPsychBert.objects.update_or_create(
-            mhai_chat=chat_message,
+        # Save the analysis results to MhaiDiaryEvalPsychBert
+        MhaiDiaryEvalPsychBert.objects.update_or_create(
+            my_diary=chat_message,
             defaults=psychbert_data,
         )
 
-    except MhaiChat.DoesNotExist as e:
+    except MyDiary.DoesNotExist as e:
         logger.error(
-            f"Error: MhaiChat message with id {message_id} does not exist."
+            f"Error: MyDiary message with id {message_id} does not exist."
         )
         raise e
     except Exception as e:
         logger.error(f"Error: {e}")
-        chat_message_fallback = MhaiChat.objects.filter(id=message_id)
+        chat_message_fallback = MyDiary.objects.filter(id=message_id)
         if chat_message_fallback:
             chat_message.status = "error"
             chat_message.save()

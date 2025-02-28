@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 @method_decorator(login_required, name="dispatch")
-class MhaiChatView(TemplateView):
+class MhaiDiaryView(TemplateView):
     template_name = "generic.html"
 
     def get(self, request: HttpRequest) -> HttpResponse:
