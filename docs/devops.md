@@ -18,7 +18,7 @@ cd mhai-web
 Use `mamba` to create a **Conda environment** and install dependencies using **Poetry**:
 
 ```bash
-mamba env create --file conda/dev.yaml --force
+mamba env create --file conda/dev.yaml --yes
 conda activate mhai-web
 poetry config virtualenvs.create false
 poetry install
